@@ -10,11 +10,6 @@ import (
 	"syscall"
 )
 
-const (
-	channelID = "1019335547145175092"
-	botID     = "1127282771786743922"
-)
-
 func main() {
 	// bring in .env
 	err := godotenv.Load()
@@ -71,6 +66,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Content == "ping" {
 		_, _ = s.ChannelMessageSend(m.ChannelID, "Pong!")
 	}
+
+	botID := os.Getenv("BOT_ID")
 
 	// if the message is directed at the bot, reply with "I'm here!"
 	if m.Content == fmt.Sprintf("<@%s> hi", botID) {
