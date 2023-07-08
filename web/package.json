@@ -11,6 +11,7 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@types/node": "^18.16.19",
+    "@types/uuid": "^9.0.2",
     "nuxt": "^3.6.2",
     "nuxt-windicss": "^2.6.1",
     "uuid ": "link:@types/uuid "

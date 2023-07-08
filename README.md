@@ -7,3 +7,4 @@ ChatGPT based Dungeons and Dragons Dungeon Master (DM) chatbot.
 Currently supports the following chat services:
 
 * Discord
+* IRC
