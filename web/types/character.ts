@@ -1,8 +1,8 @@
-// types/character.ts
+// types/post.ts
 
 export interface Character {
     id: string
-    discordId: string
+    discord: string
     name: string
     race: string
     class: string
@@ -48,5 +48,4 @@ export interface Character {
         abilityScoreBonuses: number,
         specialAbilities: string[]
     }
-
 }

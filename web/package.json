@@ -9,6 +9,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@aws-sdk/lib-dynamodb": "^3.365.0",
     "@nuxt/devtools": "latest",
     "@types/node": "^18.16.19",
     "@types/uuid": "^9.0.2",
@@ -21,7 +22,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.363.0",
-    "@aws-sdk/lib-dynamodb": "^3.365.0",
     "aws-sdk": "^2.1413.0",
     "uuid": "^9.0.0"
   }

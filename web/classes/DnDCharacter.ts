@@ -1,6 +1,6 @@
 export class DnDCharacter {
     id!: string;
-    discordId!: string;
+    discord!: string;
     validDiscordId!: boolean;
     name: string;
     race: string;
@@ -37,7 +37,7 @@ export class DnDCharacter {
     };
     racialTraits: string[];
 
-    constructor(id: string, name: string, race: string, cClass: string, alignment: string, discordId: string) {
+    constructor(id: string, name: string, race: string, cClass: string, alignment: string, discord: string) {
         this.id = id
         this.name = name;
         this.race = race;
@@ -72,7 +72,7 @@ export class DnDCharacter {
             successes: 0,
             failures: 0
         }
-        this.discordId = discordId;
+        this.discord = discord;
         this.racialTraits = this.getRacialTraits();
     }
 
