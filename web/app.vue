@@ -1,35 +1,43 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-screen py-2">
+  <!-- Add a section to display the generated character and buttons to save or re-roll -->
+  <div v-if="generatedCharacter" class="flex flex-col items-center justify-center min-h-screen py-2">
+    <pre>{{ generatedCharacter ? JSON.stringify(generatedCharacter, null, 2) : 'No character generated' }}</pre>
+    <button @click="save" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
+    <button @click="generate" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Re-roll</button>
+  </div>
+  <div v-else class="flex flex-col items-center justify-center min-h-screen py-2">
     <h1 class="text-2xl font-bold mb-4">Create a new character</h1>
-    <form @submit.prevent="generate" class="w-full max-w-sm">
+    <form @submit.prevent="submit" class="w-full max-w-sm">
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" v-model="character.name" required>
       </div>
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="race">Race</label>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="race" type="text" v-model="character.race" required>
+        <select v-model="character.race" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <option value="">Select a race</option>
+          <option value="Human">Human</option>
+          <option value="Elf">Elf</option>
+          <option value="Dwarf">Dwarf</option>
+          <!-- Add more options as needed -->
+        </select>
       </div>
       <div class="mb-6">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="class">Class</label>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="class" type="text" v-model="character.class" required>
+        <select v-model="character.class" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <option value="">Select a class</option>
+          <option value="Fighter">Fighter</option>
+          <option value="Wizard">Wizard</option>
+          <option value="Rogue">Rogue</option>
+          <!-- Add more options as needed -->
+        </select>
       </div>
       <div class="flex items-center justify-between">
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-          Roll
+          Submit
         </button>
       </div>
     </form>
-    <div v-if="generatedCharacter">
-      <h2 class="text-xl font-bold mt-4">Generated Character</h2>
-      <pre class="text-sm">{{ generatedCharacter }}</pre>
-      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2" @click="submit">
-        Save
-      </button>
-      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2" @click="generatedCharacter = null">
-        Roll Again
-      </button>
-    </div>
   </div>
 </template>
 
@@ -129,7 +137,7 @@ function generateCharacter(name: string, race: string, cClass: string): Characte
   }
 }
 
-const submit = async () => {
+const save = async () => {
   if (generatedCharacter.value) {
     try {
       const { data, error } = await useFetch('/api/createCharacter', { method: 'POST', body: JSON.stringify(generatedCharacter.value) })
@@ -157,5 +165,45 @@ const submit = async () => {
     }
   }
 }
+
+const submit = () => {
+  // generate a new character
+  generate()
+}
+
+/*
+const submit = async () => {
+  // generate a new character
+  generate()
+
+  if (generatedCharacter.value) {
+    try {
+      const { data, error } = await useFetch('/api/createCharacter', { method: 'POST', body: JSON.stringify(generatedCharacter.value) })
+
+      if (error.value) {
+        console.error('Error creating character', error.value)
+        alert(`Error creating character: ${error.value.message}`)
+      } else if (data.value && data.value.statusCode === 200) {
+        alert('Character created successfully')
+        // Reset the form
+        character.value = createEmptyCharacter()
+
+        generatedCharacter.value = null
+      } else {
+        console.error('Unexpected response creating character', data.value)
+        alert(`Unexpected response creating character: ${data.value ? data.value.body : 'No response data'}`)
+      }
+    } catch (err) {
+      console.error('Error creating character', err)
+      if (err instanceof Error) {
+        alert(`Error creating character: ${err.message}`)
+      } else {
+        alert(`Error creating character: ${err}`)
+      }
+    }
+  }
+}
+
+ */
 
 </script>
