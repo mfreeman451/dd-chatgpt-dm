@@ -114,11 +114,28 @@ function generateCharacter(name: string, race: string, cClass: string): Characte
 
 const submit = async () => {
   try {
-    const character = ref<Character>(generateCharacter("Bob", "Human", "Fighter"))
-    await useFetch('/api/createCharacter', { method: 'POST', body: JSON.stringify(character.value) })
-    alert('Character created successfully')
+    // Use the inputs from the form and pass them to the generateCharacter function
+    character.value = generateCharacter(character.value.name, character.value.race, character.value.class)
+    const { data, error } = await useFetch('/api/createCharacter', { method: 'POST', body: JSON.stringify(character.value) })
+
+    if (error.value) {
+      console.error('Error creating character', error)
+      alert(`Error creating character: ${error.value.message}`)
+    } else if (data.value && data.value.statusCode === 200) {
+      alert('Character created successfully')
+      // Reset the form
+      character.value = generateCharacter('', '', '')
+    } else {
+      console.error('Unexpected response creating character', data)
+      alert(`Unexpected response creating character: ${data.value ? data.value.body : 'No response data'}`)
+    }
   } catch (err) {
     console.error('Error creating character', err)
+    if (err instanceof Error) {
+      alert(`Error creating character: ${err.message}`)
+    } else {
+      alert(`Error creating character: ${err}`)
+    }
   }
 }
 
