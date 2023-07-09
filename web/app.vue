@@ -171,39 +171,4 @@ const submit = () => {
   generate()
 }
 
-/*
-const submit = async () => {
-  // generate a new character
-  generate()
-
-  if (generatedCharacter.value) {
-    try {
-      const { data, error } = await useFetch('/api/createCharacter', { method: 'POST', body: JSON.stringify(generatedCharacter.value) })
-
-      if (error.value) {
-        console.error('Error creating character', error.value)
-        alert(`Error creating character: ${error.value.message}`)
-      } else if (data.value && data.value.statusCode === 200) {
-        alert('Character created successfully')
-        // Reset the form
-        character.value = createEmptyCharacter()
-
-        generatedCharacter.value = null
-      } else {
-        console.error('Unexpected response creating character', data.value)
-        alert(`Unexpected response creating character: ${data.value ? data.value.body : 'No response data'}`)
-      }
-    } catch (err) {
-      console.error('Error creating character', err)
-      if (err instanceof Error) {
-        alert(`Error creating character: ${err.message}`)
-      } else {
-        alert(`Error creating character: ${err}`)
-      }
-    }
-  }
-}
-
- */
-
 </script>
