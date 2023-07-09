@@ -14,7 +14,7 @@
       </div>
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="race">Race</label>
-        <select v-model="character.race" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <select v-model="character.race" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
           <option value="">Select a race</option>
           <option value="Human">Human</option>
           <option value="Elf">Elf</option>
@@ -84,7 +84,7 @@
       </div>
       <div class="mb-6">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="class">Class</label>
-        <select v-model="character.class" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <select v-model="character.class" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
           <option value="">Select a class</option>
           <option value="Fighter">Fighter</option>
           <option value="Wizard">Wizard</option>
@@ -105,7 +105,7 @@
       </div>
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="alignment">Alignment</label>
-        <select v-model="character.alignment" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <select v-model="character.alignment" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
           <option value="">Select an alignment</option>
           <option value="Lawful Good">Lawful Good</option>
           <option value="Neutral Good">Neutral Good</option>
