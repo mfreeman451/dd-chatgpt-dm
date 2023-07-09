@@ -129,12 +129,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Character } from './types/character' // adjust the path as needed
+import { Character } from './types/character'
 
 const character = ref<Character>(createEmptyCharacter())
 const generatedCharacter = ref<Character | null>(null)
 const generate = () => {
-  generatedCharacter.value = generateCharacter(character.value.name, character.value.race, character.value.class)
+  generatedCharacter.value = generateCharacter(character.value.name, character.value.race, character.value.class, character.value.alignment)
 }
 
 function createEmptyCharacter(): Character {
@@ -172,11 +172,23 @@ function createEmptyCharacter(): Character {
     deathSaves: {
       successes: 0,
       failures: 0
+    },
+    abilityScoreBonuses: {},
+    specialAbilities: [],
+    racialTraits: {
+      name: '',
+      description: '',
+      darkvision: 0,
+      size: 'Medium',
+      speed: 30,
+      languages: [],
+      abilityScoreBonuses: 0,
+      specialAbilities: []
     }
   }
 }
 
-function generateCharacter(name: string, race: string, cClass: string): Character {
+function generateCharacter(name: string, race: string, cClass: string, alignment: string): Character {
   // Function to generate a random ability score by rolling 4d6 and dropping the lowest roll
   function rollAbilityScore(): number {
     const rolls = Array(4).fill(0).map(() => Math.floor(Math.random() * 6) + 1)
@@ -191,7 +203,7 @@ function generateCharacter(name: string, race: string, cClass: string): Characte
     race: race,
     class: cClass,
     level: 1,
-    alignment: '',
+    alignment: alignment,
     background: '',
     strength: rollAbilityScore(),
     dexterity: rollAbilityScore(),
@@ -219,8 +231,21 @@ function generateCharacter(name: string, race: string, cClass: string): Characte
     deathSaves: {
       successes: 0,
       failures: 0
+    },
+    abilityScoreBonuses: {}, // Add race and class specific bonuses here
+    specialAbilities: [], // Add race and class specific abilities here
+    racialTraits: {
+      name: '',
+      description: '',
+      darkvision: 0,
+      size: 'Medium',
+      speed: 30,
+      languages: [],
+      abilityScoreBonuses: 0,
+      specialAbilities: []
     }
   }
+
 }
 
 const save = async () => {
