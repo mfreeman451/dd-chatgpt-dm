@@ -120,7 +120,9 @@
       </div>
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2" for="discordId">Discord ID</label>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="discordId" type="text" v-model="character.discordId" required>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="discordId" type="text" v-model="character.discordId" @change="validateDiscordId" required>
+        <Icon v-if="character.validDiscordId" name="skill-icons:discord" color="green" />
+        <Icon v-else name="skill-icons:discord" color="red" />
       </div>
       <div class="flex items-center justify-between">
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
@@ -204,5 +206,26 @@ const submit = () => {
 function generateId(): string {
   return uuidv4();
 }
+
+const validateDiscordId = async () => {
+  try {
+    // const response = await fetch(`https://discord.com/api/v8/users/${character.value.discordId}`, {
+    // const { data, error } = await useFetch('/api/createCharacter', { method: 'POST', body: JSON.stringify(generatedCharacter.value) })
+    const {data, error} = await useFetch(`/api/discordUser?discordId=${character.value.discordId}`, { method: 'GET' })
+    console.log(data)
+    console.log("Error: " + error.value)
+    // pull teh response from the data
+    const response = data.value
+    if (response.ok) {
+      character.value.validDiscordId = true
+    } else {
+      character.value.validDiscordId = false
+    }
+  } catch (err) {
+    console.error('Error validating Discord ID', err)
+    character.value.validDiscordId = false
+  }
+}
+
 
 </script>

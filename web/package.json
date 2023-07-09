@@ -12,7 +12,9 @@
     "@nuxt/devtools": "latest",
     "@types/node": "^18.16.19",
     "@types/uuid": "^9.0.2",
+    "@vercel/node": "^2.15.3",
     "nuxt": "^3.6.2",
+    "nuxt-icon": "^0.4.2",
     "nuxt-windicss": "^2.6.1",
     "uuid ": "link:@types/uuid "
   },
