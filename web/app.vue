@@ -25,26 +25,101 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
-interface Character {
-  name: string
-  race: string
-  class: string
-}
+import { Character } from './types/character' // adjust the path as needed
 
 const character = ref<Character>({
+  id: '',
   name: '',
   race: '',
-  class: ''
+  class: '',
+  level: 1,
+  alignment: '',
+  background: '',
+  strength: 10,
+  dexterity: 10,
+  constitution: 10,
+  intelligence: 10,
+  wisdom: 10,
+  charisma: 10,
+  hitPoints: 10,
+  temporaryHitPoints: 0,
+  maxHitPoints: 10,
+  armorClass: 10,
+  proficiencyBonus: 2,
+  skills: [],
+  savingThrows: [],
+  languages: [],
+  equipment: [],
+  features: [],
+  spells: [],
+  spellSlots: 0,
+  currentSpellSlots: 0,
+  experiencePoints: 0,
+  initiative: 0,
+  speed: 30,
+  hitDice: '1d8',
+  deathSaves: {
+    successes: 0,
+    failures: 0
+  }
 })
+
+
+function generateCharacter(name: string, race: string, cClass: string): Character {
+  // Function to generate a random ability score by rolling 4d6 and dropping the lowest roll
+  function rollAbilityScore(): number {
+    const rolls = Array(4).fill(0).map(() => Math.floor(Math.random() * 6) + 1)
+    rolls.sort()
+    rolls.shift()
+    return rolls.reduce((a, b) => a + b, 0)
+  }
+
+  return {
+    id: '',
+    name: name,
+    race: race,
+    class: cClass,
+    level: 1,
+    alignment: '',
+    background: '',
+    strength: rollAbilityScore(),
+    dexterity: rollAbilityScore(),
+    constitution: rollAbilityScore(),
+    intelligence: rollAbilityScore(),
+    wisdom: rollAbilityScore(),
+    charisma: rollAbilityScore(),
+    hitPoints: 10,
+    temporaryHitPoints: 0,
+    maxHitPoints: 10,
+    armorClass: 10,
+    proficiencyBonus: 2,
+    skills: [],
+    savingThrows: [],
+    languages: [],
+    equipment: [],
+    features: [],
+    spells: [],
+    spellSlots: 0,
+    currentSpellSlots: 0,
+    experiencePoints: 0,
+    initiative: 0,
+    speed: 30,
+    hitDice: '1d8',
+    deathSaves: {
+      successes: 0,
+      failures: 0
+    }
+  }
+}
 
 const submit = async () => {
   try {
+    const character = ref<Character>(generateCharacter("Bob", "Human", "Fighter"))
     await useFetch('/api/createCharacter', { method: 'POST', body: JSON.stringify(character.value) })
-    character.value = { name: '', race: '', class: '' }
     alert('Character created successfully')
   } catch (err) {
     console.error('Error creating character', err)
   }
 }
+
 </script>
