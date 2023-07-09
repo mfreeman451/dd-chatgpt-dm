@@ -2,6 +2,7 @@
 
 export interface Character {
     id: string
+    discordId: string
     name: string
     race: string
     class: string

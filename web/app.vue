@@ -118,6 +118,10 @@
           <option value="Chaotic Evil">Chaotic Evil</option>
         </select>
       </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="discordId">Discord ID</label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="discordId" type="text" v-model="character.discordId" required>
+      </div>
       <div class="flex items-center justify-between">
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
           Submit
@@ -129,123 +133,33 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Character } from './types/character'
+import { DnDCharacter } from './classes/DnDCharacter'
+import { v4 as uuidv4 } from 'uuid';
 
-const character = ref<Character>(createEmptyCharacter())
-const generatedCharacter = ref<Character | null>(null)
+// Create a reactive object to store the ID
+const state = reactive({
+  id: ''
+})
+
 const generate = () => {
-  generatedCharacter.value = generateCharacter(character.value.name, character.value.race, character.value.class, character.value.alignment)
+  // If the ID hasn't been generated yet, generate it now
+  if (!state.id) {
+    state.id = generateId()
+  }
+
+  // Pass the ID to the generateCharacter function
+  generatedCharacter.value = generateCharacter(state.id, character.value.name, character.value.race, character.value.class, character.value.alignment, character.value.discordId)
 }
 
-function createEmptyCharacter(): Character {
-  return {
-    id: '',
-    name: '',
-    race: '',
-    class: '',
-    level: 1,
-    alignment: '',
-    background: '',
-    strength: 10,
-    dexterity: 10,
-    constitution: 10,
-    intelligence: 10,
-    wisdom: 10,
-    charisma: 10,
-    hitPoints: 10,
-    temporaryHitPoints: 0,
-    maxHitPoints: 10,
-    armorClass: 10,
-    proficiencyBonus: 2,
-    skills: [],
-    savingThrows: [],
-    languages: [],
-    equipment: [],
-    features: [],
-    spells: [],
-    spellSlots: 0,
-    currentSpellSlots: 0,
-    experiencePoints: 0,
-    initiative: 0,
-    speed: 30,
-    hitDice: '1d8',
-    deathSaves: {
-      successes: 0,
-      failures: 0
-    },
-    abilityScoreBonuses: {},
-    specialAbilities: [],
-    racialTraits: {
-      name: '',
-      description: '',
-      darkvision: 0,
-      size: 'Medium',
-      speed: 30,
-      languages: [],
-      abilityScoreBonuses: 0,
-      specialAbilities: []
-    }
-  }
+const createEmptyCharacter = (): DnDCharacter => {
+  return new DnDCharacter('', '', '', '', '', '')
 }
 
-function generateCharacter(name: string, race: string, cClass: string, alignment: string): Character {
-  // Function to generate a random ability score by rolling 4d6 and dropping the lowest roll
-  function rollAbilityScore(): number {
-    const rolls = Array(4).fill(0).map(() => Math.floor(Math.random() * 6) + 1)
-    rolls.sort()
-    rolls.shift()
-    return rolls.reduce((a, b) => a + b, 0)
-  }
+const character = ref<DnDCharacter>(createEmptyCharacter())
+const generatedCharacter = ref<DnDCharacter | null>(null)
 
-  return {
-    id: '',
-    name: name,
-    race: race,
-    class: cClass,
-    level: 1,
-    alignment: alignment,
-    background: '',
-    strength: rollAbilityScore(),
-    dexterity: rollAbilityScore(),
-    constitution: rollAbilityScore(),
-    intelligence: rollAbilityScore(),
-    wisdom: rollAbilityScore(),
-    charisma: rollAbilityScore(),
-    hitPoints: 10,
-    temporaryHitPoints: 0,
-    maxHitPoints: 10,
-    armorClass: 10,
-    proficiencyBonus: 2,
-    skills: [],
-    savingThrows: [],
-    languages: [],
-    equipment: [],
-    features: [],
-    spells: [],
-    spellSlots: 0,
-    currentSpellSlots: 0,
-    experiencePoints: 0,
-    initiative: 0,
-    speed: 30,
-    hitDice: '1d8',
-    deathSaves: {
-      successes: 0,
-      failures: 0
-    },
-    abilityScoreBonuses: {}, // Add race and class specific bonuses here
-    specialAbilities: [], // Add race and class specific abilities here
-    racialTraits: {
-      name: '',
-      description: '',
-      darkvision: 0,
-      size: 'Medium',
-      speed: 30,
-      languages: [],
-      abilityScoreBonuses: 0,
-      specialAbilities: []
-    }
-  }
-
+function generateCharacter(id: string, name: string, race: string, cClass: string, alignment: string, discordId: string): DnDCharacter {
+  return new DnDCharacter(id, name, race, cClass, alignment, discordId)
 }
 
 const save = async () => {
@@ -278,8 +192,17 @@ const save = async () => {
 }
 
 const submit = () => {
+  // If the ID hasn't been generated yet, generate it now
+  if (!state.id) {
+    state.id = generateId()
+  }
+
   // generate a new character
-  generate()
+  generatedCharacter.value = generateCharacter(state.id, character.value.name, character.value.race, character.value.class, character.value.alignment, character.value.discordId)
+}
+
+function generateId(): string {
+  return uuidv4();
 }
 
 </script>
