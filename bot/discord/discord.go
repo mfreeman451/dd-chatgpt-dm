@@ -2,20 +2,6 @@ package discord
 
 import "github.com/bwmarrin/discordgo"
 
-type Reader interface {
-	Get(id string) (string, error)
-}
-
-type Writer interface {
-	Create(id string, state string) (int, error)
-	Update(id string, state string) (int, error)
-}
-
-type MessageStore interface {
-	Reader
-	Writer
-}
-
 type DiscordAPI struct {
 	Client *discordgo.Session
 }

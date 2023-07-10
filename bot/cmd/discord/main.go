@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
+	"github.com/mfreeman451/dd-chatgpt-dm/bot/pkg/discord"
 	"log"
 	"os"
 	"os/signal"
@@ -22,56 +22,21 @@ func main() {
 		log.Fatalln("DISCORD_AUTH_TOKEN not set")
 	}
 
-	discord, err := discordgo.New("Bot " + authToken)
+	discordService, err := discord.NewService("Bot " + authToken)
 	if err != nil {
 		panic(err)
 	}
 
 	// connect to discord server
-	err = discord.Open()
+	err = discordService.Open()
 	if err != nil {
 		panic(err)
 	}
-	defer discord.Close() // Ensure the connection is closed when main returns
-
-	// add handler for messageCreate events
-	discord.AddHandler(messageCreate)
-
-	// join the #Gaming channel
-	/*
-		_, err = discord.ChannelMessageSend(channelID, "The Dungeon Master has arrived!")
-		if err != nil {
-			panic(err)
-		}
-
-	*/
+	defer discordService.Close() // Ensure the connection is closed when main returns
 
 	// Wait here until CTRL-C or other term signal is received.
 	fmt.Println("Bot is now running.  Press CTRL-C to exit.")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
-}
-
-// messageCreate is called whenever a message is created
-func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
-	// ignore messages created by the bot itself
-	if m.Author.ID == s.State.User.ID {
-		return
-	}
-
-	fmt.Println(m.Content)
-
-	// if the message is "ping" reply with "Pong!"
-	if m.Content == "ping" {
-		_, _ = s.ChannelMessageSend(m.ChannelID, "Pong!")
-	}
-
-	botID := os.Getenv("BOT_ID")
-
-	// if the message is directed at the bot, reply with "I'm here!"
-	if m.Content == fmt.Sprintf("<@%s> hi", botID) {
-		msg := fmt.Sprintf("Yes hello, %s", m.Author.Mention())
-		_, _ = s.ChannelMessageSend(m.ChannelID, msg)
-	}
 }
