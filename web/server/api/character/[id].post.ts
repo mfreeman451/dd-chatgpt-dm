@@ -14,8 +14,10 @@ const docClient = DynamoDBDocumentClient.from(client);
 
 export default defineEventHandler(async (event) => {
     const character: Character = await readBody(event)
-    if (!event.context.params.id) {
-        character.id = uuidv4()
+    if (event.context.params) {
+        if (!event.context.params.id) {
+            character.id = uuidv4()
+        }
     }
 
     // Check if a user with the same Discord ID already exists

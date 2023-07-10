@@ -6,7 +6,7 @@
     <div v-else>
       <ul>
         <li v-for="character in characters" :key="character.id">
-          <NuxtLink :to="`/character/${character.id}/${character.name}`">
+          <NuxtLink :to="`/character/${character.id}`">
             {{ character.name }} - {{ character.discord }}
           </NuxtLink>
         </li>

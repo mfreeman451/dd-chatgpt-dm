@@ -21,17 +21,11 @@ import { Character } from "~/types/character";
 
 export default {
   async setup() {
-    console.log("setup")
     const route = useRoute()
-    console.log("id", route.params.id)
-    console.log("params", route.params)
 
     const id = route.params.id
-    const name = route.params.name
 
-    console.log("ID: ", id, "Name: ", name)
-
-    const fetch = useFetch(`/api/character/${id}/${name}`)
+    const fetch = useFetch(`/api/character/${id}`, { method: "GET" })
 
     const character = ref<Character | null>(null)
 

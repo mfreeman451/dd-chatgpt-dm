@@ -18,13 +18,11 @@ export default defineEventHandler(async (event) => {
             body: JSON.stringify({ error: 'No ID provided' })
         }
     }
-    const id = event.context.params.id as string;
-    const name = event.context.params.name as string;
+    const id = event.context.params.id
     const params = {
         TableName: process.env.TABLE_NAME,
         Key: {
-            id: { S: id },
-            name: { S: name }
+            ":id": { S: id },
         }
     }
     const command = new GetCommand(params)
