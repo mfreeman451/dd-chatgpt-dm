@@ -24,27 +24,27 @@ export default {
     const route = useRoute()
 
     const id = route.params.id
+    const isLoading = ref(false)
 
     const fetch = useFetch(`/api/character/${id}`, { method: "GET" })
 
     const character = ref<Character | null>(null)
 
+    isLoading.value = true
     fetch.then(({ data, error }) => {
       if (error.value) {
-        console.error(error.value)
+        console.error("[id].vue Error: ", error.value)
       } else if (data.value) {
-        console.log("data", data.value)
         const parsedData = JSON.parse(data.value.body);
         if (parsedData.error) {
-          console.error(parsedData.error)
+          console.error("parsedData.error: ", parsedData.error)
           return
         }
-        console.log("parsedData", parsedData)
         character.value = parsedData as Character;
       }
     })
 
-    return { character, isLoading: fetch.isLoading, error: fetch.error }
+    return { character, isLoading, error: fetch.error }
   }
 }
 </script>
