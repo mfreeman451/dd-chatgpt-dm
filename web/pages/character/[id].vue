@@ -1,19 +1,52 @@
 <template>
-  <div>
-    <div v-if="character">
-      <h1>{{ character.name }}</h1>
-      <table class="table-auto">
+  <div class="container mx-auto px-4">
+    <div v-if="isLoading" class="text-center py-4">
+      Loading...
+    </div>
+    <div v-else-if="character">
+      <h1 class="text-2xl font-bold mb-4">{{ character.name }}</h1>
+      <table class="table-auto w-full">
         <tbody>
         <tr>
-          <td>Discord</td>
-          <td>d: {{ character.discord }}</td>
+          <td class="border px-4 py-2 font-bold">Discord ID</td>
+          <td class="border px-4 py-2">{{ character.discord }}</td>
+        </tr>
+        <tr>
+          <td class="border px-4 py-2 font-bold">Class</td>
+          <td class="border px-4 py-2">{{ character.class }}</td>
         </tr>
         <!-- Add more rows here for other character attributes -->
+        <tr>
+          <td class="border px-4 py-2 font-bold">Race</td>
+          <td class="border px-4 py-2">{{ character.race }}</td>
+        </tr>
+        <tr>
+          <td class="border px-4 py-2 font-bold">Level</td>
+          <td class="border px-4 py-2">{{ character.level }}</td>
+        </tr>
+        <tr>
+          <td class="border px-4 py-2 font-bold">Alignment</td>
+          <td class="border px-4 py-2">{{ character.alignment }}</td>
+        </tr>
+        <tr>
+          <td class="border px-4 py-2 font-bold">Skills</td>
+          <td class="border px-4 py-2">
+            <ul>
+              <li v-for="(skill, index) in character.skills" :key="index">{{ skill }}</li>
+            </ul>
+          </td>
+        </tr>
+        <!-- ... -->
+        <!-- Continue adding rows for each attribute -->
         </tbody>
       </table>
     </div>
+    <div v-else>
+      <p class="text-center py-4">No character data available.</p>
+    </div>
   </div>
 </template>
+
 
 <script lang="ts">
 import { ref } from 'vue'
@@ -36,6 +69,7 @@ export default {
         console.error("[id].vue Error: ", error.value)
       } else if (data.value) {
         const parsedData = JSON.parse(data.value.body);
+        isLoading.value = false
         if (parsedData.error) {
           console.error("parsedData.error: ", parsedData.error)
           return
