@@ -2,7 +2,7 @@ export class DnDCharacter {
     id!: string;
     discord!: string;
     validDiscordId!: boolean;
-    name: string;
+    name!: string;
     race: string;
     class: string;
     level: number;
