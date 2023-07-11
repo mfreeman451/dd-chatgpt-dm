@@ -8,4 +8,5 @@ func (s *Server) handlePing(c *fiber.Ctx) error {
 	// Handle the ping request here
 	// For example:
 	// return c.SendString("Pong!")
+	return nil
 }
