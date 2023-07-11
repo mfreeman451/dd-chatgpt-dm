@@ -28,3 +28,4 @@ func main() {
 		panic(err)
 	}
 	defer discordService.Close() // Ensure the connection is closed
+}
