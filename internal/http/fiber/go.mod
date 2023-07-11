@@ -1,4 +1,4 @@
-module github.com/mfreeman451/dd-chatgpt-dm
+module github.com/mfreeman451/dd-chatgpt-dm/internal/http/fiber
 
 go 1.20
 
