@@ -1,0 +1,10 @@
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
+github.com/mfreeman451/dd-chatgpt-dm v0.0.0-20230710201406-2d8ff37978d1 h1:jFvAecPoV1Qdei83SGPbehanAP3rCvCex5MvKDJMLg4=
+github.com/mfreeman451/dd-chatgpt-dm v0.0.0-20230710201406-2d8ff37978d1/go.mod h1:VX3Nntt4DHtlRU4a3Gte3N4fkaZxTCUUjxUpjgHfCbM=
+github.com/mfreeman451/dd-chatgpt-dm v0.0.0-20230710215355-03d684cf30f1 h1:dzmFrZSmrBJHZ3IuThoDqQrAgItvsLi8P/bWflHD4/c=
+github.com/mfreeman451/dd-chatgpt-dm v0.0.0-20230710215355-03d684cf30f1/go.mod h1:VX3Nntt4DHtlRU4a3Gte3N4fkaZxTCUUjxUpjgHfCbM=
+github.com/mfreeman451/dd-chatgpt-dm v0.0.0-20230710221655-7ead9b9cef4d h1:AmPGqaMnUK+Qq95EyNpZm5Owum8KfWkKYykF/Wchn50=
+github.com/mfreeman451/dd-chatgpt-dm v0.0.0-20230710221655-7ead9b9cef4d/go.mod h1:VX3Nntt4DHtlRU4a3Gte3N4fkaZxTCUUjxUpjgHfCbM=
+github.com/mfreeman451/dd-chatgpt-dm v0.0.0-20230711012937-2f9d50f8e689 h1:HnVmwCWcyOTuLRZ9zBqP27flye+a30KUSr5wRATtgLI=
+github.com/mfreeman451/dd-chatgpt-dm v0.0.0-20230711012937-2f9d50f8e689/go.mod h1:VX3Nntt4DHtlRU4a3Gte3N4fkaZxTCUUjxUpjgHfCbM=
