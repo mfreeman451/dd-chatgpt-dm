@@ -2,7 +2,7 @@ module github.com/mfreeman451/dd-chatgpt-dm
 
 go 1.20
 
-require github.com/mfreeman451/dd-chatgpt-dm/internal/http/fiber v0.0.0-20230711050420-fb324c94d3d7
+require github.com/mfreeman451/dd-chatgpt-dm/internal/http/gofiber v0.0.0-20230711050816-7f97e5e8269b
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
