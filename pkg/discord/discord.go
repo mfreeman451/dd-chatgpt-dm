@@ -13,11 +13,5 @@ func New(apiKey string) *DiscordAPI {
 		panic(err)
 	}
 
-	// connect to discord server
-	err = client.Open()
-	if err != nil {
-		panic(err)
-	}
-
 	return &DiscordAPI{Client: client}
 }
