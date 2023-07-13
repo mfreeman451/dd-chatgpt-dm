@@ -1,4 +1,4 @@
-module github.com/mfreeman/dd-chatgpt-dm/api
+module github.com/mfreeman451/dd-chatgpt-dm/api
 
 go 1.20
 
