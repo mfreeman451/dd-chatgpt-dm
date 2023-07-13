@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module github.com/mfreeman451/dd-chatgpt-dm
 
 go 1.20
@@ -22,3 +23,8 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	golang.org/x/sys v0.10.0 // indirect
 )
+=======
+module github.com/mfreeman/dd-chatgpt-dm/bot/api
+
+go 1.20
+>>>>>>> a150b86 (🔧 cleanup)
