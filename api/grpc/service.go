@@ -2,16 +2,17 @@ package grpc
 
 import (
 	"context"
+	"github.com/mfreeman451/dd-chatgpt-dm/api/grpc/room"
 )
 
 type RoomServiceServer struct {
-	dnd.UnimplementedRoomServiceServer
+	room.UnimplementedRoomServiceServer
 }
 
-func (s *RoomServiceServer) GetRoom(ctx context.Context, req *dnd.RoomRequest) (*dnd.RoomResponse, error) {
+func (s *RoomServiceServer) GetRoom(ctx context.Context, req *room.RoomRequest) (*room.RoomResponse, error) {
 	// Here you would typically fetch the room details based on the coordinates in req
 	// For now, let's just return a dummy response
-	return &dnd.RoomResponse{
+	return &room.RoomResponse{
 		Description: "You are in a dark, cold room. There is a door to the north.",
 		Items:       []string{"a rusty sword", "a torch"},
 		Npcs:        []string{"a goblin"},
