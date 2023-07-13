@@ -1,4 +1,4 @@
-module github.com/mfreeman451/dd-chatgpt-dm/bot/cmd/discord
+module github.com/mfreeman451/dd-chatgpt-dm/cmd/discord
 
 go 1.20
 
