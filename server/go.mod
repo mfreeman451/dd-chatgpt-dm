@@ -1,4 +1,4 @@
-module dd-chatgpt-dm/server
+module game/server
 
 go 1.17
 

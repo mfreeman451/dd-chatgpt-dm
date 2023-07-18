@@ -1,4 +1,4 @@
-module dd-chatgpt-dm/client
+module game/client
 
 go 1.17
 
