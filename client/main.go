@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"github.com/mfreeman451/dd-chatgpt-dm/client/pb/game"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
 	"google.golang.org/grpc"
 	"log"
 )
@@ -15,8 +14,6 @@ func main() {
 		log.Fatalf("failed to dial: %v", err)
 	}
 	defer conn.Close()
-
-	db, err := db.NewPostgresDB()
 
 	client := game.NewGameClient(conn)
 

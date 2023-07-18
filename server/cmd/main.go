@@ -9,8 +9,13 @@ import (
 
 func main() {
 
-	database := &db.PostgresDB{}
-	var dbInstance db.DB = database
+	dbInstance, err := db.NewPostgresDB()
+	if err != nil {
+		log.Fatalf("failed to create database instance: %v", err)
+	}
+
+	//database := &db.PostgresDB{}
+	// var dbInstance db.DB = database
 
 	// Create Service
 	srv := service.NewService(dbInstance)
