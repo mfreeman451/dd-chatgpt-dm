@@ -9,12 +9,8 @@ import (
 
 func main() {
 
-	// In main.go
 	database := &db.PostgresDB{}
 	var dbInstance db.DB = database
-
-	// Create DB
-	// var db db.DB = &db.DB{}
 
 	// Create Service
 	srv := service.NewService(dbInstance)

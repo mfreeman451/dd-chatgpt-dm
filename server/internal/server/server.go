@@ -13,13 +13,13 @@ type GRPCServer struct {
 }
 
 // Constructor function
-func NewGRPCServer(service pb.GameServiceServer) *GRPCServer {
+func NewGRPCServer(service pb.GameServer) *GRPCServer {
 
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
 
 	// Register service implementation
-	pb.RegisterGameServerServer(grpcServer, service)
+	pb.RegisterGameServer(grpcServer, service)
 
 	return &GRPCServer{
 		grpc: grpcServer,
