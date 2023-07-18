@@ -14,9 +14,6 @@ func main() {
 		log.Fatalf("failed to create database instance: %v", err)
 	}
 
-	//database := &db.PostgresDB{}
-	// var dbInstance db.DB = database
-
 	// Create Service
 	srv := service.NewService(dbInstance)
 
