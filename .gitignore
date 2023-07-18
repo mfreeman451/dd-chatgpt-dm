@@ -17,3 +17,6 @@
 # Temporary files
 tmp/
 bin/
+
+.env
+.idea
