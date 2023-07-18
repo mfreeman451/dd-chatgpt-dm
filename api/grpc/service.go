@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"github.com/mfreeman451/dd-chatgpt-dm/pkg/grpc/room"
 )
 
 type RoomServiceServer struct {
