@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"google.golang.org/grpc"
 	"log"
@@ -14,8 +15,9 @@ type server struct {
 
 func (s *server) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (*game.CreatePlayerResponse, error) {
 
-	// Create player logic...
+	fmt.Print("CreatePlayer called\n")
 
+	// Create player logic...
 	return &game.CreatePlayerResponse{
 		Player: &game.Player{
 			// Player details
