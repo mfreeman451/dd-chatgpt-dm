@@ -32,7 +32,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	game.RegisterGameServerServer(grpcServer, &server{})
+	game.RegisterGameServer(grpcServer, &server{})
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
