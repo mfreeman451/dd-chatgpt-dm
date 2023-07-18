@@ -1,4 +1,4 @@
-module game/server
+module github.com/mfreeman451/dd-chatgpt-dm/server
 
 go 1.20
 
