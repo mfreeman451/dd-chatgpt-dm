@@ -9,6 +9,7 @@ import (
 
 func main() {
 
+	// Create DB instance
 	dbInstance, err := db.NewPostgresDB()
 	if err != nil {
 		log.Fatalf("failed to create database instance: %v", err)
