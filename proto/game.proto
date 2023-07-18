@@ -1,8 +1,6 @@
 syntax = "proto3";
 
-package dnd;
-
-option go_package = "github.com/mfreeman451/dd-chatgpt-dm/pb";
+option go_package = "pb/game";
 
 service Game {
   rpc CreatePlayer(CreatePlayerRequest) returns (CreatePlayerResponse) {}
