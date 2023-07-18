@@ -3,6 +3,7 @@ module github.com/mfreeman451/dd-chatgpt-dm/server
 go 1.20
 
 require (
+	github.com/google/uuid v1.3.0
 	google.golang.org/grpc v1.56.2
 	google.golang.org/protobuf v1.31.0
 )
