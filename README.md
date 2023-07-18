@@ -8,3 +8,12 @@ Currently supports the following chat services:
 
 * Discord
 * IRC
+
+
+## Protobuf
+
+```shell
+ protoc --go_out=internal/pb --go_opt=paths=source_relative \
+  --go-grpc_out=internal/adapters/grpc --go-grpc_opt=paths=source_relative \
+  ./pkg/proto/game.proto
+```
