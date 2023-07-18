@@ -20,7 +20,9 @@ func (s *server) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest
 	// Create player logic...
 	return &game.CreatePlayerResponse{
 		Player: &game.Player{
-			// Player details
+			Id:       "",
+			Name:     req.Name,
+			Location: nil,
 		},
 	}, nil
 }
