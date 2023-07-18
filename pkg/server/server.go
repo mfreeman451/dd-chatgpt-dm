@@ -2,20 +2,16 @@ package server
 
 import (
 	"context"
-	"net"
-
-	"github.com/mfreeman451/dd-chatgpt-dm/pb"
-
-	grpc "github.com/mfreeman451/dd-chatgpt-dm/adapters/grpc"
-
+	mygrpc "github.com/mfreeman451/dd-chatgpt-dm/adapters/mygrpc"
 	"google.golang.org/grpc"
+	"net"
 )
 
 type GRPCServer struct{}
 
-func (s *GRPCServer) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest) (*pb.CreatePlayerResponse, error) {
+func (s *GRPCServer) CreatePlayer(ctx context.Context, req *mygrpc.CreatePlayerRequest) (*mygrpc.CreatePlayerResponse, error) {
 	// Player creation logic
-	return &pb.CreatePlayerResponse{}, nil
+	return &mygrpc.CreatePlayerResponse{}, nil
 }
 
 // Other RPC methods
@@ -33,7 +29,7 @@ func (s *GRPCServer) Start() error {
 	gsrv := grpc.NewServer()
 
 	// Register service with generated code
-	pb.RegisterGameServer(gsrv, s)
+	mygrpc.RegisterGameServer(gsrv, s)
 
 	return gsrv.Serve(lis)
 }
