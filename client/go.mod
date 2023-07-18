@@ -1,4 +1,4 @@
-module game/client
+module github.com/mfreeman451/dd-chatgpt-dm/client
 
 go 1.20
 
