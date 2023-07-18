@@ -2,16 +2,17 @@ package server
 
 import (
 	"context"
-	mygrpc "github.com/mfreeman451/dd-chatgpt-dm/adapters/mygrpc"
+	mygrpc "github.com/mfreeman451/dd-chatgpt-dm/adapters/mygrpc/pkg/proto"
+	pb "github.com/mfreeman451/dd-chatgpt-dm/pkg/proto"
 	"google.golang.org/grpc"
 	"net"
 )
 
 type GRPCServer struct{}
 
-func (s *GRPCServer) CreatePlayer(ctx context.Context, req *mygrpc.CreatePlayerRequest) (*mygrpc.CreatePlayerResponse, error) {
+func (s *GRPCServer) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest) (*pb.CreatePlayerResponse, error) {
 	// Player creation logic
-	return &mygrpc.CreatePlayerResponse{}, nil
+	return &pb.CreatePlayerResponse{}, nil
 }
 
 // Other RPC methods
