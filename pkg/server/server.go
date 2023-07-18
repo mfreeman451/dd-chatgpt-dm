@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 	mygrpc "github.com/mfreeman451/dd-chatgpt-dm/adapters/mygrpc/pkg/proto"
-	pb "github.com/mfreeman451/dd-chatgpt-dm/pkg/proto"
+	pb "github.com/mfreeman451/dd-chatgpt-dm/pb/pkg/proto"
 	"google.golang.org/grpc"
 	"net"
 )
