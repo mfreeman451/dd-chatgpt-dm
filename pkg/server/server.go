@@ -15,6 +15,19 @@ func (s *GRPCServer) CreatePlayer(ctx context.Context, req *pb.CreatePlayerReque
 	return &pb.CreatePlayerResponse{}, nil
 }
 
+func (s *GRPCServer) MovePlayer(ctx context.Context, req *pb.MovePlayerRequest) (*pb.MovePlayerResponse, error) {
+	// add stub implementation
+	return &pb.MovePlayerResponse{}, nil
+}
+
+func (s *GRPCServer) GetLocation(ctx context.Context, req *pb.GetLocationRequest) (*pb.GetLocationResponse, error) {
+	// add stub
+	return &pb.GetLocationResponse{}, nil
+}
+
+// Embed unmimplemented methods
+func (*GRPCServer) mustEmbedUnimplementedGameServer() {}
+
 // Other RPC methods
 
 func NewServer() *GRPCServer {
