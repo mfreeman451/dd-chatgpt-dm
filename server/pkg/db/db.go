@@ -13,19 +13,19 @@ type Player struct {
 	// Other fields...
 }
 
+// PostgresDB is a PostgreSQL database
 type PostgresDB struct {
 	*sql.DB
 }
 
-// DB interface
+// DB is a database interface
 type DB interface {
 	GetPlayer(ctx context.Context, id string) (*Player, error)
-	// CreatePlayer(ctx context.Context, player *Player) error
 	CreatePlayer(ctx context.Context, name string) (string, error)
 	// Other data access methods...
 }
 
-// DB implementation
+// NewPostgresDB creates a new PostgreSQL database
 func NewPostgresDB() (*PostgresDB, error) {
 	db, err := sql.Open("postgres", "postgres://postgres:postgres@localhost:5432/chatgptdm?sslmode=disable")
 	if err != nil {
@@ -35,6 +35,7 @@ func NewPostgresDB() (*PostgresDB, error) {
 	return &PostgresDB{DB: db}, nil
 }
 
+// CreatePlayer creates a new player
 func (db *PostgresDB) CreatePlayer(ctx context.Context, name string) (string, error) {
 	// Generate ID
 	id := uuid.New()
@@ -48,11 +49,13 @@ func (db *PostgresDB) CreatePlayer(ctx context.Context, name string) (string, er
 	return id.String(), nil
 }
 
+// GetPlayer gets a player
 func (db *PostgresDB) GetPlayer(ctx context.Context, id string) (*Player, error) {
 	// PostgreSQL implementation...
 	return &Player{}, nil
 }
 
+// insertPlayer inserts a player
 func (db *PostgresDB) insertPlayer(ctx context.Context, id string, name string) error {
 
 	// SQL query to insert player
