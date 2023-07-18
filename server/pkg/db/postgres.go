@@ -10,9 +10,9 @@ type PostgresDB struct {
 	*sql.DB
 }
 
-// NewPostgresDB creates a new PostgreSQL database
-func NewPostgresDB() (*PostgresDB, error) {
-	db, err := sql.Open("postgres", "postgres://postgres:postgres@localhost:5432/chatgptdm?sslmode=disable")
+// NewPostgresDB creates a new PostgresSQL database
+func NewPostgresDB(connStr string) (*PostgresDB, error) {
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, err
 	}

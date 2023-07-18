@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
 	"google.golang.org/grpc/codes"
@@ -21,6 +22,8 @@ func NewService(db mydb.DB) *Service {
 
 // CreatePlayer creates a new player
 func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest) (*pb.CreatePlayerResponse, error) {
+
+	fmt.Println("CreatePlayer")
 
 	// create player in DB
 	id, err := s.DB.CreatePlayer(ctx, req.Name)
