@@ -7,7 +7,7 @@
 Protobufs
 
 ```bash
-brew instal protobuf
+brew install protobuf
 ```
 
 Go plugins for the protobuf compiler or refer [here](https://grpc.io/docs/languages/go/quickstart/#prerequisites)
@@ -21,7 +21,7 @@ make install
 ```bash
 # Note: since we are not using TLS all the calls are with -plaintext flag
 grpcurl -plaintext localhost:8080 list # introspect the service
-grpcurl -plaintext localhost:8080 Inventory.GetBookList # to get a list of books
+grpcurl -plaintext localhost:8080 Inventory.GetPlayerList # to get a list of players
 ```
 
 
