@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 	"github.com/google/uuid"
 )
 
@@ -13,26 +12,11 @@ type Player struct {
 	// Other fields...
 }
 
-// PostgresDB is a PostgreSQL database
-type PostgresDB struct {
-	*sql.DB
-}
-
 // DB is a database interface
 type DB interface {
 	GetPlayer(ctx context.Context, id string) (*Player, error)
 	CreatePlayer(ctx context.Context, name string) (string, error)
 	// Other data access methods...
-}
-
-// NewPostgresDB creates a new PostgreSQL database
-func NewPostgresDB() (*PostgresDB, error) {
-	db, err := sql.Open("postgres", "postgres://postgres:postgres@localhost:5432/chatgptdm?sslmode=disable")
-	if err != nil {
-		return nil, err
-	}
-
-	return &PostgresDB{DB: db}, nil
 }
 
 // CreatePlayer creates a new player
