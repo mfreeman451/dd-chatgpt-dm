@@ -4,7 +4,7 @@ import (
 	"google.golang.org/grpc"
 	"net"
 
-	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb"
+	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 )
 
 type GRPCServer struct {

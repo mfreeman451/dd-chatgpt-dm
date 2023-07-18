@@ -2,21 +2,29 @@ package service
 
 import (
 	"context"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/pb"
+	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
 )
 
 type Service struct {
-	// Composition
+	db mydb.DB
 }
 
-func NewService( /* deps */) *Service {
-	// Construction
-	return &Service{}
+func NewService(db mydb.DB) *Service {
+	return &Service{db: db}
 }
 
 func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest) (*pb.CreatePlayerResponse, error) {
-	// Business logic
-	return &pb.CreatePlayerResponse{}, nil
+
+	// create player in DB
+	id, err := s.db.CreatePlayer(ctx, req.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.CreatePlayerResponse{
+		Player: &pb.Player{Id: id},
+	}, nil
 }
 
 // Other service methods

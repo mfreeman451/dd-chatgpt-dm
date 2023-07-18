@@ -2,32 +2,29 @@ package main
 
 import (
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/server"
-	. "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/service"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
 	"log"
 )
 
 func main() {
 
-	// Initialize dependencies
-	db := newDB()
-	service := newService(db)
+	// In main.go
+	database := &db.PostgresDB{}
+	var dbInstance db.DB = database
 
-	// Create gRPC server
-	grpc := server.NewGRPCServer(service)
+	// Create DB
+	// var db db.DB = &db.DB{}
 
-	// Start gRPC server
+	// Create Service
+	srv := service.NewService(dbInstance)
+
+	// Create GRPC server
+	grpc := server.NewGRPCServer(srv)
+
+	// Start GRPC server
 	if err := grpc.Start(); err != nil {
 		log.Fatalf("failed to start gRPC server: %v", err)
 	}
-}
 
-func newDB() DB {
-	// Connect to database
-	return &DB{}
-}
-
-func newService(db DB) Service {
-	return &Service{
-		db: db,
-	}
 }

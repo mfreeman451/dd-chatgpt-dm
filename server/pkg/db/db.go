@@ -1,6 +1,9 @@
 package db
 
-import "context"
+import (
+	"context"
+	"github.com/google/uuid"
+)
 
 // Player model
 type Player struct {
@@ -9,24 +12,33 @@ type Player struct {
 	// Other fields...
 }
 
-// DB interface
-type DB interface {
-	GetPlayer(ctx context.Context, id string) (*Player, error)
-	CreatePlayer(ctx context.Context, player *Player) error
-	// Other data access methods...
-}
-
-// Implementation with PostgreSQL
-type pgDB struct {
+type PostgresDB struct {
 	// Database connection fields...
 }
 
-func (db *pgDB) GetPlayer(ctx context.Context, id string) (*Player, error) {
-	// PostgreSQL implementation...
-	return &Player{}, nil
+// DB interface
+type DB interface {
+	GetPlayer(ctx context.Context, id string) (*Player, error)
+	// CreatePlayer(ctx context.Context, player *Player) error
+	CreatePlayer(ctx context.Context, name string) (string, error)
+	// Other data access methods...
 }
 
-func (db *pgDB) CreatePlayer(ctx context.Context, player *Player) error {
+// DB implementation
+func (db *PostgresDB) CreatePlayer(ctx context.Context, name string) (string, error) {
+	// Generate ID
+	id := uuid.New()
+
+	// Insert player in database
+	err := db.insertPlayer(ctx, id, name)
+	if err != nil {
+		return "", err
+	}
+
+	return id.String(), nil
+}
+
+func (db *PostgresDB) GetPlayer(ctx context.Context, id string) (*Player, error) {
 	// PostgreSQL implementation...
-	return nil
+	return &Player{}, nil
 }
