@@ -1,4 +1,4 @@
-module bookshop/client
+module dd-chatgpt-dm/client
 
 go 1.17
 
