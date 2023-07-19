@@ -1,4 +1,4 @@
-# dd-chatgpt-dm
+# 🐉 dd-chatgpt-dm 🤺
 
 ![](./assets/images/basic-dmg-cover-1280x720.png?raw=true)
 
