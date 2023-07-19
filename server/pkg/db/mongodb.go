@@ -13,17 +13,18 @@ import (
 
 // MongoDB is a MongoDB database
 type MongoDB struct {
-	db *mongo.Database
+	*mongo.Database
 }
 
 // NewMongoDB creates a new MongoDB database
 func NewMongoDB(connStr string) (DB, error) {
+	fmt.Println("connsStr:", connStr)
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(connStr))
 	if err != nil {
 		return nil, err
 	}
 
-	return &MongoDB{db: client.Database("your_database_name")}, nil
+	return &MongoDB{client.Database("dnd")}, nil
 }
 
 // CreatePlayer creates a new player
@@ -33,7 +34,7 @@ func (db *MongoDB) CreatePlayer(ctx context.Context, player *model.Player) (stri
 	player.ID = uuid.New().String()
 
 	// Create player in the database
-	res, err := db.db.Collection("players").InsertOne(ctx, player)
+	res, err := db.Collection("players").InsertOne(ctx, player)
 	if err != nil {
 		fmt.Println("Error inserting player:", err)
 		return "", err
@@ -47,7 +48,7 @@ func (db *MongoDB) CreatePlayer(ctx context.Context, player *model.Player) (stri
 func (db *MongoDB) GetPlayer(ctx context.Context, id string) (*model.Player, error) {
 	// Fetch player from the database based on the given ID
 	player := &model.Player{}
-	err := db.db.Collection("players").FindOne(ctx, bson.M{"id": id}).Decode(player)
+	err := db.Collection("players").FindOne(ctx, bson.M{"id": id}).Decode(player)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, nil // Return nil if player not found
