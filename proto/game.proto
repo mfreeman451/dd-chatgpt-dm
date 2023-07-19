@@ -4,12 +4,10 @@ option go_package = "pb/game";
 
 service Game {
   rpc CreatePlayer(CreatePlayerRequest) returns (CreatePlayerResponse) {}
-
   rpc MovePlayer(MovePlayerRequest) returns (MovePlayerResponse) {}
-
   rpc GetLocation(GetLocationRequest) returns (GetLocationResponse) {}
-
   rpc ListPlayers(ListPlayersRequest) returns (ListPlayersResponse) {}
+  rpc GetPlayer(GetPlayerRequest) returns (GetPlayerResponse) {} // Added GetPlayer method
 }
 
 message Coordinates {
@@ -143,4 +141,12 @@ message ListPlayersRequest {}
 
 message ListPlayersResponse {
   repeated Player players = 1;
+}
+
+message GetPlayerRequest {
+  string playerId = 1; // Add the field to specify the player ID
+}
+
+message GetPlayerResponse {
+  Player player = 1; // Add the field to return the player
 }
