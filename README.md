@@ -52,7 +52,7 @@ make install
 ```bash
 # Note: since we are not using TLS all the calls are with -plaintext flag
 grpcurl -plaintext localhost:8080 list # introspect the service
-grpcurl -plaintext localhost:8080 Inventory.GetPlayerList # to get a list of players
+grpcurl -plaintext localhost:8080 Players.GetPlayerList # to get a list of players
 ```
 
 
