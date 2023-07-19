@@ -16,7 +16,7 @@ type DB interface {
 // NewDB creates a new database instance
 func NewDB(connStr string, dbType string) (DB, error) {
 	switch dbType {
-	case "mongo":
+	case "mongodb":
 		return NewMongoDB(connStr)
 	case "dynamodb":
 		return NewDynamoDB(connStr)

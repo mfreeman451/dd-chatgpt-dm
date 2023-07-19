@@ -28,15 +28,17 @@ func NewMongoDB(connStr string) (DB, error) {
 
 // CreatePlayer creates a new player
 func (db *MongoDB) CreatePlayer(ctx context.Context, player *model.Player) (string, error) {
+	fmt.Println("Creating player in MongoDB..")
 	// Generate ID
 	player.ID = uuid.New().String()
 
 	// Create player in the database
-	_, err := db.db.Collection("players").InsertOne(ctx, player)
+	res, err := db.db.Collection("players").InsertOne(ctx, player)
 	if err != nil {
 		fmt.Println("Error inserting player:", err)
 		return "", err
 	}
+	fmt.Println("Inserted player with ID:", res.InsertedID)
 
 	return player.ID, nil
 }

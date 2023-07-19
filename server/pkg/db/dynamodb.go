@@ -30,6 +30,7 @@ func NewDynamoDB(region string) (DB, error) {
 
 // CreatePlayer creates a new player
 func (db *DynamoDB) CreatePlayer(ctx context.Context, player *model.Player) (string, error) {
+	fmt.Println("Creating player in Dynamo..")
 	// Generate ID
 	player.ID = uuid.New().String()
 

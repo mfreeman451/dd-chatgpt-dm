@@ -30,6 +30,7 @@ func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest)
 		Name: req.Name,
 	}
 
+	fmt.Println("Inserting player")
 	// Create the player in the database
 	id, err := s.DB.CreatePlayer(ctx, player)
 	if err != nil {
@@ -39,6 +40,7 @@ func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest)
 	// Set the ID in the player object
 	player.ID = id
 
+	fmt.Println("Creating response")
 	// Create the response with the player object
 	response := &pb.CreatePlayerResponse{
 		Player: convertPlayerToProto(player),
