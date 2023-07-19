@@ -1343,6 +1343,91 @@ func (x *GetLocationResponse) GetLocation() *Location {
 	return nil
 }
 
+type ListPlayersRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *ListPlayersRequest) Reset() {
+	*x = ListPlayersRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_game_proto_msgTypes[20]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListPlayersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListPlayersRequest) ProtoMessage() {}
+
+func (x *ListPlayersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_game_proto_msgTypes[20]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListPlayersRequest.ProtoReflect.Descriptor instead.
+func (*ListPlayersRequest) Descriptor() ([]byte, []int) {
+	return file_game_proto_rawDescGZIP(), []int{20}
+}
+
+type ListPlayersResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Players []*Player `protobuf:"bytes,1,rep,name=players,proto3" json:"players,omitempty"`
+}
+
+func (x *ListPlayersResponse) Reset() {
+	*x = ListPlayersResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_game_proto_msgTypes[21]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListPlayersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListPlayersResponse) ProtoMessage() {}
+
+func (x *ListPlayersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_game_proto_msgTypes[21]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListPlayersResponse.ProtoReflect.Descriptor instead.
+func (*ListPlayersResponse) Descriptor() ([]byte, []int) {
+	return file_game_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *ListPlayersResponse) GetPlayers() []*Player {
+	if x != nil {
+		return x.Players
+	}
+	return nil
+}
+
 var File_game_proto protoreflect.FileDescriptor
 
 var file_game_proto_rawDesc = []byte{
@@ -1505,7 +1590,12 @@ var file_game_proto_rawDesc = []byte{
 	0x65, 0x74, 0x4c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
 	0x73, 0x65, 0x12, 0x25, 0x0a, 0x08, 0x6c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01,
 	0x20, 0x01, 0x28, 0x0b, 0x32, 0x09, 0x2e, 0x4c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52,
-	0x08, 0x6c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x32, 0xba, 0x01, 0x0a, 0x04, 0x47, 0x61,
+	0x08, 0x6c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x14, 0x0a, 0x12, 0x4c, 0x69, 0x73,
+	0x74, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22,
+	0x38, 0x0a, 0x13, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x73, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x21, 0x0a, 0x07, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72,
+	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x07, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72,
+	0x52, 0x07, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x73, 0x32, 0xf6, 0x01, 0x0a, 0x04, 0x47, 0x61,
 	0x6d, 0x65, 0x12, 0x3d, 0x0a, 0x0c, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x6c, 0x61, 0x79,
 	0x65, 0x72, 0x12, 0x14, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x6c, 0x61, 0x79, 0x65,
 	0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74,
@@ -1517,8 +1607,12 @@ var file_game_proto_rawDesc = []byte{
 	0x74, 0x4c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x13, 0x2e, 0x47, 0x65, 0x74, 0x4c,
 	0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14,
 	0x2e, 0x47, 0x65, 0x74, 0x4c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x09, 0x5a, 0x07, 0x70, 0x62, 0x2f, 0x67, 0x61, 0x6d,
-	0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3a, 0x0a, 0x0b, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x6c,
+	0x61, 0x79, 0x65, 0x72, 0x73, 0x12, 0x13, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x6c, 0x61, 0x79,
+	0x65, 0x72, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x4c, 0x69, 0x73,
+	0x74, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x22, 0x00, 0x42, 0x09, 0x5a, 0x07, 0x70, 0x62, 0x2f, 0x67, 0x61, 0x6d, 0x65, 0x62, 0x06, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1533,7 +1627,7 @@ func file_game_proto_rawDescGZIP() []byte {
 	return file_game_proto_rawDescData
 }
 
-var file_game_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_game_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
 var file_game_proto_goTypes = []interface{}{
 	(*Coordinates)(nil),          // 0: Coordinates
 	(*Player)(nil),               // 1: Player
@@ -1555,7 +1649,9 @@ var file_game_proto_goTypes = []interface{}{
 	(*MovePlayerResponse)(nil),   // 17: MovePlayerResponse
 	(*GetLocationRequest)(nil),   // 18: GetLocationRequest
 	(*GetLocationResponse)(nil),  // 19: GetLocationResponse
-	nil,                          // 20: Player.AbilityScoreBonusesEntry
+	(*ListPlayersRequest)(nil),   // 20: ListPlayersRequest
+	(*ListPlayersResponse)(nil),  // 21: ListPlayersResponse
+	nil,                          // 22: Player.AbilityScoreBonusesEntry
 }
 var file_game_proto_depIdxs = []int32{
 	2,  // 0: Player.skills:type_name -> Skill
@@ -1565,7 +1661,7 @@ var file_game_proto_depIdxs = []int32{
 	6,  // 4: Player.features:type_name -> Feature
 	7,  // 5: Player.spells:type_name -> Spell
 	9,  // 6: Player.deathSaves:type_name -> DeathSaves
-	20, // 7: Player.abilityScoreBonuses:type_name -> Player.AbilityScoreBonusesEntry
+	22, // 7: Player.abilityScoreBonuses:type_name -> Player.AbilityScoreBonusesEntry
 	8,  // 8: Player.specialAbilities:type_name -> SpecialAbility
 	10, // 9: Player.racialTraits:type_name -> RacialTraits
 	0,  // 10: Player.location:type_name -> Coordinates
@@ -1577,17 +1673,20 @@ var file_game_proto_depIdxs = []int32{
 	0,  // 16: MovePlayerRequest.new_location:type_name -> Coordinates
 	0,  // 17: GetLocationRequest.coordinates:type_name -> Coordinates
 	11, // 18: GetLocationResponse.location:type_name -> Location
-	14, // 19: Game.CreatePlayer:input_type -> CreatePlayerRequest
-	16, // 20: Game.MovePlayer:input_type -> MovePlayerRequest
-	18, // 21: Game.GetLocation:input_type -> GetLocationRequest
-	15, // 22: Game.CreatePlayer:output_type -> CreatePlayerResponse
-	17, // 23: Game.MovePlayer:output_type -> MovePlayerResponse
-	19, // 24: Game.GetLocation:output_type -> GetLocationResponse
-	22, // [22:25] is the sub-list for method output_type
-	19, // [19:22] is the sub-list for method input_type
-	19, // [19:19] is the sub-list for extension type_name
-	19, // [19:19] is the sub-list for extension extendee
-	0,  // [0:19] is the sub-list for field type_name
+	1,  // 19: ListPlayersResponse.players:type_name -> Player
+	14, // 20: Game.CreatePlayer:input_type -> CreatePlayerRequest
+	16, // 21: Game.MovePlayer:input_type -> MovePlayerRequest
+	18, // 22: Game.GetLocation:input_type -> GetLocationRequest
+	20, // 23: Game.ListPlayers:input_type -> ListPlayersRequest
+	15, // 24: Game.CreatePlayer:output_type -> CreatePlayerResponse
+	17, // 25: Game.MovePlayer:output_type -> MovePlayerResponse
+	19, // 26: Game.GetLocation:output_type -> GetLocationResponse
+	21, // 27: Game.ListPlayers:output_type -> ListPlayersResponse
+	24, // [24:28] is the sub-list for method output_type
+	20, // [20:24] is the sub-list for method input_type
+	20, // [20:20] is the sub-list for extension type_name
+	20, // [20:20] is the sub-list for extension extendee
+	0,  // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_game_proto_init() }
@@ -1836,6 +1935,30 @@ func file_game_proto_init() {
 				return nil
 			}
 		}
+		file_game_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListPlayersRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_game_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListPlayersResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1843,7 +1966,7 @@ func file_game_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_game_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   21,
+			NumMessages:   23,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
