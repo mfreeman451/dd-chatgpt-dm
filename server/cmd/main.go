@@ -2,16 +2,19 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/joho/godotenv"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/server"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/service"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
-	"log"
-	"os"
 )
 
 func main() {
-	// read in .env
+	// Read in .env
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("failed to load .env file: %v", err)
@@ -26,9 +29,15 @@ func main() {
 		os.Getenv("POSTGRES_DB"),
 	)
 
-	dbInstance, err := db.NewPostgresDB(pgConnStr)
+	dbInstance, err := db.NewGormDB(pgConnStr)
 	if err != nil {
 		log.Fatalf("failed to create database instance: %v", err)
+	}
+
+	// Run database migrations
+	err = dbInstance.Migrate()
+	if err != nil {
+		log.Fatalf("failed to run database migrations: %v", err)
 	}
 
 	// Create Service
@@ -37,10 +46,27 @@ func main() {
 	// Create GRPC server
 	grpc := server.NewGRPCServer(srv)
 
-	fmt.Println("Starting server")
+	// Start GRPC server in a separate goroutine
+	go func() {
+		fmt.Println("Starting server")
 
-	// Start GRPC server
-	if err := grpc.Start(); err != nil {
-		log.Fatalf("failed to start gRPC server: %v", err)
-	}
+		if err := grpc.Start(50051); err != nil {
+			log.Fatalf("failed to start gRPC server: %v", err)
+		}
+	}()
+
+	// Set up signal handling for graceful shutdown
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
+
+	// Wait for the termination signal
+	<-stop
+
+	fmt.Println("Shutting down server...")
+
+	// Gracefully stop the GRPC server
+	grpc.Stop()
+
+	fmt.Println("Server gracefully stopped")
+
 }
