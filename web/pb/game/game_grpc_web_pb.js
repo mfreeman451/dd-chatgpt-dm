@@ -378,5 +378,127 @@ proto.GamePromiseClient.prototype.getPlayer =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.SetPlayerRequest,
+ *   !proto.SetPlayerResponse>}
+ */
+const methodDescriptor_Game_SetPlayer = new grpc.web.MethodDescriptor(
+  '/Game/SetPlayer',
+  grpc.web.MethodType.UNARY,
+  proto.SetPlayerRequest,
+  proto.SetPlayerResponse,
+  /**
+   * @param {!proto.SetPlayerRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.SetPlayerResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.SetPlayerRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.SetPlayerResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.SetPlayerResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.GameClient.prototype.setPlayer =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/Game/SetPlayer',
+      request,
+      metadata || {},
+      methodDescriptor_Game_SetPlayer,
+      callback);
+};
+
+
+/**
+ * @param {!proto.SetPlayerRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.SetPlayerResponse>}
+ *     Promise that resolves to the response
+ */
+proto.GamePromiseClient.prototype.setPlayer =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/Game/SetPlayer',
+      request,
+      metadata || {},
+      methodDescriptor_Game_SetPlayer);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.UpdatePlayerRequest,
+ *   !proto.UpdatePlayerResponse>}
+ */
+const methodDescriptor_Game_UpdatePlayer = new grpc.web.MethodDescriptor(
+  '/Game/UpdatePlayer',
+  grpc.web.MethodType.UNARY,
+  proto.UpdatePlayerRequest,
+  proto.UpdatePlayerResponse,
+  /**
+   * @param {!proto.UpdatePlayerRequest} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.UpdatePlayerResponse.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.UpdatePlayerRequest} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.RpcError, ?proto.UpdatePlayerResponse)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.UpdatePlayerResponse>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.GameClient.prototype.updatePlayer =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/Game/UpdatePlayer',
+      request,
+      metadata || {},
+      methodDescriptor_Game_UpdatePlayer,
+      callback);
+};
+
+
+/**
+ * @param {!proto.UpdatePlayerRequest} request The
+ *     request proto
+ * @param {?Object<string, string>=} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.UpdatePlayerResponse>}
+ *     Promise that resolves to the response
+ */
+proto.GamePromiseClient.prototype.updatePlayer =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/Game/UpdatePlayer',
+      request,
+      metadata || {},
+      methodDescriptor_Game_UpdatePlayer);
+};
+
+
 module.exports = proto;
 

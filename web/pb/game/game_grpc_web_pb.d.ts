@@ -43,6 +43,20 @@ export class GameClient {
                response: game_pb.GetPlayerResponse) => void
   ): grpcWeb.ClientReadableStream<game_pb.GetPlayerResponse>;
 
+  setPlayer(
+    request: game_pb.SetPlayerRequest,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.RpcError,
+               response: game_pb.SetPlayerResponse) => void
+  ): grpcWeb.ClientReadableStream<game_pb.SetPlayerResponse>;
+
+  updatePlayer(
+    request: game_pb.UpdatePlayerRequest,
+    metadata: grpcWeb.Metadata | undefined,
+    callback: (err: grpcWeb.RpcError,
+               response: game_pb.UpdatePlayerResponse) => void
+  ): grpcWeb.ClientReadableStream<game_pb.UpdatePlayerResponse>;
+
 }
 
 export class GamePromiseClient {
@@ -74,6 +88,16 @@ export class GamePromiseClient {
     request: game_pb.GetPlayerRequest,
     metadata?: grpcWeb.Metadata
   ): Promise<game_pb.GetPlayerResponse>;
+
+  setPlayer(
+    request: game_pb.SetPlayerRequest,
+    metadata?: grpcWeb.Metadata
+  ): Promise<game_pb.SetPlayerResponse>;
+
+  updatePlayer(
+    request: game_pb.UpdatePlayerRequest,
+    metadata?: grpcWeb.Metadata
+  ): Promise<game_pb.UpdatePlayerResponse>;
 
 }
 

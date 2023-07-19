@@ -710,3 +710,95 @@ export namespace GetPlayerResponse {
   }
 }
 
+export class SetPlayerRequest extends jspb.Message {
+  hasPlayer(): boolean;
+  clearPlayer(): void;
+  getPlayer(): Player | undefined;
+  setPlayer(value?: Player): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SetPlayerRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SetPlayerRequest): SetPlayerRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SetPlayerRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SetPlayerRequest;
+  static deserializeBinaryFromReader(message: SetPlayerRequest, reader: jspb.BinaryReader): SetPlayerRequest;
+}
+
+export namespace SetPlayerRequest {
+  export type AsObject = {
+    player?: Player.AsObject,
+  }
+}
+
+export class SetPlayerResponse extends jspb.Message {
+  hasPlayer(): boolean;
+  clearPlayer(): void;
+  getPlayer(): Player | undefined;
+  setPlayer(value?: Player): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SetPlayerResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: SetPlayerResponse): SetPlayerResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SetPlayerResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SetPlayerResponse;
+  static deserializeBinaryFromReader(message: SetPlayerResponse, reader: jspb.BinaryReader): SetPlayerResponse;
+}
+
+export namespace SetPlayerResponse {
+  export type AsObject = {
+    player?: Player.AsObject,
+  }
+}
+
+export class UpdatePlayerRequest extends jspb.Message {
+  getPlayerId(): string;
+  setPlayerId(value: string): void;
+
+  hasPlayer(): boolean;
+  clearPlayer(): void;
+  getPlayer(): Player | undefined;
+  setPlayer(value?: Player): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdatePlayerRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdatePlayerRequest): UpdatePlayerRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: UpdatePlayerRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdatePlayerRequest;
+  static deserializeBinaryFromReader(message: UpdatePlayerRequest, reader: jspb.BinaryReader): UpdatePlayerRequest;
+}
+
+export namespace UpdatePlayerRequest {
+  export type AsObject = {
+    playerId: string,
+    player?: Player.AsObject,
+  }
+}
+
+export class UpdatePlayerResponse extends jspb.Message {
+  hasPlayer(): boolean;
+  clearPlayer(): void;
+  getPlayer(): Player | undefined;
+  setPlayer(value?: Player): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdatePlayerResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdatePlayerResponse): UpdatePlayerResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: UpdatePlayerResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdatePlayerResponse;
+  static deserializeBinaryFromReader(message: UpdatePlayerResponse, reader: jspb.BinaryReader): UpdatePlayerResponse;
+}
+
+export namespace UpdatePlayerResponse {
+  export type AsObject = {
+    player?: Player.AsObject,
+  }
+}
+

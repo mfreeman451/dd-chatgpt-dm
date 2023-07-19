@@ -8,6 +8,8 @@ service Game {
   rpc GetLocation(GetLocationRequest) returns (GetLocationResponse) {}
   rpc ListPlayers(ListPlayersRequest) returns (ListPlayersResponse) {}
   rpc GetPlayer(GetPlayerRequest) returns (GetPlayerResponse) {} // Added GetPlayer method
+  rpc SetPlayer(SetPlayerRequest) returns (SetPlayerResponse); // Added SetPlayer method
+  rpc UpdatePlayer(UpdatePlayerRequest) returns (UpdatePlayerResponse) {} // Added UpdatePlayer method
 }
 
 message Coordinates {
@@ -149,4 +151,21 @@ message GetPlayerRequest {
 
 message GetPlayerResponse {
   Player player = 1; // Add the field to return the player
+}
+
+message SetPlayerRequest {
+  Player player = 1; // Add the field to specify the player
+}
+
+message SetPlayerResponse {
+  Player player = 1; // Add the field to return the player
+}
+
+message UpdatePlayerRequest { // Added message
+  string player_id = 1;
+  Player player = 2;
+}
+
+message UpdatePlayerResponse { // Added message
+  Player player = 1;
 }
