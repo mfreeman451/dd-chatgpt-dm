@@ -1,23 +1,24 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/joho/godotenv"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/logger"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/server"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/service"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
 )
 
 func main() {
+	var log = logger.New()
+
 	// Read in .env
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("failed to load .env file: %v", err)
+		log.Fatal().Err(err).Msg("failed to load .env file")
 	}
 
 	// Create DB instance, pass in .env variables
@@ -26,7 +27,7 @@ func main() {
 
 	dbInstance, err := db.NewDB(dbConnStr, dbType)
 	if err != nil {
-		log.Fatalf("failed to create database instance: %v", err)
+		log.Fatal().Err(err).Msg("failed to create DB instance")
 	}
 
 	// Create Service
@@ -37,10 +38,10 @@ func main() {
 
 	// Start GRPC server in a separate goroutine
 	go func() {
-		fmt.Println("Starting server")
+		log.Info().Msg("Server starting up")
 
 		if err := grpc.Start(50051); err != nil {
-			log.Fatalf("failed to start gRPC server: %v", err)
+			log.Fatal().Err(err).Msg("failed to start server")
 		}
 	}()
 
@@ -51,11 +52,11 @@ func main() {
 	// Wait for the termination signal
 	<-stop
 
-	fmt.Println("Shutting down server...")
+	log.Info().Msg("Shutting down server...")
 
 	// Gracefully stop the GRPC server
 	grpc.Stop()
 
-	fmt.Println("Server gracefully stopped")
+	log.Info().Msg("Server gracefully stopped")
 
 }
