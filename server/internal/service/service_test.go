@@ -5,8 +5,10 @@ import (
 	"errors"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"log"
 	"reflect"
 	"testing"
 )
@@ -14,6 +16,11 @@ import (
 type mockDB struct {
 	player *model.Player
 	err    error
+}
+
+func (m *mockDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 func (m *mockDB) GetPlayer(ctx context.Context, id string) (*model.Player, error) {
@@ -83,5 +90,42 @@ func TestCreatePlayerDBError(t *testing.T) {
 	// Assert response is nil
 	if resp != nil {
 		t.Error("Expected nil response on error")
+	}
+}
+
+func TestListPlayers(t *testing.T) {
+	// Start the gRPC server in a separate goroutine
+	/*
+		go func() {
+			if err := startGRPCServer(); err != nil {
+				log.Fatalf("Failed to start gRPC server: %v", err)
+			}
+		}()
+	*/
+
+	// Set up a connection to the gRPC server
+	conn, err := grpc.Dial("localhost:8080", grpc.WithInsecure())
+	if err != nil {
+		t.Fatalf("Failed to dial server: %v", err)
+	}
+	defer func(conn *grpc.ClientConn) {
+		err := conn.Close()
+		if err != nil {
+			t.Errorf("Failed to close connection: %v", err)
+		}
+	}(conn)
+
+	// Create a gRPC client
+	client := pb.NewGameClient(conn)
+
+	// Call the ListPlayers method
+	response, err := client.ListPlayers(context.Background(), &pb.ListPlayersRequest{})
+	if err != nil {
+		t.Fatalf("Failed to call ListPlayers: %v", err)
+	}
+
+	// Handle the response
+	for _, player := range response.Players {
+		log.Printf("Player ID: %s, Name: %s", player.Id, player.Name)
 	}
 }

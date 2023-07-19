@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 
 	"github.com/joho/godotenv"
@@ -40,7 +41,11 @@ func main() {
 	go func() {
 		log.Info().Msg("Server starting up")
 
-		if err := grpc.Start(50051); err != nil {
+		grpcPort, err := strconv.Atoi(os.Getenv("GRPC_PORT"))
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to convert GRPC_PORT to int")
+		}
+		if err := grpc.Start(grpcPort); err != nil {
 			log.Fatal().Err(err).Msg("failed to start server")
 		}
 	}()

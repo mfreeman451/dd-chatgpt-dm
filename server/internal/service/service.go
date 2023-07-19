@@ -49,6 +49,30 @@ func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest)
 	return response, nil
 }
 
+// ListPlayers lists all players
+func (s *Service) ListPlayers(ctx context.Context, req *pb.ListPlayersRequest) (*pb.ListPlayersResponse, error) {
+	fmt.Println("ListPlayers")
+
+	// Get all players from the database
+	players, err := s.DB.ListPlayers(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to retrieve players: %v", err)
+	}
+
+	// Convert the players to protobuf format
+	protoPlayers := make([]*pb.Player, len(players))
+	for i, player := range players {
+		protoPlayers[i] = convertPlayerToProto(player)
+	}
+
+	// Create the response with the list of players
+	response := &pb.ListPlayersResponse{
+		Players: protoPlayers,
+	}
+
+	return response, nil
+}
+
 // convertPlayerToProto converts a model.Player to pb.Player
 func convertPlayerToProto(player *model.Player) *pb.Player {
 	return &pb.Player{

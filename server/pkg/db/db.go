@@ -10,6 +10,7 @@ import (
 type DB interface {
 	GetPlayer(ctx context.Context, id string) (*model.Player, error)
 	CreatePlayer(ctx context.Context, player *model.Player) (string, error)
+	ListPlayers(ctx context.Context) ([]*model.Player, error)
 	// Other data access methods...
 }
 

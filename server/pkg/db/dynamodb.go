@@ -83,3 +83,32 @@ func (db *DynamoDB) GetPlayer(ctx context.Context, id string) (*model.Player, er
 
 	return player, nil
 }
+
+// ListPlayers retrieves all players
+func (db *DynamoDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
+	// Define an empty slice to store the players
+	players := []*model.Player{}
+
+	// Scan the "Players" table to retrieve all players
+	input := &dynamodb.ScanInput{
+		TableName: aws.String("Players"),
+	}
+	result, err := db.Scan(input)
+	if err != nil {
+		fmt.Println("Error retrieving players:", err)
+		return nil, err
+	}
+
+	// Unmarshal each item into a Player object and add it to the slice
+	for _, item := range result.Items {
+		player := &model.Player{}
+		err = dynamodbattribute.UnmarshalMap(item, player)
+		if err != nil {
+			fmt.Println("Error unmarshalling player:", err)
+			return nil, err
+		}
+		players = append(players, player)
+	}
+
+	return players, nil
+}

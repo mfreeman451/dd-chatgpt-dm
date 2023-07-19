@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
+	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -58,4 +59,40 @@ func (db *MongoDB) GetPlayer(ctx context.Context, id string) (*model.Player, err
 	}
 
 	return player, nil
+}
+
+// ListPlayers retrieves all players
+func (db *MongoDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
+	// Define an empty slice to store the players
+	players := []*model.Player{}
+
+	// Find all players in the database
+	cursor, err := db.Collection("players").Find(ctx, bson.M{})
+	if err != nil {
+		fmt.Println("Error retrieving players:", err)
+		return nil, err
+	}
+	defer func(cursor *mongo.Cursor, ctx context.Context) {
+		err := cursor.Close(ctx)
+		if err != nil {
+			log.Error().Err(err).Msg("failed to close cursor")
+		}
+	}(cursor, ctx)
+
+	// Iterate over the cursor and decode each player into a model.Player object
+	for cursor.Next(ctx) {
+		player := &model.Player{}
+		if err := cursor.Decode(player); err != nil {
+			fmt.Println("Error decoding player:", err)
+			return nil, err
+		}
+		players = append(players, player)
+	}
+
+	if err := cursor.Err(); err != nil {
+		fmt.Println("Cursor error:", err)
+		return nil, err
+	}
+
+	return players, nil
 }

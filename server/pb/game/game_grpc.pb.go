@@ -22,6 +22,7 @@ const (
 	Game_CreatePlayer_FullMethodName = "/Game/CreatePlayer"
 	Game_MovePlayer_FullMethodName   = "/Game/MovePlayer"
 	Game_GetLocation_FullMethodName  = "/Game/GetLocation"
+	Game_ListPlayers_FullMethodName  = "/Game/ListPlayers"
 )
 
 // GameClient is the client API for Game service.
@@ -31,6 +32,7 @@ type GameClient interface {
 	CreatePlayer(ctx context.Context, in *CreatePlayerRequest, opts ...grpc.CallOption) (*CreatePlayerResponse, error)
 	MovePlayer(ctx context.Context, in *MovePlayerRequest, opts ...grpc.CallOption) (*MovePlayerResponse, error)
 	GetLocation(ctx context.Context, in *GetLocationRequest, opts ...grpc.CallOption) (*GetLocationResponse, error)
+	ListPlayers(ctx context.Context, in *ListPlayersRequest, opts ...grpc.CallOption) (*ListPlayersResponse, error)
 }
 
 type gameClient struct {
@@ -68,6 +70,15 @@ func (c *gameClient) GetLocation(ctx context.Context, in *GetLocationRequest, op
 	return out, nil
 }
 
+func (c *gameClient) ListPlayers(ctx context.Context, in *ListPlayersRequest, opts ...grpc.CallOption) (*ListPlayersResponse, error) {
+	out := new(ListPlayersResponse)
+	err := c.cc.Invoke(ctx, Game_ListPlayers_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GameServer is the server API for Game service.
 // All implementations must embed UnimplementedGameServer
 // for forward compatibility
@@ -75,6 +86,7 @@ type GameServer interface {
 	CreatePlayer(context.Context, *CreatePlayerRequest) (*CreatePlayerResponse, error)
 	MovePlayer(context.Context, *MovePlayerRequest) (*MovePlayerResponse, error)
 	GetLocation(context.Context, *GetLocationRequest) (*GetLocationResponse, error)
+	ListPlayers(context.Context, *ListPlayersRequest) (*ListPlayersResponse, error)
 	mustEmbedUnimplementedGameServer()
 }
 
@@ -90,6 +102,9 @@ func (UnimplementedGameServer) MovePlayer(context.Context, *MovePlayerRequest) (
 }
 func (UnimplementedGameServer) GetLocation(context.Context, *GetLocationRequest) (*GetLocationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLocation not implemented")
+}
+func (UnimplementedGameServer) ListPlayers(context.Context, *ListPlayersRequest) (*ListPlayersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPlayers not implemented")
 }
 func (UnimplementedGameServer) mustEmbedUnimplementedGameServer() {}
 
@@ -158,6 +173,24 @@ func _Game_GetLocation_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Game_ListPlayers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPlayersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameServer).ListPlayers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Game_ListPlayers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameServer).ListPlayers(ctx, req.(*ListPlayersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Game_ServiceDesc is the grpc.ServiceDesc for Game service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +209,10 @@ var Game_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLocation",
 			Handler:    _Game_GetLocation_Handler,
+		},
+		{
+			MethodName: "ListPlayers",
+			Handler:    _Game_ListPlayers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
