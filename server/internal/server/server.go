@@ -1,8 +1,10 @@
 package server
 
 import (
-	"google.golang.org/grpc"
+	"fmt"
 	"net"
+
+	"google.golang.org/grpc"
 
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 )
@@ -15,7 +17,6 @@ type GRPCServer struct {
 
 // NewGRPCServer creates a new gRPC server
 func NewGRPCServer(service pb.GameServer) *GRPCServer {
-
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
 
@@ -28,11 +29,16 @@ func NewGRPCServer(service pb.GameServer) *GRPCServer {
 }
 
 // Start starts the gRPC server
-func (s *GRPCServer) Start() error {
-	lis, err := net.Listen("tcp", ":50051")
+func (s *GRPCServer) Start(port int) error {
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		return err
 	}
 
 	return s.grpc.Serve(lis)
+}
+
+// Stop stops the gRPC server
+func (s *GRPCServer) Stop() {
+	s.grpc.GracefulStop()
 }

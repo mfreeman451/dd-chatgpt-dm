@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
 	"google.golang.org/grpc/codes"
@@ -22,18 +23,37 @@ func NewService(db mydb.DB) *Service {
 
 // CreatePlayer creates a new player
 func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest) (*pb.CreatePlayerResponse, error) {
-
 	fmt.Println("CreatePlayer")
 
-	// create player in DB
-	id, err := s.DB.CreatePlayer(ctx, req.Name)
-	if err != nil {
-		return nil, err
+	// Create the player object
+	player := &model.Player{
+		Name: req.Name,
 	}
 
-	return &pb.CreatePlayerResponse{
-		Player: &pb.Player{Id: id},
-	}, nil
+	// Create the player in the database
+	id, err := s.DB.CreatePlayer(ctx, player)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to create player: %v", err)
+	}
+
+	// Set the ID in the player object
+	player.ID = id
+
+	// Create the response with the player object
+	response := &pb.CreatePlayerResponse{
+		Player: convertPlayerToProto(player),
+	}
+
+	return response, nil
+}
+
+// convertPlayerToProto converts a model.Player to pb.Player
+func convertPlayerToProto(player *model.Player) *pb.Player {
+	return &pb.Player{
+		Id:   player.ID,
+		Name: player.Name,
+		// Include other fields as needed
+	}
 }
 
 // MovePlayer moves a player

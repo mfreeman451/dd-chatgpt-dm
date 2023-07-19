@@ -1,4 +1,4 @@
-// types/post.ts
+// types/character.ts
 
 export interface Character {
     id: string
