@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
 )
 
@@ -13,6 +14,13 @@ type DB interface {
 }
 
 // NewDB creates a new database instance
-func NewDB(connStr string) (DB, error) {
-	return NewGormDB(connStr)
+func NewDB(connStr string, dbType string) (DB, error) {
+	switch dbType {
+	case "mongo":
+		return NewMongoDB(connStr)
+	case "dynamodb":
+		return NewDynamoDB(connStr)
+	default:
+		return nil, fmt.Errorf("unsupported database type: %s", dbType)
+	}
 }

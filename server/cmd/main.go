@@ -21,23 +21,12 @@ func main() {
 	}
 
 	// Create DB instance, pass in .env variables
-	pgConnStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
-		os.Getenv("POSTGRES_USER"),
-		os.Getenv("POSTGRES_PASSWORD"),
-		os.Getenv("POSTGRES_HOST"),
-		os.Getenv("POSTGRES_PORT"),
-		os.Getenv("POSTGRES_DB"),
-	)
+	dbConnStr := os.Getenv("DB_CONN_STR")
+	dbType := os.Getenv("DB_TYPE")
 
-	dbInstance, err := db.NewGormDB(pgConnStr)
+	dbInstance, err := db.NewDB(dbConnStr, dbType)
 	if err != nil {
 		log.Fatalf("failed to create database instance: %v", err)
-	}
-
-	// Run database migrations
-	err = dbInstance.Migrate()
-	if err != nil {
-		log.Fatalf("failed to run database migrations: %v", err)
 	}
 
 	// Create Service
