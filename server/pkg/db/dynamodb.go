@@ -13,7 +13,7 @@ import (
 
 // DynamoDB is a DynamoDB database
 type DynamoDB struct {
-	db *dynamodb.DynamoDB
+	*dynamodb.DynamoDB
 }
 
 // NewDynamoDB creates a new DynamoDB database
@@ -25,7 +25,7 @@ func NewDynamoDB(region string) (DB, error) {
 		return nil, err
 	}
 
-	return &DynamoDB{db: dynamodb.New(sess)}, nil
+	return &DynamoDB{dynamodb.New(sess)}, nil
 }
 
 // CreatePlayer creates a new player
@@ -45,7 +45,7 @@ func (db *DynamoDB) CreatePlayer(ctx context.Context, player *model.Player) (str
 		TableName: aws.String("Players"),
 	}
 
-	_, err = db.db.PutItem(input)
+	_, err = db.PutItem(input)
 	if err != nil {
 		fmt.Println("Error inserting player:", err)
 		return "", err
@@ -57,7 +57,7 @@ func (db *DynamoDB) CreatePlayer(ctx context.Context, player *model.Player) (str
 // GetPlayer retrieves a player by ID
 func (db *DynamoDB) GetPlayer(ctx context.Context, id string) (*model.Player, error) {
 	// Fetch player from the database based on the given ID
-	result, err := db.db.GetItem(&dynamodb.GetItemInput{
+	result, err := db.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String("Players"),
 		Key: map[string]*dynamodb.AttributeValue{
 			"ID": {
