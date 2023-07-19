@@ -8,6 +8,8 @@ service Game {
   rpc MovePlayer(MovePlayerRequest) returns (MovePlayerResponse) {}
 
   rpc GetLocation(GetLocationRequest) returns (GetLocationResponse) {}
+
+  rpc ListPlayers(ListPlayersRequest) returns (ListPlayersResponse) {}
 }
 
 message Coordinates {
@@ -135,4 +137,10 @@ message GetLocationRequest {
 
 message GetLocationResponse {
   Location location = 1;
+}
+
+message ListPlayersRequest {}
+
+message ListPlayersResponse {
+  repeated Player players = 1;
 }
