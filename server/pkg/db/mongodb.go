@@ -18,12 +18,13 @@ type MongoDB struct {
 
 // NewMongoDB creates a new MongoDB database
 func NewMongoDB(connStr string) (DB, error) {
+	fmt.Println("connsStr:", connStr)
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(connStr))
 	if err != nil {
 		return nil, err
 	}
 
-	return &MongoDB{db: client.Database("your_database_name")}, nil
+	return &MongoDB{db: client.Database("dnd")}, nil
 }
 
 // CreatePlayer creates a new player

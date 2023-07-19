@@ -23,6 +23,7 @@ func NewGRPCServer(service pb.GameServer) *GRPCServer {
 	// Register service implementation
 	pb.RegisterGameServer(grpcServer, service)
 
+	// Return the gRPC server
 	return &GRPCServer{
 		grpc: grpcServer,
 	}
