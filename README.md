@@ -47,6 +47,13 @@ Go plugins for the protobuf compiler or refer [here](https://grpc.io/docs/langua
 make install
 ```
 
+### TLS
+
+Configuring TLS 
+
+* Client - TBD
+* Server - TBD
+
 ## Invoking RPCs 🚀
 
 ```bash
