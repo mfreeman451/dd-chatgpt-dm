@@ -1,33 +1,41 @@
-import { DynamoDBClient, ScanCommand } from "@aws-sdk/client-dynamodb";
-import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { GameClient } from '~/pb/game/game_grpc_web_pb';
+import {ListPlayersRequest, ListPlayersResponse} from "~/pb/game/game_pb";
 
-const client = new DynamoDBClient({
-    region: process.env.AWS_REGION,
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
-    }
-});
+const client = new GameClient('http://localhost:8080');
 
 export default defineEventHandler(async () => {
-    const params = {
-        TableName: process.env.TABLE_NAME
-    }
-    const command = new ScanCommand(params)
 
     try {
-        const data = await client.send(command)
-        const items = data.Items ? data.Items.map(item => unmarshall(item)) : [];
+
+        const request = new ListPlayersRequest();
+
+        const response = await new Promise<ListPlayersResponse>(
+            (resolve, reject) => {
+                client.listPlayers(request, {},
+                    (err: any, response: ListPlayersResponse) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(response);
+                        }
+                    }
+                );
+            }
+        );
+
+        const players = response.getPlayersList();
 
         return {
             statusCode: 200,
-            body: JSON.stringify(items)
-        }
+            body: JSON.stringify(players)
+        };
+
     } catch (err) {
-        console.error(err)
+        console.error(err);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'An error occurred while fetching characters' })
-        }
+            body: JSON.stringify({ error: 'Error fetching players' })
+        };
     }
-})
+
+});

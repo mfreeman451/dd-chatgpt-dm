@@ -23,6 +23,9 @@ const (
 	Game_MovePlayer_FullMethodName   = "/Game/MovePlayer"
 	Game_GetLocation_FullMethodName  = "/Game/GetLocation"
 	Game_ListPlayers_FullMethodName  = "/Game/ListPlayers"
+	Game_GetPlayer_FullMethodName    = "/Game/GetPlayer"
+	Game_SetPlayer_FullMethodName    = "/Game/SetPlayer"
+	Game_UpdatePlayer_FullMethodName = "/Game/UpdatePlayer"
 )
 
 // GameClient is the client API for Game service.
@@ -33,6 +36,9 @@ type GameClient interface {
 	MovePlayer(ctx context.Context, in *MovePlayerRequest, opts ...grpc.CallOption) (*MovePlayerResponse, error)
 	GetLocation(ctx context.Context, in *GetLocationRequest, opts ...grpc.CallOption) (*GetLocationResponse, error)
 	ListPlayers(ctx context.Context, in *ListPlayersRequest, opts ...grpc.CallOption) (*ListPlayersResponse, error)
+	GetPlayer(ctx context.Context, in *GetPlayerRequest, opts ...grpc.CallOption) (*GetPlayerResponse, error)
+	SetPlayer(ctx context.Context, in *SetPlayerRequest, opts ...grpc.CallOption) (*SetPlayerResponse, error)
+	UpdatePlayer(ctx context.Context, in *UpdatePlayerRequest, opts ...grpc.CallOption) (*UpdatePlayerResponse, error)
 }
 
 type gameClient struct {
@@ -79,6 +85,33 @@ func (c *gameClient) ListPlayers(ctx context.Context, in *ListPlayersRequest, op
 	return out, nil
 }
 
+func (c *gameClient) GetPlayer(ctx context.Context, in *GetPlayerRequest, opts ...grpc.CallOption) (*GetPlayerResponse, error) {
+	out := new(GetPlayerResponse)
+	err := c.cc.Invoke(ctx, Game_GetPlayer_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameClient) SetPlayer(ctx context.Context, in *SetPlayerRequest, opts ...grpc.CallOption) (*SetPlayerResponse, error) {
+	out := new(SetPlayerResponse)
+	err := c.cc.Invoke(ctx, Game_SetPlayer_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameClient) UpdatePlayer(ctx context.Context, in *UpdatePlayerRequest, opts ...grpc.CallOption) (*UpdatePlayerResponse, error) {
+	out := new(UpdatePlayerResponse)
+	err := c.cc.Invoke(ctx, Game_UpdatePlayer_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GameServer is the server API for Game service.
 // All implementations must embed UnimplementedGameServer
 // for forward compatibility
@@ -87,6 +120,9 @@ type GameServer interface {
 	MovePlayer(context.Context, *MovePlayerRequest) (*MovePlayerResponse, error)
 	GetLocation(context.Context, *GetLocationRequest) (*GetLocationResponse, error)
 	ListPlayers(context.Context, *ListPlayersRequest) (*ListPlayersResponse, error)
+	GetPlayer(context.Context, *GetPlayerRequest) (*GetPlayerResponse, error)
+	SetPlayer(context.Context, *SetPlayerRequest) (*SetPlayerResponse, error)
+	UpdatePlayer(context.Context, *UpdatePlayerRequest) (*UpdatePlayerResponse, error)
 	mustEmbedUnimplementedGameServer()
 }
 
@@ -105,6 +141,15 @@ func (UnimplementedGameServer) GetLocation(context.Context, *GetLocationRequest)
 }
 func (UnimplementedGameServer) ListPlayers(context.Context, *ListPlayersRequest) (*ListPlayersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPlayers not implemented")
+}
+func (UnimplementedGameServer) GetPlayer(context.Context, *GetPlayerRequest) (*GetPlayerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPlayer not implemented")
+}
+func (UnimplementedGameServer) SetPlayer(context.Context, *SetPlayerRequest) (*SetPlayerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetPlayer not implemented")
+}
+func (UnimplementedGameServer) UpdatePlayer(context.Context, *UpdatePlayerRequest) (*UpdatePlayerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePlayer not implemented")
 }
 func (UnimplementedGameServer) mustEmbedUnimplementedGameServer() {}
 
@@ -191,6 +236,60 @@ func _Game_ListPlayers_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Game_GetPlayer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPlayerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameServer).GetPlayer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Game_GetPlayer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameServer).GetPlayer(ctx, req.(*GetPlayerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Game_SetPlayer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetPlayerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameServer).SetPlayer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Game_SetPlayer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameServer).SetPlayer(ctx, req.(*SetPlayerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Game_UpdatePlayer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePlayerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameServer).UpdatePlayer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Game_UpdatePlayer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameServer).UpdatePlayer(ctx, req.(*UpdatePlayerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Game_ServiceDesc is the grpc.ServiceDesc for Game service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -213,6 +312,18 @@ var Game_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListPlayers",
 			Handler:    _Game_ListPlayers_Handler,
+		},
+		{
+			MethodName: "GetPlayer",
+			Handler:    _Game_GetPlayer_Handler,
+		},
+		{
+			MethodName: "SetPlayer",
+			Handler:    _Game_SetPlayer_Handler,
+		},
+		{
+			MethodName: "UpdatePlayer",
+			Handler:    _Game_UpdatePlayer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
