@@ -11,7 +11,8 @@
 /* eslint-disable */
 // @ts-nocheck
 
-var jspb = require('google-protobuf');
+import jspb from 'google-protobuf';
+
 var goog = jspb;
 var global =
     (typeof globalThis !== 'undefined' && globalThis) ||
@@ -4270,7 +4271,8 @@ proto.CreatePlayerRequest.prototype.toObject = function(opt_includeInstance) {
  */
 proto.CreatePlayerRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    name: jspb.Message.getFieldWithDefault(msg, 1, "")
+    name: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    player: (f = msg.getPlayer()) && proto.Player.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4311,6 +4313,11 @@ proto.CreatePlayerRequest.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setName(value);
       break;
+    case 2:
+      var value = new proto.Player;
+      reader.readMessage(value,proto.Player.deserializeBinaryFromReader);
+      msg.setPlayer(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -4347,6 +4354,14 @@ proto.CreatePlayerRequest.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getPlayer();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      proto.Player.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -4365,6 +4380,43 @@ proto.CreatePlayerRequest.prototype.getName = function() {
  */
 proto.CreatePlayerRequest.prototype.setName = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional Player player = 2;
+ * @return {?proto.Player}
+ */
+proto.CreatePlayerRequest.prototype.getPlayer = function() {
+  return /** @type{?proto.Player} */ (
+    jspb.Message.getWrapperField(this, proto.Player, 2));
+};
+
+
+/**
+ * @param {?proto.Player|undefined} value
+ * @return {!proto.CreatePlayerRequest} returns this
+*/
+proto.CreatePlayerRequest.prototype.setPlayer = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.CreatePlayerRequest} returns this
+ */
+proto.CreatePlayerRequest.prototype.clearPlayer = function() {
+  return this.setPlayer(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.CreatePlayerRequest.prototype.hasPlayer = function() {
+  return jspb.Message.getField(this, 2) != null;
 };
 
 

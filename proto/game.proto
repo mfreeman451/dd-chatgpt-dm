@@ -118,6 +118,7 @@ message NPC {
 
 message CreatePlayerRequest {
   string name = 1;
+  Player player = 2;
 }
 
 message CreatePlayerResponse {

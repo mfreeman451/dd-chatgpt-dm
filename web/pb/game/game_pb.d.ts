@@ -506,6 +506,11 @@ export class CreatePlayerRequest extends jspb.Message {
   getName(): string;
   setName(value: string): void;
 
+  hasPlayer(): boolean;
+  clearPlayer(): void;
+  getPlayer(): Player | undefined;
+  setPlayer(value?: Player): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CreatePlayerRequest.AsObject;
   static toObject(includeInstance: boolean, msg: CreatePlayerRequest): CreatePlayerRequest.AsObject;
@@ -519,6 +524,7 @@ export class CreatePlayerRequest extends jspb.Message {
 export namespace CreatePlayerRequest {
   export type AsObject = {
     name: string,
+    player?: Player.AsObject,
   }
 }
 
