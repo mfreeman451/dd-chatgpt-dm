@@ -69,6 +69,7 @@ func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest)
 			Y: 0,
 			Z: 0,
 		},
+		LastLogin: time.Now(),
 	}
 
 	// Create the player in the database
@@ -79,7 +80,6 @@ func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest)
 
 	// Set the ID and default room ID on the player object
 	player.ID = id
-	// set player coordinates to 0,0,0
 
 	// Convert the player object to the protobuf message
 	pbPlayer := convertPlayerToProto(player)

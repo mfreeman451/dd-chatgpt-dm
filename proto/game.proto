@@ -55,6 +55,7 @@ message Player {
   repeated SpecialAbility specialAbilities = 34;
   RacialTraits racialTraits = 35;
   Coordinates location = 36;
+  int64 LastLogin = 37;
 }
 
 message Skill {
