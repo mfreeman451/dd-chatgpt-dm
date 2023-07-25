@@ -1,5 +1,7 @@
 package model
 
+import "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+
 type Player struct {
 	ID                  string
 	Discord             string
@@ -36,6 +38,7 @@ type Player struct {
 	AbilityScoreBonuses map[string]int32
 	SpecialAbilities    []string
 	RacialTraits        RacialTraits
+	Coordinates         game.Coordinates
 	// Other fields...
 }
 

@@ -6,6 +6,7 @@ require (
 	github.com/aws/aws-sdk-go v1.44.302
 	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.5.1
+	github.com/mfreeman451/dd-chatgpt-dm/client v0.0.0-20230725193853-19c2d1912324
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/rs/zerolog v1.29.1
 	go.mongodb.org/mongo-driver v1.12.0
