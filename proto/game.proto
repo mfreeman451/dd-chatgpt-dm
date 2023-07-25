@@ -137,7 +137,9 @@ message MovePlayerRequest {
   Coordinates new_location = 2;
 }
 
-message MovePlayerResponse {}
+message MovePlayerResponse {
+  Player player = 1;
+}
 
 message GetLocationRequest {
   Coordinates coordinates = 1;
