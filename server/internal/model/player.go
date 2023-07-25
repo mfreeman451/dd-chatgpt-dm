@@ -33,7 +33,7 @@ type Player struct {
 	Speed               int
 	HitDice             string
 	DeathSaves          DeathSaves
-	AbilityScoreBonuses map[string]int
+	AbilityScoreBonuses map[string]int32
 	SpecialAbilities    []string
 	RacialTraits        RacialTraits
 	// Other fields...

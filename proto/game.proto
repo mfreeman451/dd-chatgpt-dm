@@ -51,7 +51,7 @@ message Player {
   int32 speed = 30;
   string hitDice = 31;
   DeathSaves deathSaves = 32;
-  map<string, int32> abilityScoreBonuses = 33;
+  repeated AbilityScoreBonus abilityScoreBonuses = 33;
   repeated SpecialAbility specialAbilities = 34;
   RacialTraits racialTraits = 35;
   Coordinates location = 36;
@@ -83,6 +83,11 @@ message Spell {
 
 message SpecialAbility {
   string name = 1;
+}
+
+message AbilityScoreBonus {
+  string name = 1;
+  int32 value = 2;
 }
 
 message DeathSaves {

@@ -8,6 +8,8 @@ import (
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
+	"reflect"
 )
 
 // Service is a gRPC service
@@ -92,12 +94,101 @@ func (s *Service) ListPlayers(ctx context.Context, req *pb.ListPlayersRequest) (
 	return response, nil
 }
 
+// Helper function to convert a slice of strings to a slice of pointers to a protobuf message
+func convertStringsToPBMessages(strSlice []string, pbMsg interface{}) (resultSlice interface{}) {
+	pbType := reflect.TypeOf(pbMsg)
+	pbSlice := reflect.MakeSlice(reflect.SliceOf(pbType), len(strSlice), len(strSlice))
+
+	for i, str := range strSlice {
+		myPb := reflect.New(pbType).Interface()
+		pbElem := reflect.ValueOf(myPb).Elem()
+		pbElem.FieldByName("Name").SetString(str)
+		pbSlice.Index(i).Set(pbElem)
+	}
+
+	return pbSlice.Interface()
+}
+
+// convertMapToPBMessages is a helper function to convert a map of strings to int32 to a slice of pointers to a protobuf message
+func convertMapToPBMessages(m map[string]int32, msg proto.Message) interface{} {
+	switch msg.(type) {
+	case *pb.AbilityScoreBonus:
+		var bonuses []*pb.AbilityScoreBonus
+		for key, value := range m {
+			bonuses = append(bonuses, &pb.AbilityScoreBonus{
+				Name:  key,
+				Value: value,
+			})
+		}
+		return bonuses
+	default:
+		return nil
+	}
+}
+
 // convertPlayerToProto converts a model.Player to pb.Player
 func convertPlayerToProto(player *model.Player) *pb.Player {
+
+	// Convert slices of strings to slices of pointers to protobuf messages
+	skills := convertStringsToPBMessages(player.Skills, &pb.Skill{}).([]*pb.Skill)
+	features := convertStringsToPBMessages(player.Features, &pb.Feature{}).([]*pb.Feature)
+	savingThrows := convertStringsToPBMessages(player.SavingThrows, &pb.SavingThrow{}).([]*pb.SavingThrow)
+	languages := convertStringsToPBMessages(player.Languages, &pb.Language{}).([]*pb.Language)
+	equipment := convertStringsToPBMessages(player.Equipment, &pb.Equipment{}).([]*pb.Equipment)
+	spells := convertStringsToPBMessages(player.Spells, &pb.Spell{}).([]*pb.Spell)
+	abilityScoreBonuses := convertMapToPBMessages(player.AbilityScoreBonuses, &pb.AbilityScoreBonus{}).([]*pb.AbilityScoreBonus)
+	specialAbilities := convertStringsToPBMessages(player.SpecialAbilities, &pb.SpecialAbility{}).([]*pb.SpecialAbility)
+	rtLanguages := convertStringsToPBMessages(player.RacialTraits.Languages, &pb.Language{}).([]*pb.Language)
+	rtSpecialAbilities := convertStringsToPBMessages(player.RacialTraits.SpecialAbilities, &pb.SpecialAbility{}).([]*pb.SpecialAbility)
+
 	return &pb.Player{
-		Id:   player.ID,
-		Name: player.Name,
-		// Include other fields as needed
+		Id:                 player.ID,
+		Discord:            player.Discord,
+		Name:               player.Name,
+		Race:               player.Race,
+		Class:              player.Class,
+		Level:              int32(player.Level),
+		Alignment:          player.Alignment,
+		Background:         player.Background,
+		Strength:           int32(player.Strength),
+		Dexterity:          int32(player.Dexterity),
+		Constitution:       int32(player.Constitution),
+		Intelligence:       int32(player.Intelligence),
+		Wisdom:             int32(player.Wisdom),
+		Charisma:           int32(player.Charisma),
+		HitPoints:          int32(player.HitPoints),
+		TemporaryHitPoints: int32(player.TemporaryHitPoints),
+		MaxHitPoints:       int32(player.MaxHitPoints),
+		ArmorClass:         int32(player.ArmorClass),
+		ProficiencyBonus:   int32(player.ProficiencyBonus),
+		Skills:             skills,
+		SavingThrows:       savingThrows,
+		Languages:          languages,
+		Equipment:          equipment,
+		Features:           features,
+		Spells:             spells,
+		SpellSlots:         int32(player.SpellSlots),
+		CurrentSpellSlots:  int32(player.CurrentSpellSlots),
+		ExperiencePoints:   int32(player.ExperiencePoints),
+		Initiative:         int32(player.Initiative),
+		Speed:              int32(player.Speed),
+		HitDice:            player.HitDice,
+		DeathSaves: &pb.DeathSaves{
+			Successes: int32(player.DeathSaves.Successes),
+			Failures:  int32(player.DeathSaves.Failures),
+		},
+		AbilityScoreBonuses: abilityScoreBonuses,
+		SpecialAbilities:    specialAbilities,
+		RacialTraits: &pb.RacialTraits{
+			Name:                player.RacialTraits.Name,
+			Description:         player.RacialTraits.Description,
+			Darkvision:          int32(player.RacialTraits.Darkvision),
+			Size:                player.RacialTraits.Size,
+			Speed:               int32(player.RacialTraits.Speed),
+			Languages:           rtLanguages,
+			AbilityScoreBonuses: int32(player.RacialTraits.AbilityScoreBonuses),
+			SpecialAbilities:    rtSpecialAbilities,
+		},
 	}
 }
 
