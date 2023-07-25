@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -84,7 +85,7 @@ func (db *MongoDB) GetPlayer(ctx context.Context, id string) (*model.Player, err
 // ListPlayers retrieves all players
 func (db *MongoDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
 	// Define an empty slice to store the players
-	players := []*model.Player{}
+	var players []*model.Player
 
 	// Find all players in the database
 	cursor, err := db.Collection("players").Find(ctx, bson.M{})
@@ -115,4 +116,25 @@ func (db *MongoDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
 	}
 
 	return players, nil
+}
+
+// GetLocationByCoordinates retrieves a location by coordinates
+func (db *MongoDB) GetLocationByCoordinates(ctx context.Context, coordinates *game.Coordinates) (*model.Location, error) {
+	filter := bson.M{"coordinates": coordinates}
+	location := &model.Location{}
+	err := db.Collection("rooms").FindOne(ctx, filter).Decode(location)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, nil // Return nil if location not found
+		}
+		fmt.Println("Error retrieving location:", err)
+		return nil, err
+	}
+	return location, nil
+	// return nil, errors.New("GetLocationByCoordinates not implemented")
+}
+
+// GetRoomState retrieves the state of a room
+func (db *MongoDB) GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error) {
+	return nil, errors.New("GetRoomState not implemented")
 }

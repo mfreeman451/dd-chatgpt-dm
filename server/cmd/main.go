@@ -31,8 +31,15 @@ func main() {
 		log.Fatal().Err(err).Msg("failed to create DB instance")
 	}
 
+	// Create Redis client
+	redisClient, err := server.NewRedisClient(server.RedisConfig{
+		Address:  os.Getenv("REDIS_ADDRESS"),
+		Password: os.Getenv("REDIS_PASSWORD"),
+		DB:       0,
+	})
+
 	// Create Service
-	srv := service.NewService(dbInstance)
+	srv := service.NewService(dbInstance, redisClient)
 
 	// Create GRPC server
 	grpc := server.NewGRPCServer(srv)

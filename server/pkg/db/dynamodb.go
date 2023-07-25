@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/google/uuid"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 )
 
 // DynamoDB is a DynamoDB database
@@ -27,6 +28,57 @@ func NewDynamoDB(region string) (DB, error) {
 	}
 
 	return &DynamoDB{dynamodb.New(sess)}, nil
+}
+
+// GetLocationByCoordinates retrieves a location from the database based on the provided coordinates.
+func (db *DynamoDB) GetLocationByCoordinates(ctx context.Context, coordinates *game.Coordinates) (*model.Location, error) {
+	// Fetch location from the database based on the given coordinates
+	// Note: Implement the logic to fetch the location using the provided coordinates.
+	// For example, you can use the Scan method or GetItem method with a proper filter condition.
+	// The exact implementation will depend on how your location data is stored in the database.
+
+	// For this example, let's assume you have a table named "Locations" and you want to fetch the location
+	// based on the X, Y, and Z coordinates.
+
+	// Convert the coordinates to a DynamoDB map attribute value
+	av, err := dynamodbattribute.MarshalMap(coordinates)
+	if err != nil {
+		fmt.Println("Error marshalling coordinates:", err)
+		return nil, err
+	}
+
+	// Define the DynamoDB query or scan input based on the coordinates
+	input := &dynamodb.ScanInput{
+		TableName:        aws.String("Locations"),
+		FilterExpression: aws.String("X = :x AND Y = :y AND Z = :z"),
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
+			":x": av["X"],
+			":y": av["Y"],
+			":z": av["Z"],
+		},
+	}
+
+	// Execute the query or scan
+	result, err := db.Scan(input)
+	if err != nil {
+		fmt.Println("Error retrieving location:", err)
+		return nil, err
+	}
+
+	// Check if the location was found
+	if len(result.Items) == 0 {
+		return nil, nil // Return nil if location not found
+	}
+
+	// Unmarshal the first item into a Location object
+	location := &model.Location{}
+	err = dynamodbattribute.UnmarshalMap(result.Items[0], location)
+	if err != nil {
+		fmt.Println("Error unmarshalling location:", err)
+		return nil, err
+	}
+
+	return location, nil
 }
 
 // UpdatePlayer updates an existing player in the database based on the provided player object.
@@ -139,4 +191,9 @@ func (db *DynamoDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
 	}
 
 	return players, nil
+}
+
+// GetRoomState retrieves the state of a room by ID
+func (db *DynamoDB) GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error) {
+	return nil, errors.New("not implemented")
 }
