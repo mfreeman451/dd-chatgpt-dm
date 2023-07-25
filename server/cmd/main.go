@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"os"
 	"os/signal"
 	"strconv"
@@ -31,8 +32,22 @@ func main() {
 		log.Fatal().Err(err).Msg("failed to create DB instance")
 	}
 
+	// Create Redis client
+	redisClient, err := server.NewRedisClient(server.RedisConfig{
+		Address:  os.Getenv("REDIS_ADDRESS"),
+		Password: os.Getenv("REDIS_PASSWORD"),
+		DB:       0,
+	})
+
+	// test Redis connection
+	redRes, err := redisClient.Ping(context.Background()).Result()
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to connect to Redis")
+	}
+	log.Info().Msgf("Redis ping result: %s", redRes)
+
 	// Create Service
-	srv := service.NewService(dbInstance)
+	srv := service.NewService(dbInstance, redisClient)
 
 	// Create GRPC server
 	grpc := server.NewGRPCServer(srv)

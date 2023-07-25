@@ -1,6 +1,9 @@
 package model
 
-import "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+import (
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	"time"
+)
 
 type Player struct {
 	ID                  string
@@ -38,7 +41,11 @@ type Player struct {
 	AbilityScoreBonuses map[string]int32
 	SpecialAbilities    []string
 	RacialTraits        RacialTraits
-	Coordinates         game.Coordinates
+	Coordinates         *game.Coordinates
+	DefaultRoom         *game.Coordinates // New field to set the default room
+	LastLogin           time.Time
+	LastLogout          time.Time
+	// Other fields...
 	// Other fields...
 }
 

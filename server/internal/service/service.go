@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/mfreeman451/dd-chatgpt-dm/client/pb/game"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
@@ -65,6 +64,12 @@ func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest)
 	// Create the player object
 	player := &model.Player{
 		Name: req.Name,
+		DefaultRoom: &pb.Coordinates{
+			X: 0,
+			Y: 0,
+			Z: 0,
+		},
+		LastLogin: time.Now(),
 	}
 
 	// Create the player in the database
@@ -75,12 +80,6 @@ func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest)
 
 	// Set the ID and default room ID on the player object
 	player.ID = id
-	// set player coordinates to 0,0,0
-	player.Coordinates = &game.Coordinates{
-		X: 0,
-		Y: 0,
-		Z: 0,
-	}
 
 	// Convert the player object to the protobuf message
 	pbPlayer := convertPlayerToProto(player)
@@ -289,48 +288,92 @@ func convertPlayerToProto(player *model.Player) *pb.Player {
 	return pbPlayer
 }
 
-/*
-// convertPlayerToProto converts a model.Player to pb.Player
-func convertPlayerToProto(player *model.Player) *pb.Player {
-	pbPlayer := &pb.Player{}
-	playerValue := reflect.ValueOf(player).Elem()
-	pbPlayerValue := reflect.ValueOf(pbPlayer).Elem()
-
-	for i := 0; i < playerValue.NumField(); i++ {
-		field := playerValue.Type().Field(i)
-		fieldValue := playerValue.Field(i)
-
-		pbFieldName := field.Tag.Get("protobuf")
-		if pbFieldName == "" {
-			pbFieldName = field.Name
-		}
-
-		pbField := pbPlayerValue.FieldByName(pbFieldName)
-		if pbField.IsValid() {
-			pbField.Set(fieldValue)
-		}
+func (s *Service) MovePlayer(ctx context.Context, req *pb.MovePlayerRequest) (*pb.MovePlayerResponse, error) {
+	// Fetch the player from the database based on the provided player ID
+	playerID := req.PlayerId
+	existingPlayer, err := s.DB.GetPlayer(ctx, playerID)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to retrieve player: %v", err)
 	}
 
-	return pbPlayer
+	// Return NotFound error if the player with the provided ID does not exist
+	if existingPlayer == nil {
+		return nil, status.Errorf(codes.NotFound, "player not found")
+	}
+
+	// Update the player's LastLogout time to the current time
+	existingPlayer.LastLogout = time.Now()
+
+	// Update the player's location
+	existingPlayer.Coordinates = req.NewLocation
+
+	// Update the player in the database
+	err = s.DB.UpdatePlayer(ctx, existingPlayer)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to update player: %v", err)
+	}
+
+	// Convert the updated player to the protobuf message
+	pbPlayer := convertPlayerToProto(existingPlayer)
+
+	// Create the response with the updated player object
+	response := &pb.MovePlayerResponse{
+		Player: pbPlayer,
+	}
+
+	return response, nil
 }
 
-*/
-
-// MovePlayer moves a player
-func (s *Service) MovePlayer(ctx context.Context, req *pb.MovePlayerRequest) (*pb.MovePlayerResponse, error) {
-	// TODO: implement
-	return nil, status.Errorf(codes.Unimplemented, "not implemented yet")
-}
-
-// GetLocation gets a location
 func (s *Service) GetLocation(ctx context.Context, req *pb.GetLocationRequest) (*pb.GetLocationResponse, error) {
-	// TODO: implement
-	return nil, status.Errorf(codes.Unimplemented, "not implemented yet")
+	// Fetch the location from the database based on the provided coordinates
+	location, err := s.DB.GetLocationByCoordinates(ctx, req.Coordinates)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to retrieve location: %v", err)
+	}
+
+	// If the location is not found, return NotFound error
+	if location == nil {
+		return nil, status.Errorf(codes.NotFound, "location not found")
+	}
+
+	// Convert the location to the protobuf message
+	pbLocation := convertLocationToProto(location)
+
+	// Create the response with the location object
+	response := &pb.GetLocationResponse{
+		Location: pbLocation,
+	}
+
+	return response, nil
+}
+
+// convertLocationToProto is a helper function to convert a model.Location to pb.Location
+func convertLocationToProto(location *model.Location) *pb.Location {
+	pbLocation := &pb.Location{
+		Id:          location.ID,
+		Description: location.Description,
+	}
+
+	// Convert slices of model.Item and model.NPC to slices of pb.Item and pb.NPC
+	for _, item := range location.Items {
+		pbLocation.Items = append(pbLocation.Items, &pb.Item{
+			Name: item.Name,
+		})
+	}
+
+	for _, npc := range location.NPCs {
+		pbLocation.Npcs = append(pbLocation.Npcs, &pb.NPC{
+			Name: npc.Name,
+		})
+	}
+
+	return pbLocation
 }
 
 // mustEmbedUnimplementedGameServer ensures that Service implements pb.GameServer
 func (s *Service) mustEmbedUnimplementedGameServer() {}
 
+// expirationDuration is the duration after which the room state will expire in Redis
 const expirationDuration = 10 * time.Minute
 
 // GetRoomState retrieves the state of a room from Redis or the database
@@ -359,4 +402,29 @@ func (s *Service) GetRoomState(ctx context.Context, roomID string) (*model.RoomS
 	}
 
 	return roomState, nil
+}
+
+// LogoutPlayer logs out a player
+func (s *Service) LogoutPlayer(ctx context.Context, playerID string) error {
+	// Fetch the player from the database based on the provided player ID
+	existingPlayer, err := s.DB.GetPlayer(ctx, playerID)
+	if err != nil {
+		return status.Errorf(codes.Internal, "failed to retrieve player: %v", err)
+	}
+
+	// Return NotFound error if the player with the provided ID does not exist
+	if existingPlayer == nil {
+		return status.Errorf(codes.NotFound, "player not found")
+	}
+
+	// Update the player's LastLogout time to the current time
+	existingPlayer.LastLogout = time.Now()
+
+	// Update the player in the database
+	err = s.DB.UpdatePlayer(ctx, existingPlayer)
+	if err != nil {
+		return status.Errorf(codes.Internal, "failed to update player: %v", err)
+	}
+
+	return nil
 }

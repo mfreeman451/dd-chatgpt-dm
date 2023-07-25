@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 )
 
 // DB is a database interface
@@ -13,6 +14,7 @@ type DB interface {
 	UpdatePlayer(ctx context.Context, player *model.Player) error
 	ListPlayers(ctx context.Context) ([]*model.Player, error)
 	GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error)
+	GetLocationByCoordinates(ctx context.Context, coordinates *game.Coordinates) (*model.Location, error)
 	// Other data access methods...
 }
 
