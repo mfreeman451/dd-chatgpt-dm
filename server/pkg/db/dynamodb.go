@@ -115,7 +115,7 @@ func (db *DynamoDB) GetPlayer(ctx context.Context, id string) (*model.Player, er
 // ListPlayers retrieves all players
 func (db *DynamoDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
 	// Define an empty slice to store the players
-	players := []*model.Player{}
+	var players []*model.Player
 
 	// Scan the "Players" table to retrieve all players
 	input := &dynamodb.ScanInput{

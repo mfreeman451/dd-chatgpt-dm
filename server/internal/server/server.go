@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/redis/go-redis/v9"
 	"net"
 
 	"google.golang.org/grpc"
@@ -42,4 +43,20 @@ func (s *GRPCServer) Start(port int) error {
 // Stop stops the gRPC server
 func (s *GRPCServer) Stop() {
 	s.grpc.GracefulStop()
+}
+
+// RedisConfig holds the configuration for the Redis client
+type RedisConfig struct {
+	Address  string
+	Password string
+	DB       int
+}
+
+// NewRedisClient creates a new Redis client
+func NewRedisClient(cfg RedisConfig) (*redis.Client, error) {
+	return redis.NewClient(&redis.Options{
+		Addr:     cfg.Address,
+		Password: cfg.Password,
+		DB:       cfg.DB,
+	}), nil
 }

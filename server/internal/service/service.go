@@ -3,25 +3,43 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/mfreeman451/dd-chatgpt-dm/client/pb/game"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
+	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
 	"reflect"
+	"time"
 )
 
 // Service is a gRPC service
 type Service struct {
 	pb.UnimplementedGameServer
 	mydb.DB
+	redis *redis.Client
 }
 
 // NewService creates a new gRPC service
-func NewService(db mydb.DB) *Service {
-	return &Service{pb.UnimplementedGameServer{}, db}
+func NewService(db mydb.DB, redisClient *redis.Client) *Service {
+	return &Service{pb.UnimplementedGameServer{}, db, redisClient}
+}
+
+// PublishNewPlayerEvent sends a message to the room channel notifying other players about the new player
+func (s *Service) PublishNewPlayerEvent(ctx context.Context, roomID, newPlayerID string) error {
+	// Create a message indicating that a new player has joined the room
+	message := "Player " + newPlayerID + " has joined the room."
+
+	// Publish the message to the room channel
+	err := s.redis.Publish(ctx, roomID, message).Err()
+	if err != nil {
+		// Handle error
+	}
+
+	return nil
 }
 
 // GetPlayer retrieves a player by ID
@@ -55,8 +73,14 @@ func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest)
 		return nil, status.Errorf(codes.Internal, "failed to create player: %v", err)
 	}
 
-	// Set the ID in the player object
+	// Set the ID and default room ID on the player object
 	player.ID = id
+	// set player coordinates to 0,0,0
+	player.Coordinates = &game.Coordinates{
+		X: 0,
+		Y: 0,
+		Z: 0,
+	}
 
 	// Convert the player object to the protobuf message
 	pbPlayer := convertPlayerToProto(player)
@@ -306,3 +330,33 @@ func (s *Service) GetLocation(ctx context.Context, req *pb.GetLocationRequest) (
 
 // mustEmbedUnimplementedGameServer ensures that Service implements pb.GameServer
 func (s *Service) mustEmbedUnimplementedGameServer() {}
+
+const expirationDuration = 10 * time.Minute
+
+// GetRoomState retrieves the state of a room from Redis or the database
+func (s *Service) GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error) {
+	// Try to get the room state from Redis
+	cachedState, err := s.redis.Get(ctx, roomID).Result()
+	if err == nil {
+		// Room state found in Redis, deserialize it and return
+		// You can use JSON or any other serialization format here
+		// For example, using JSON:
+		return model.DeserializeRoomState(cachedState), nil
+	}
+
+	// Room state not found in Redis, fetch it from the database
+	roomState, err := s.DB.GetRoomState(ctx, roomID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Store the room state in Redis for future access
+	// Serialize the room state before storing it in Redis
+	serializedState := model.SerializeRoomState(roomState)
+	err = s.redis.Set(ctx, roomID, serializedState, expirationDuration).Err()
+	if err != nil {
+		// Handle error
+	}
+
+	return roomState, nil
+}

@@ -12,6 +12,7 @@ type DB interface {
 	CreatePlayer(ctx context.Context, player *model.Player) (string, error)
 	UpdatePlayer(ctx context.Context, player *model.Player) error
 	ListPlayers(ctx context.Context) ([]*model.Player, error)
+	GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error)
 	// Other data access methods...
 }
 
