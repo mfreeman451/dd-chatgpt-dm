@@ -28,6 +28,26 @@ func NewMongoDB(connStr string) (DB, error) {
 	return &MongoDB{client.Database("dnd")}, nil
 }
 
+// UpdatePlayer updates an existing player in the database based on the provided player object.
+func (db *MongoDB) UpdatePlayer(ctx context.Context, player *model.Player) error {
+	// Check if the player ID is empty
+	if player.ID == "" {
+		return errors.New("player ID is empty")
+	}
+
+	// Update the player in the database
+	filter := bson.M{"id": player.ID}
+	update := bson.M{"$set": player}
+
+	_, err := db.Collection("players").UpdateOne(ctx, filter, update)
+	if err != nil {
+		fmt.Println("Error updating player:", err)
+		return err
+	}
+
+	return nil
+}
+
 // CreatePlayer creates a new player
 func (db *MongoDB) CreatePlayer(ctx context.Context, player *model.Player) (string, error) {
 	fmt.Println("Creating player in MongoDB..")

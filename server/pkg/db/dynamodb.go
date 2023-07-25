@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -26,6 +27,33 @@ func NewDynamoDB(region string) (DB, error) {
 	}
 
 	return &DynamoDB{dynamodb.New(sess)}, nil
+}
+
+// UpdatePlayer updates an existing player in the database based on the provided player object.
+func (db *DynamoDB) UpdatePlayer(ctx context.Context, player *model.Player) error {
+	// Check if the player ID is empty
+	if player.ID == "" {
+		return errors.New("player ID is empty")
+	}
+
+	av, err := dynamodbattribute.MarshalMap(player)
+	if err != nil {
+		fmt.Println("Error marshalling player:", err)
+		return err
+	}
+
+	input := &dynamodb.PutItemInput{
+		Item:      av,
+		TableName: aws.String("Players"),
+	}
+
+	_, err = db.PutItem(input)
+	if err != nil {
+		fmt.Println("Error updating player:", err)
+		return err
+	}
+
+	return nil
 }
 
 // CreatePlayer creates a new player

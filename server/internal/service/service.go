@@ -91,6 +91,43 @@ func (s *Service) ListPlayers(ctx context.Context, req *pb.ListPlayersRequest) (
 	return response, nil
 }
 
+// UpdatePlayer updates an existing player in the database based on the provided player object.
+func (s *Service) UpdatePlayer(ctx context.Context, req *pb.UpdatePlayerRequest) (*pb.UpdatePlayerResponse, error) {
+	// Get the player from the database based on the provided player ID
+	playerID := req.PlayerId
+	existingPlayer, err := s.DB.GetPlayer(ctx, playerID)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to retrieve player: %v", err)
+	}
+
+	// Return NotFound error if the player with the provided ID does not exist
+	if existingPlayer == nil {
+		return nil, status.Errorf(codes.NotFound, "player not found")
+	}
+
+	// Update the existing player object with the fields from the request
+	if req.Player.Name != "" {
+		existingPlayer.Name = req.Player.Name
+	}
+	// Add more fields here for updating other player properties...
+
+	// Update the player in the database
+	err = s.DB.UpdatePlayer(ctx, existingPlayer)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to update player: %v", err)
+	}
+
+	// Convert the updated player to the protobuf message
+	pbPlayer := convertPlayerToProto(existingPlayer)
+
+	// Create the response with the updated player object
+	response := &pb.UpdatePlayerResponse{
+		Player: pbPlayer,
+	}
+
+	return response, nil
+}
+
 // convertPlayerToProto converts a model.Player to pb.Player
 func convertPlayerToProto(player *model.Player) *pb.Player {
 	pbPlayer := &pb.Player{}
