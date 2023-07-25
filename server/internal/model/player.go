@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	"time"
 )
 
 type Player struct {
@@ -42,7 +43,8 @@ type Player struct {
 	RacialTraits        RacialTraits
 	Coordinates         *game.Coordinates
 	DefaultRoom         *game.Coordinates // New field to set the default room
-	LastLogin           int64
+	LastLogin           time.Time
+	LastLogout          time.Time
 	// Other fields...
 	// Other fields...
 }

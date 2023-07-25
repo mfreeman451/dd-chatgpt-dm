@@ -56,6 +56,7 @@ message Player {
   RacialTraits racialTraits = 35;
   Coordinates location = 36;
   int64 LastLogin = 37;
+  int64 LastLogout = 38;
 }
 
 message Skill {
