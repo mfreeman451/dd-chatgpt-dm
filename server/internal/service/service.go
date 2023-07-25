@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/mfreeman451/dd-chatgpt-dm/client/pb/game"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
@@ -65,6 +64,11 @@ func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest)
 	// Create the player object
 	player := &model.Player{
 		Name: req.Name,
+		DefaultRoom: &pb.Coordinates{
+			X: 0,
+			Y: 0,
+			Z: 0,
+		},
 	}
 
 	// Create the player in the database
@@ -76,11 +80,6 @@ func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest)
 	// Set the ID and default room ID on the player object
 	player.ID = id
 	// set player coordinates to 0,0,0
-	player.Coordinates = &game.Coordinates{
-		X: 0,
-		Y: 0,
-		Z: 0,
-	}
 
 	// Convert the player object to the protobuf message
 	pbPlayer := convertPlayerToProto(player)

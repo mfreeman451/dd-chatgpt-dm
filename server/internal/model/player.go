@@ -38,7 +38,9 @@ type Player struct {
 	AbilityScoreBonuses map[string]int32
 	SpecialAbilities    []string
 	RacialTraits        RacialTraits
-	Coordinates         game.Coordinates
+	Coordinates         *game.Coordinates
+	DefaultRoom         *game.Coordinates // New field to set the default room
+	// Other fields...
 	// Other fields...
 }
 
