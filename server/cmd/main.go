@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"os"
 	"os/signal"
 	"strconv"
@@ -37,6 +38,13 @@ func main() {
 		Password: os.Getenv("REDIS_PASSWORD"),
 		DB:       0,
 	})
+
+	// test Redis connection
+	redRes, err := redisClient.Ping(context.Background()).Result()
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to connect to Redis")
+	}
+	log.Info().Msgf("Redis ping result: %s", redRes)
 
 	// Create Service
 	srv := service.NewService(dbInstance, redisClient)
