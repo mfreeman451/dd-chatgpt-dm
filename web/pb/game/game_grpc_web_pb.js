@@ -19,7 +19,7 @@
 const grpc = {};
 grpc.web = require('grpc-web');
 
-import proto from './game_pb.js';
+const proto = require('./game_pb.js');
 
 /**
  * @param {string} hostname
@@ -500,5 +500,5 @@ proto.GamePromiseClient.prototype.updatePlayer =
 };
 
 
-export default proto;
+module.exports = proto;
 

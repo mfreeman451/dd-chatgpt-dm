@@ -21,6 +21,25 @@ func NewService(db mydb.DB) *Service {
 	return &Service{pb.UnimplementedGameServer{}, db}
 }
 
+// GetPlayer retrieves a player by ID
+func (s *Service) GetPlayer(ctx context.Context, req *pb.GetPlayerRequest) (*pb.GetPlayerResponse, error) {
+	// Fetch player from the database based on the given ID
+	player, err := s.DB.GetPlayer(ctx, req.PlayerId)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to retrieve player: %v", err)
+	}
+
+	// Convert the player to protobuf format
+	protoPlayer := convertPlayerToProto(player)
+
+	// Create the response with the player
+	response := &pb.GetPlayerResponse{
+		Player: protoPlayer,
+	}
+
+	return response, nil
+}
+
 // CreatePlayer creates a new player
 func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest) (*pb.CreatePlayerResponse, error) {
 	fmt.Println("CreatePlayer")

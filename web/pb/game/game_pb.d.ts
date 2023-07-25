@@ -1,23 +1,20 @@
-// package: 
-// file: game.proto
+import * as jspb from 'google-protobuf'
 
-import * as jspb from "google-protobuf";
+
 
 export class Coordinates extends jspb.Message {
   getX(): number;
-  setX(value: number): void;
+  setX(value: number): Coordinates;
 
   getY(): number;
-  setY(value: number): void;
+  setY(value: number): Coordinates;
 
   getZ(): number;
-  setZ(value: number): void;
+  setZ(value: number): Coordinates;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Coordinates.AsObject;
   static toObject(includeInstance: boolean, msg: Coordinates): Coordinates.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Coordinates, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Coordinates;
   static deserializeBinaryFromReader(message: Coordinates, reader: jspb.BinaryReader): Coordinates;
@@ -33,137 +30,136 @@ export namespace Coordinates {
 
 export class Player extends jspb.Message {
   getId(): string;
-  setId(value: string): void;
+  setId(value: string): Player;
 
   getDiscord(): string;
-  setDiscord(value: string): void;
+  setDiscord(value: string): Player;
 
   getName(): string;
-  setName(value: string): void;
+  setName(value: string): Player;
 
   getRace(): string;
-  setRace(value: string): void;
+  setRace(value: string): Player;
 
   getClass(): string;
-  setClass(value: string): void;
+  setClass(value: string): Player;
 
   getLevel(): number;
-  setLevel(value: number): void;
+  setLevel(value: number): Player;
 
   getAlignment(): string;
-  setAlignment(value: string): void;
+  setAlignment(value: string): Player;
 
   getBackground(): string;
-  setBackground(value: string): void;
+  setBackground(value: string): Player;
 
   getStrength(): number;
-  setStrength(value: number): void;
+  setStrength(value: number): Player;
 
   getDexterity(): number;
-  setDexterity(value: number): void;
+  setDexterity(value: number): Player;
 
   getConstitution(): number;
-  setConstitution(value: number): void;
+  setConstitution(value: number): Player;
 
   getIntelligence(): number;
-  setIntelligence(value: number): void;
+  setIntelligence(value: number): Player;
 
   getWisdom(): number;
-  setWisdom(value: number): void;
+  setWisdom(value: number): Player;
 
   getCharisma(): number;
-  setCharisma(value: number): void;
+  setCharisma(value: number): Player;
 
   getHitpoints(): number;
-  setHitpoints(value: number): void;
+  setHitpoints(value: number): Player;
 
   getTemporaryhitpoints(): number;
-  setTemporaryhitpoints(value: number): void;
+  setTemporaryhitpoints(value: number): Player;
 
   getMaxhitpoints(): number;
-  setMaxhitpoints(value: number): void;
+  setMaxhitpoints(value: number): Player;
 
   getArmorclass(): number;
-  setArmorclass(value: number): void;
+  setArmorclass(value: number): Player;
 
   getProficiencybonus(): number;
-  setProficiencybonus(value: number): void;
+  setProficiencybonus(value: number): Player;
 
-  clearSkillsList(): void;
   getSkillsList(): Array<Skill>;
-  setSkillsList(value: Array<Skill>): void;
+  setSkillsList(value: Array<Skill>): Player;
+  clearSkillsList(): Player;
   addSkills(value?: Skill, index?: number): Skill;
 
-  clearSavingthrowsList(): void;
   getSavingthrowsList(): Array<SavingThrow>;
-  setSavingthrowsList(value: Array<SavingThrow>): void;
+  setSavingthrowsList(value: Array<SavingThrow>): Player;
+  clearSavingthrowsList(): Player;
   addSavingthrows(value?: SavingThrow, index?: number): SavingThrow;
 
-  clearLanguagesList(): void;
   getLanguagesList(): Array<Language>;
-  setLanguagesList(value: Array<Language>): void;
+  setLanguagesList(value: Array<Language>): Player;
+  clearLanguagesList(): Player;
   addLanguages(value?: Language, index?: number): Language;
 
-  clearEquipmentList(): void;
   getEquipmentList(): Array<Equipment>;
-  setEquipmentList(value: Array<Equipment>): void;
+  setEquipmentList(value: Array<Equipment>): Player;
+  clearEquipmentList(): Player;
   addEquipment(value?: Equipment, index?: number): Equipment;
 
-  clearFeaturesList(): void;
   getFeaturesList(): Array<Feature>;
-  setFeaturesList(value: Array<Feature>): void;
+  setFeaturesList(value: Array<Feature>): Player;
+  clearFeaturesList(): Player;
   addFeatures(value?: Feature, index?: number): Feature;
 
-  clearSpellsList(): void;
   getSpellsList(): Array<Spell>;
-  setSpellsList(value: Array<Spell>): void;
+  setSpellsList(value: Array<Spell>): Player;
+  clearSpellsList(): Player;
   addSpells(value?: Spell, index?: number): Spell;
 
   getSpellslots(): number;
-  setSpellslots(value: number): void;
+  setSpellslots(value: number): Player;
 
   getCurrentspellslots(): number;
-  setCurrentspellslots(value: number): void;
+  setCurrentspellslots(value: number): Player;
 
   getExperiencepoints(): number;
-  setExperiencepoints(value: number): void;
+  setExperiencepoints(value: number): Player;
 
   getInitiative(): number;
-  setInitiative(value: number): void;
+  setInitiative(value: number): Player;
 
   getSpeed(): number;
-  setSpeed(value: number): void;
+  setSpeed(value: number): Player;
 
   getHitdice(): string;
-  setHitdice(value: string): void;
+  setHitdice(value: string): Player;
 
-  hasDeathsaves(): boolean;
-  clearDeathsaves(): void;
   getDeathsaves(): DeathSaves | undefined;
-  setDeathsaves(value?: DeathSaves): void;
+  setDeathsaves(value?: DeathSaves): Player;
+  hasDeathsaves(): boolean;
+  clearDeathsaves(): Player;
 
   getAbilityscorebonusesMap(): jspb.Map<string, number>;
-  clearAbilityscorebonusesMap(): void;
-  clearSpecialabilitiesList(): void;
+  clearAbilityscorebonusesMap(): Player;
+
   getSpecialabilitiesList(): Array<SpecialAbility>;
-  setSpecialabilitiesList(value: Array<SpecialAbility>): void;
+  setSpecialabilitiesList(value: Array<SpecialAbility>): Player;
+  clearSpecialabilitiesList(): Player;
   addSpecialabilities(value?: SpecialAbility, index?: number): SpecialAbility;
 
-  hasRacialtraits(): boolean;
-  clearRacialtraits(): void;
   getRacialtraits(): RacialTraits | undefined;
-  setRacialtraits(value?: RacialTraits): void;
+  setRacialtraits(value?: RacialTraits): Player;
+  hasRacialtraits(): boolean;
+  clearRacialtraits(): Player;
 
-  hasLocation(): boolean;
-  clearLocation(): void;
   getLocation(): Coordinates | undefined;
-  setLocation(value?: Coordinates): void;
+  setLocation(value?: Coordinates): Player;
+  hasLocation(): boolean;
+  clearLocation(): Player;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Player.AsObject;
   static toObject(includeInstance: boolean, msg: Player): Player.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Player, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Player;
   static deserializeBinaryFromReader(message: Player, reader: jspb.BinaryReader): Player;
@@ -212,13 +208,11 @@ export namespace Player {
 
 export class Skill extends jspb.Message {
   getName(): string;
-  setName(value: string): void;
+  setName(value: string): Skill;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Skill.AsObject;
   static toObject(includeInstance: boolean, msg: Skill): Skill.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Skill, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Skill;
   static deserializeBinaryFromReader(message: Skill, reader: jspb.BinaryReader): Skill;
@@ -232,13 +226,11 @@ export namespace Skill {
 
 export class SavingThrow extends jspb.Message {
   getName(): string;
-  setName(value: string): void;
+  setName(value: string): SavingThrow;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SavingThrow.AsObject;
   static toObject(includeInstance: boolean, msg: SavingThrow): SavingThrow.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: SavingThrow, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SavingThrow;
   static deserializeBinaryFromReader(message: SavingThrow, reader: jspb.BinaryReader): SavingThrow;
@@ -252,13 +244,11 @@ export namespace SavingThrow {
 
 export class Language extends jspb.Message {
   getName(): string;
-  setName(value: string): void;
+  setName(value: string): Language;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Language.AsObject;
   static toObject(includeInstance: boolean, msg: Language): Language.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Language, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Language;
   static deserializeBinaryFromReader(message: Language, reader: jspb.BinaryReader): Language;
@@ -272,13 +262,11 @@ export namespace Language {
 
 export class Equipment extends jspb.Message {
   getName(): string;
-  setName(value: string): void;
+  setName(value: string): Equipment;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Equipment.AsObject;
   static toObject(includeInstance: boolean, msg: Equipment): Equipment.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Equipment, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Equipment;
   static deserializeBinaryFromReader(message: Equipment, reader: jspb.BinaryReader): Equipment;
@@ -292,13 +280,11 @@ export namespace Equipment {
 
 export class Feature extends jspb.Message {
   getName(): string;
-  setName(value: string): void;
+  setName(value: string): Feature;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Feature.AsObject;
   static toObject(includeInstance: boolean, msg: Feature): Feature.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Feature, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Feature;
   static deserializeBinaryFromReader(message: Feature, reader: jspb.BinaryReader): Feature;
@@ -312,13 +298,11 @@ export namespace Feature {
 
 export class Spell extends jspb.Message {
   getName(): string;
-  setName(value: string): void;
+  setName(value: string): Spell;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Spell.AsObject;
   static toObject(includeInstance: boolean, msg: Spell): Spell.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Spell, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Spell;
   static deserializeBinaryFromReader(message: Spell, reader: jspb.BinaryReader): Spell;
@@ -332,13 +316,11 @@ export namespace Spell {
 
 export class SpecialAbility extends jspb.Message {
   getName(): string;
-  setName(value: string): void;
+  setName(value: string): SpecialAbility;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SpecialAbility.AsObject;
   static toObject(includeInstance: boolean, msg: SpecialAbility): SpecialAbility.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: SpecialAbility, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SpecialAbility;
   static deserializeBinaryFromReader(message: SpecialAbility, reader: jspb.BinaryReader): SpecialAbility;
@@ -352,16 +334,14 @@ export namespace SpecialAbility {
 
 export class DeathSaves extends jspb.Message {
   getSuccesses(): number;
-  setSuccesses(value: number): void;
+  setSuccesses(value: number): DeathSaves;
 
   getFailures(): number;
-  setFailures(value: number): void;
+  setFailures(value: number): DeathSaves;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeathSaves.AsObject;
   static toObject(includeInstance: boolean, msg: DeathSaves): DeathSaves.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: DeathSaves, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): DeathSaves;
   static deserializeBinaryFromReader(message: DeathSaves, reader: jspb.BinaryReader): DeathSaves;
@@ -376,38 +356,36 @@ export namespace DeathSaves {
 
 export class RacialTraits extends jspb.Message {
   getName(): string;
-  setName(value: string): void;
+  setName(value: string): RacialTraits;
 
   getDescription(): string;
-  setDescription(value: string): void;
+  setDescription(value: string): RacialTraits;
 
   getDarkvision(): number;
-  setDarkvision(value: number): void;
+  setDarkvision(value: number): RacialTraits;
 
   getSize(): string;
-  setSize(value: string): void;
+  setSize(value: string): RacialTraits;
 
   getSpeed(): number;
-  setSpeed(value: number): void;
+  setSpeed(value: number): RacialTraits;
 
-  clearLanguagesList(): void;
   getLanguagesList(): Array<Language>;
-  setLanguagesList(value: Array<Language>): void;
+  setLanguagesList(value: Array<Language>): RacialTraits;
+  clearLanguagesList(): RacialTraits;
   addLanguages(value?: Language, index?: number): Language;
 
   getAbilityscorebonuses(): number;
-  setAbilityscorebonuses(value: number): void;
+  setAbilityscorebonuses(value: number): RacialTraits;
 
-  clearSpecialabilitiesList(): void;
   getSpecialabilitiesList(): Array<SpecialAbility>;
-  setSpecialabilitiesList(value: Array<SpecialAbility>): void;
+  setSpecialabilitiesList(value: Array<SpecialAbility>): RacialTraits;
+  clearSpecialabilitiesList(): RacialTraits;
   addSpecialabilities(value?: SpecialAbility, index?: number): SpecialAbility;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): RacialTraits.AsObject;
   static toObject(includeInstance: boolean, msg: RacialTraits): RacialTraits.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: RacialTraits, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): RacialTraits;
   static deserializeBinaryFromReader(message: RacialTraits, reader: jspb.BinaryReader): RacialTraits;
@@ -428,26 +406,24 @@ export namespace RacialTraits {
 
 export class Location extends jspb.Message {
   getId(): string;
-  setId(value: string): void;
+  setId(value: string): Location;
 
   getDescription(): string;
-  setDescription(value: string): void;
+  setDescription(value: string): Location;
 
-  clearItemsList(): void;
   getItemsList(): Array<Item>;
-  setItemsList(value: Array<Item>): void;
+  setItemsList(value: Array<Item>): Location;
+  clearItemsList(): Location;
   addItems(value?: Item, index?: number): Item;
 
-  clearNpcsList(): void;
   getNpcsList(): Array<NPC>;
-  setNpcsList(value: Array<NPC>): void;
+  setNpcsList(value: Array<NPC>): Location;
+  clearNpcsList(): Location;
   addNpcs(value?: NPC, index?: number): NPC;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Location.AsObject;
   static toObject(includeInstance: boolean, msg: Location): Location.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Location, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Location;
   static deserializeBinaryFromReader(message: Location, reader: jspb.BinaryReader): Location;
@@ -464,13 +440,11 @@ export namespace Location {
 
 export class Item extends jspb.Message {
   getName(): string;
-  setName(value: string): void;
+  setName(value: string): Item;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Item.AsObject;
   static toObject(includeInstance: boolean, msg: Item): Item.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Item, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Item;
   static deserializeBinaryFromReader(message: Item, reader: jspb.BinaryReader): Item;
@@ -484,13 +458,11 @@ export namespace Item {
 
 export class NPC extends jspb.Message {
   getName(): string;
-  setName(value: string): void;
+  setName(value: string): NPC;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): NPC.AsObject;
   static toObject(includeInstance: boolean, msg: NPC): NPC.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: NPC, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): NPC;
   static deserializeBinaryFromReader(message: NPC, reader: jspb.BinaryReader): NPC;
@@ -504,18 +476,16 @@ export namespace NPC {
 
 export class CreatePlayerRequest extends jspb.Message {
   getName(): string;
-  setName(value: string): void;
+  setName(value: string): CreatePlayerRequest;
 
-  hasPlayer(): boolean;
-  clearPlayer(): void;
   getPlayer(): Player | undefined;
-  setPlayer(value?: Player): void;
+  setPlayer(value?: Player): CreatePlayerRequest;
+  hasPlayer(): boolean;
+  clearPlayer(): CreatePlayerRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CreatePlayerRequest.AsObject;
   static toObject(includeInstance: boolean, msg: CreatePlayerRequest): CreatePlayerRequest.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: CreatePlayerRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): CreatePlayerRequest;
   static deserializeBinaryFromReader(message: CreatePlayerRequest, reader: jspb.BinaryReader): CreatePlayerRequest;
@@ -529,16 +499,14 @@ export namespace CreatePlayerRequest {
 }
 
 export class CreatePlayerResponse extends jspb.Message {
-  hasPlayer(): boolean;
-  clearPlayer(): void;
   getPlayer(): Player | undefined;
-  setPlayer(value?: Player): void;
+  setPlayer(value?: Player): CreatePlayerResponse;
+  hasPlayer(): boolean;
+  clearPlayer(): CreatePlayerResponse;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CreatePlayerResponse.AsObject;
   static toObject(includeInstance: boolean, msg: CreatePlayerResponse): CreatePlayerResponse.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: CreatePlayerResponse, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): CreatePlayerResponse;
   static deserializeBinaryFromReader(message: CreatePlayerResponse, reader: jspb.BinaryReader): CreatePlayerResponse;
@@ -552,18 +520,16 @@ export namespace CreatePlayerResponse {
 
 export class MovePlayerRequest extends jspb.Message {
   getPlayerId(): string;
-  setPlayerId(value: string): void;
+  setPlayerId(value: string): MovePlayerRequest;
 
-  hasNewLocation(): boolean;
-  clearNewLocation(): void;
   getNewLocation(): Coordinates | undefined;
-  setNewLocation(value?: Coordinates): void;
+  setNewLocation(value?: Coordinates): MovePlayerRequest;
+  hasNewLocation(): boolean;
+  clearNewLocation(): MovePlayerRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): MovePlayerRequest.AsObject;
   static toObject(includeInstance: boolean, msg: MovePlayerRequest): MovePlayerRequest.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: MovePlayerRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): MovePlayerRequest;
   static deserializeBinaryFromReader(message: MovePlayerRequest, reader: jspb.BinaryReader): MovePlayerRequest;
@@ -580,8 +546,6 @@ export class MovePlayerResponse extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): MovePlayerResponse.AsObject;
   static toObject(includeInstance: boolean, msg: MovePlayerResponse): MovePlayerResponse.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: MovePlayerResponse, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): MovePlayerResponse;
   static deserializeBinaryFromReader(message: MovePlayerResponse, reader: jspb.BinaryReader): MovePlayerResponse;
@@ -593,16 +557,14 @@ export namespace MovePlayerResponse {
 }
 
 export class GetLocationRequest extends jspb.Message {
-  hasCoordinates(): boolean;
-  clearCoordinates(): void;
   getCoordinates(): Coordinates | undefined;
-  setCoordinates(value?: Coordinates): void;
+  setCoordinates(value?: Coordinates): GetLocationRequest;
+  hasCoordinates(): boolean;
+  clearCoordinates(): GetLocationRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetLocationRequest.AsObject;
   static toObject(includeInstance: boolean, msg: GetLocationRequest): GetLocationRequest.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: GetLocationRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): GetLocationRequest;
   static deserializeBinaryFromReader(message: GetLocationRequest, reader: jspb.BinaryReader): GetLocationRequest;
@@ -615,16 +577,14 @@ export namespace GetLocationRequest {
 }
 
 export class GetLocationResponse extends jspb.Message {
-  hasLocation(): boolean;
-  clearLocation(): void;
   getLocation(): Location | undefined;
-  setLocation(value?: Location): void;
+  setLocation(value?: Location): GetLocationResponse;
+  hasLocation(): boolean;
+  clearLocation(): GetLocationResponse;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetLocationResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GetLocationResponse): GetLocationResponse.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: GetLocationResponse, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): GetLocationResponse;
   static deserializeBinaryFromReader(message: GetLocationResponse, reader: jspb.BinaryReader): GetLocationResponse;
@@ -640,8 +600,6 @@ export class ListPlayersRequest extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListPlayersRequest.AsObject;
   static toObject(includeInstance: boolean, msg: ListPlayersRequest): ListPlayersRequest.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ListPlayersRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ListPlayersRequest;
   static deserializeBinaryFromReader(message: ListPlayersRequest, reader: jspb.BinaryReader): ListPlayersRequest;
@@ -653,16 +611,14 @@ export namespace ListPlayersRequest {
 }
 
 export class ListPlayersResponse extends jspb.Message {
-  clearPlayersList(): void;
   getPlayersList(): Array<Player>;
-  setPlayersList(value: Array<Player>): void;
+  setPlayersList(value: Array<Player>): ListPlayersResponse;
+  clearPlayersList(): ListPlayersResponse;
   addPlayers(value?: Player, index?: number): Player;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListPlayersResponse.AsObject;
   static toObject(includeInstance: boolean, msg: ListPlayersResponse): ListPlayersResponse.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ListPlayersResponse, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ListPlayersResponse;
   static deserializeBinaryFromReader(message: ListPlayersResponse, reader: jspb.BinaryReader): ListPlayersResponse;
@@ -676,13 +632,11 @@ export namespace ListPlayersResponse {
 
 export class GetPlayerRequest extends jspb.Message {
   getPlayerid(): string;
-  setPlayerid(value: string): void;
+  setPlayerid(value: string): GetPlayerRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetPlayerRequest.AsObject;
   static toObject(includeInstance: boolean, msg: GetPlayerRequest): GetPlayerRequest.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: GetPlayerRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): GetPlayerRequest;
   static deserializeBinaryFromReader(message: GetPlayerRequest, reader: jspb.BinaryReader): GetPlayerRequest;
@@ -695,16 +649,14 @@ export namespace GetPlayerRequest {
 }
 
 export class GetPlayerResponse extends jspb.Message {
-  hasPlayer(): boolean;
-  clearPlayer(): void;
   getPlayer(): Player | undefined;
-  setPlayer(value?: Player): void;
+  setPlayer(value?: Player): GetPlayerResponse;
+  hasPlayer(): boolean;
+  clearPlayer(): GetPlayerResponse;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetPlayerResponse.AsObject;
   static toObject(includeInstance: boolean, msg: GetPlayerResponse): GetPlayerResponse.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: GetPlayerResponse, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): GetPlayerResponse;
   static deserializeBinaryFromReader(message: GetPlayerResponse, reader: jspb.BinaryReader): GetPlayerResponse;
@@ -717,16 +669,14 @@ export namespace GetPlayerResponse {
 }
 
 export class SetPlayerRequest extends jspb.Message {
-  hasPlayer(): boolean;
-  clearPlayer(): void;
   getPlayer(): Player | undefined;
-  setPlayer(value?: Player): void;
+  setPlayer(value?: Player): SetPlayerRequest;
+  hasPlayer(): boolean;
+  clearPlayer(): SetPlayerRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SetPlayerRequest.AsObject;
   static toObject(includeInstance: boolean, msg: SetPlayerRequest): SetPlayerRequest.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: SetPlayerRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SetPlayerRequest;
   static deserializeBinaryFromReader(message: SetPlayerRequest, reader: jspb.BinaryReader): SetPlayerRequest;
@@ -739,16 +689,14 @@ export namespace SetPlayerRequest {
 }
 
 export class SetPlayerResponse extends jspb.Message {
-  hasPlayer(): boolean;
-  clearPlayer(): void;
   getPlayer(): Player | undefined;
-  setPlayer(value?: Player): void;
+  setPlayer(value?: Player): SetPlayerResponse;
+  hasPlayer(): boolean;
+  clearPlayer(): SetPlayerResponse;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SetPlayerResponse.AsObject;
   static toObject(includeInstance: boolean, msg: SetPlayerResponse): SetPlayerResponse.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: SetPlayerResponse, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SetPlayerResponse;
   static deserializeBinaryFromReader(message: SetPlayerResponse, reader: jspb.BinaryReader): SetPlayerResponse;
@@ -762,18 +710,16 @@ export namespace SetPlayerResponse {
 
 export class UpdatePlayerRequest extends jspb.Message {
   getPlayerId(): string;
-  setPlayerId(value: string): void;
+  setPlayerId(value: string): UpdatePlayerRequest;
 
-  hasPlayer(): boolean;
-  clearPlayer(): void;
   getPlayer(): Player | undefined;
-  setPlayer(value?: Player): void;
+  setPlayer(value?: Player): UpdatePlayerRequest;
+  hasPlayer(): boolean;
+  clearPlayer(): UpdatePlayerRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UpdatePlayerRequest.AsObject;
   static toObject(includeInstance: boolean, msg: UpdatePlayerRequest): UpdatePlayerRequest.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: UpdatePlayerRequest, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): UpdatePlayerRequest;
   static deserializeBinaryFromReader(message: UpdatePlayerRequest, reader: jspb.BinaryReader): UpdatePlayerRequest;
@@ -787,16 +733,14 @@ export namespace UpdatePlayerRequest {
 }
 
 export class UpdatePlayerResponse extends jspb.Message {
-  hasPlayer(): boolean;
-  clearPlayer(): void;
   getPlayer(): Player | undefined;
-  setPlayer(value?: Player): void;
+  setPlayer(value?: Player): UpdatePlayerResponse;
+  hasPlayer(): boolean;
+  clearPlayer(): UpdatePlayerResponse;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UpdatePlayerResponse.AsObject;
   static toObject(includeInstance: boolean, msg: UpdatePlayerResponse): UpdatePlayerResponse.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: UpdatePlayerResponse, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): UpdatePlayerResponse;
   static deserializeBinaryFromReader(message: UpdatePlayerResponse, reader: jspb.BinaryReader): UpdatePlayerResponse;
