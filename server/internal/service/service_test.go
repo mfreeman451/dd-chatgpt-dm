@@ -35,6 +35,10 @@ func (m *mockDB) CreatePlayer(ctx context.Context, player *model.Player) (string
 	return player.ID, m.err
 }
 
+func (m *mockDB) UpdatePlayer(ctx context.Context, player *model.Player) error {
+	return m.err
+}
+
 func TestCreatePlayer(t *testing.T) {
 
 	db := &mockDB{}

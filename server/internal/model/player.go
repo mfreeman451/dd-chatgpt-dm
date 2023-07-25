@@ -6,31 +6,31 @@ type Player struct {
 	Name                string
 	Race                string
 	Class               string
-	Level               int
+	Level               int32
 	Alignment           string
 	Background          string
-	Strength            int
-	Dexterity           int
-	Constitution        int
-	Intelligence        int
-	Wisdom              int
-	Charisma            int
-	HitPoints           int
-	TemporaryHitPoints  int
-	MaxHitPoints        int
-	ArmorClass          int
-	ProficiencyBonus    int
+	Strength            int32
+	Dexterity           int32
+	Constitution        int32
+	Intelligence        int32
+	Wisdom              int32
+	Charisma            int32
+	HitPoints           int32
+	TemporaryHitPoints  int32
+	MaxHitPoints        int32
+	ArmorClass          int32
+	ProficiencyBonus    int32
 	Skills              []string
 	SavingThrows        []string
 	Languages           []string
 	Equipment           []string
 	Features            []string
 	Spells              []string
-	SpellSlots          int
-	CurrentSpellSlots   int
-	ExperiencePoints    int
-	Initiative          int
-	Speed               int
+	SpellSlots          int32
+	CurrentSpellSlots   int32
+	ExperiencePoints    int32
+	Initiative          int32
+	Speed               int32
 	HitDice             string
 	DeathSaves          DeathSaves
 	AbilityScoreBonuses map[string]int32
