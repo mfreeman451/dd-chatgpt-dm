@@ -6,6 +6,7 @@ import (
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
+	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
@@ -161,7 +162,6 @@ func convertMapToPBMessages(m map[string]int32, msg proto.Message) interface{} {
 	}
 }
 
-// convertPlayerToProto converts a model.Player to pb.Player
 func convertPlayerToProto(player *model.Player) *pb.Player {
 
 	// Convert slices of strings to slices of pointers to protobuf messages
@@ -176,7 +176,7 @@ func convertPlayerToProto(player *model.Player) *pb.Player {
 	rtLanguages := convertStringsToPBMessages(player.RacialTraits.Languages, &pb.Language{}).([]*pb.Language)
 	rtSpecialAbilities := convertStringsToPBMessages(player.RacialTraits.SpecialAbilities, &pb.SpecialAbility{}).([]*pb.SpecialAbility)
 
-	return &pb.Player{
+	pbPlayer := &pb.Player{
 		Id:                 player.ID,
 		Discord:            player.Discord,
 		Name:               player.Name,
@@ -225,6 +225,44 @@ func convertPlayerToProto(player *model.Player) *pb.Player {
 			SpecialAbilities:    rtSpecialAbilities,
 		},
 	}
+
+	// Initialize slices to empty if nil
+	if pbPlayer.Skills == nil {
+		pbPlayer.Skills = []*pb.Skill{}
+	}
+	if pbPlayer.Features == nil {
+		pbPlayer.Features = []*pb.Feature{}
+	}
+	if pbPlayer.SavingThrows == nil {
+		pbPlayer.SavingThrows = []*pb.SavingThrow{}
+	}
+	if pbPlayer.Languages == nil {
+		pbPlayer.Languages = []*pb.Language{}
+	}
+	if pbPlayer.Equipment == nil {
+		pbPlayer.Equipment = []*pb.Equipment{}
+	}
+	if pbPlayer.Spells == nil {
+		pbPlayer.Spells = []*pb.Spell{}
+	}
+	if pbPlayer.AbilityScoreBonuses == nil {
+		pbPlayer.AbilityScoreBonuses = []*pb.AbilityScoreBonus{}
+	}
+	if pbPlayer.SpecialAbilities == nil {
+		pbPlayer.SpecialAbilities = []*pb.SpecialAbility{}
+	}
+	if pbPlayer.RacialTraits.Languages == nil {
+		pbPlayer.RacialTraits.Languages = []*pb.Language{}
+	}
+	if pbPlayer.RacialTraits.SpecialAbilities == nil {
+		pbPlayer.RacialTraits.SpecialAbilities = []*pb.SpecialAbility{}
+	}
+	pbPlayer.DeathSaves = &pb.DeathSaves{}
+	pbPlayer.RacialTraits = &pb.RacialTraits{}
+
+	log.Printf("Converted Player:\n%+v\n", pbPlayer)
+
+	return pbPlayer
 }
 
 /*
