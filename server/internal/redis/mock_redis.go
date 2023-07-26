@@ -1,10 +1,8 @@
-// mock_redis.go
 package redis
 
 import (
 	"context"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
-	"github.com/redis/go-redis/v9"
 	"time"
 )
 
@@ -12,12 +10,14 @@ import (
 type mockRedis struct {
 	roomState *model.RoomState
 	err       error
-	client    *redis.Client
+	data      map[string]interface{}
 }
 
 // NewMockRedis creates a new mockRedis instance.
-func NewMockRedis() Redis {
-	return &mockRedis{}
+func NewMockRedis() Client {
+	return &mockRedis{
+		data: make(map[string]interface{}),
+	}
 }
 
 func (m *mockRedis) GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error) {
@@ -33,22 +33,36 @@ func (m *mockRedis) SetRoomState(ctx context.Context, roomID string, state *mode
 
 func (m *mockRedis) Set(ctx context.Context, key string, value interface{}, expiration time.Duration) error {
 	// Implement the Set method for mockRedis
-	// For example, you can store the key-value pair in a map
-	// set an expiration of 5 minutes
-	return m.client.Set(ctx, key, value, expiration).Err()
+	// For example, you can store the key-value pair in the map
+	m.data[key] = value
+	return nil
 }
 
 func (m *mockRedis) Get(ctx context.Context, key string) (interface{}, error) {
-	return m.client.Get(ctx, key).Result()
+	// Implement the Get method for mockRedis
+	// For example, you can retrieve the value from the map based on the key
+	value, ok := m.data[key]
+	if !ok {
+		return nil, nil
+	}
+	return value, nil
 }
 
 func (m *mockRedis) Delete(ctx context.Context, key string) error {
-	return m.client.Del(ctx, key).Err()
+	// Implement the Delete method for mockRedis
+	// For example, you can delete the key-value pair from the map
+	delete(m.data, key)
+	return nil
 }
 
 func (m *mockRedis) Publish(ctx context.Context, channel string, message interface{}) error {
 	// Implement the Publish method for mockRedis
 	return m.err
+}
+
+// Ping
+func (m *mockRedis) Ping(ctx context.Context) (string, error) {
+	return "PONG", nil
 }
 
 // Add other method implementations for interacting with Redis as needed

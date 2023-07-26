@@ -404,9 +404,10 @@ func (s *Service) GetRoomState(ctx context.Context, roomID string) (*model.RoomS
 		// Store the room state in Redis for future access
 		// Serialize the room state before storing it in Redis
 		serializedState := model.SerializeRoomState(roomState)
-		err := s.redis.Set(ctx, roomID, serializedState, expirationDuration).Err()
+		err := s.redis.Set(ctx, roomID, serializedState, expirationDuration)
 		if err != nil {
 			// Handle error
+			return nil, err
 		}
 	}
 
