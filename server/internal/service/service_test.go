@@ -2,10 +2,11 @@ package service
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
+	myred "github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -16,6 +17,11 @@ import (
 type mockDB struct {
 	player *model.Player
 	err    error
+}
+
+type mockRedis struct {
+	roomState *model.RoomState
+	err       error
 }
 
 func (m *mockDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
@@ -39,11 +45,23 @@ func (m *mockDB) UpdatePlayer(ctx context.Context, player *model.Player) error {
 	return m.err
 }
 
+func (r *mockRedis) GetRoomState(roomID string) (*model.RoomState, error) {
+	// Return the mock room state
+	return r.roomState, r.err
+}
+
+func (r *mockRedis) SetRoomState(roomID string, state *model.RoomState) error {
+	// Update the mock room state
+	r.roomState = state
+	return r.err
+}
+
 func TestCreatePlayer(t *testing.T) {
 
-	db := &mockDB{}
+	mockDB := db.NewMockDB()
+	mockRedis := myred.NewMockRedis()
 
-	srv := NewService(db)
+	srv := NewService(mockDB, mockRedis)
 
 	// create a random name
 
@@ -86,9 +104,10 @@ func TestCreatePlayer(t *testing.T) {
 func TestCreatePlayerDBError(t *testing.T) {
 
 	// Create a mock DB that returns an error
-	db := &mockDB{err: errors.New("db error")}
+	mockDb := db.NewMockDB()
+	mockRedis := myred.NewMockRedis()
 
-	srv := NewService(db)
+	srv := NewService(mockDb, mockRedis)
 
 	// Call the method
 	req := &pb.CreatePlayerRequest{Name: "John"}

@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
+	redis "github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
-	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -19,11 +19,11 @@ import (
 type Service struct {
 	pb.UnimplementedGameServer
 	mydb.DB
-	redis *redis.Client
+	redis redis.Client
 }
 
 // NewService creates a new gRPC service
-func NewService(db mydb.DB, redisClient *redis.Client) *Service {
+func NewService(db mydb.DB, redisClient redis.Client) *Service {
 	return &Service{pb.UnimplementedGameServer{}, db, redisClient}
 }
 
@@ -33,9 +33,10 @@ func (s *Service) PublishNewPlayerEvent(ctx context.Context, roomID, newPlayerID
 	message := "Player " + newPlayerID + " has joined the room."
 
 	// Publish the message to the room channel
-	err := s.redis.Publish(ctx, roomID, message).Err()
+	err := s.redis.Publish(ctx, roomID, message)
 	if err != nil {
 		// Handle error
+		return err
 	}
 
 	return nil
@@ -376,29 +377,38 @@ func (s *Service) mustEmbedUnimplementedGameServer() {}
 // expirationDuration is the duration after which the room state will expire in Redis
 const expirationDuration = 10 * time.Minute
 
-// GetRoomState retrieves the state of a room from Redis or the database
 func (s *Service) GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error) {
 	// Try to get the room state from Redis
-	cachedState, err := s.redis.Get(ctx, roomID).Result()
-	if err == nil {
-		// Room state found in Redis, deserialize it and return
-		// You can use JSON or any other serialization format here
-		// For example, using JSON:
-		return model.DeserializeRoomState(cachedState), nil
-	}
-
-	// Room state not found in Redis, fetch it from the database
-	roomState, err := s.DB.GetRoomState(ctx, roomID)
+	cachedState, err := s.redis.Get(ctx, roomID)
 	if err != nil {
 		return nil, err
 	}
 
-	// Store the room state in Redis for future access
-	// Serialize the room state before storing it in Redis
-	serializedState := model.SerializeRoomState(roomState)
-	err = s.redis.Set(ctx, roomID, serializedState, expirationDuration).Err()
-	if err != nil {
-		// Handle error
+	// Extract the result from the Redis response
+	serializedState, ok := cachedState.(string)
+	if !ok {
+		// Handle error: Failed to extract the result
+		return nil, fmt.Errorf("failed to extract Redis result")
+	}
+
+	// Deserialize the room state
+	roomState := model.DeserializeRoomState(serializedState)
+
+	// If the room state is nil, it means it was not found in Redis, so fetch it from the database
+	if roomState == nil {
+		roomState, err = s.DB.GetRoomState(ctx, roomID)
+		if err != nil {
+			return nil, err
+		}
+
+		// Store the room state in Redis for future access
+		// Serialize the room state before storing it in Redis
+		serializedState := model.SerializeRoomState(roomState)
+		err := s.redis.Set(ctx, roomID, serializedState, expirationDuration)
+		if err != nil {
+			// Handle error
+			return nil, err
+		}
 	}
 
 	return roomState, nil
