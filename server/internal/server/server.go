@@ -45,6 +45,16 @@ func (s *GRPCServer) Stop() {
 	s.grpc.GracefulStop()
 }
 
+// SetOptions sets the options for the gRPC server
+func (s *GRPCServer) SetOptions(options ...grpc.ServerOption) {
+	s.grpc = grpc.NewServer(options...)
+}
+
+// GetGRPCServer returns the underlying grpc.Server instance
+func (s *GRPCServer) GetGRPCServer() *grpc.Server {
+	return s.grpc
+}
+
 // RedisConfig holds the configuration for the Redis client
 type RedisConfig struct {
 	Address  string
