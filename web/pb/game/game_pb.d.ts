@@ -139,8 +139,10 @@ export class Player extends jspb.Message {
   hasDeathsaves(): boolean;
   clearDeathsaves(): Player;
 
-  getAbilityscorebonusesMap(): jspb.Map<string, number>;
-  clearAbilityscorebonusesMap(): Player;
+  getAbilityscorebonusesList(): Array<AbilityScoreBonus>;
+  setAbilityscorebonusesList(value: Array<AbilityScoreBonus>): Player;
+  clearAbilityscorebonusesList(): Player;
+  addAbilityscorebonuses(value?: AbilityScoreBonus, index?: number): AbilityScoreBonus;
 
   getSpecialabilitiesList(): Array<SpecialAbility>;
   setSpecialabilitiesList(value: Array<SpecialAbility>): Player;
@@ -156,6 +158,12 @@ export class Player extends jspb.Message {
   setLocation(value?: Coordinates): Player;
   hasLocation(): boolean;
   clearLocation(): Player;
+
+  getLastlogin(): number;
+  setLastlogin(value: number): Player;
+
+  getLastlogout(): number;
+  setLastlogout(value: number): Player;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Player.AsObject;
@@ -199,10 +207,12 @@ export namespace Player {
     speed: number,
     hitdice: string,
     deathsaves?: DeathSaves.AsObject,
-    abilityscorebonusesMap: Array<[string, number]>,
+    abilityscorebonusesList: Array<AbilityScoreBonus.AsObject>,
     specialabilitiesList: Array<SpecialAbility.AsObject>,
     racialtraits?: RacialTraits.AsObject,
     location?: Coordinates.AsObject,
+    lastlogin: number,
+    lastlogout: number,
   }
 }
 
@@ -329,6 +339,28 @@ export class SpecialAbility extends jspb.Message {
 export namespace SpecialAbility {
   export type AsObject = {
     name: string,
+  }
+}
+
+export class AbilityScoreBonus extends jspb.Message {
+  getName(): string;
+  setName(value: string): AbilityScoreBonus;
+
+  getValue(): number;
+  setValue(value: number): AbilityScoreBonus;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AbilityScoreBonus.AsObject;
+  static toObject(includeInstance: boolean, msg: AbilityScoreBonus): AbilityScoreBonus.AsObject;
+  static serializeBinaryToWriter(message: AbilityScoreBonus, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AbilityScoreBonus;
+  static deserializeBinaryFromReader(message: AbilityScoreBonus, reader: jspb.BinaryReader): AbilityScoreBonus;
+}
+
+export namespace AbilityScoreBonus {
+  export type AsObject = {
+    name: string,
+    value: number,
   }
 }
 
@@ -543,6 +575,11 @@ export namespace MovePlayerRequest {
 }
 
 export class MovePlayerResponse extends jspb.Message {
+  getPlayer(): Player | undefined;
+  setPlayer(value?: Player): MovePlayerResponse;
+  hasPlayer(): boolean;
+  clearPlayer(): MovePlayerResponse;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): MovePlayerResponse.AsObject;
   static toObject(includeInstance: boolean, msg: MovePlayerResponse): MovePlayerResponse.AsObject;
@@ -553,6 +590,7 @@ export class MovePlayerResponse extends jspb.Message {
 
 export namespace MovePlayerResponse {
   export type AsObject = {
+    player?: Player.AsObject,
   }
 }
 

@@ -1,7 +1,15 @@
-import { GetPlayerRequest, GetPlayerResponse } from '~/pb/game/game_pb';
-import { GameClient } from '~/pb/game/game_grpc_web_pb';
+// import gamePB from '~/pb/game/game_pb';
+// import gameWebPB from '~/pb/game/game_grpc_web_pb';
+// import { GetPlayerRequest, GetPlayerResponse } from '~/pb/game/game_pb';
+// import { GameClient } from '~/pb/game/game_grpc_web_pb';
 
-const client = new GameClient('http://localhost:8080');
+// const { GetPlayerRequest, GetPlayerResponse } = gamePB;
+// const { GameClient } = gameWebPB;
+
+import * as pb from '~/pb/game/game_pb';
+import * as grpcWeb from '~/pb/game/game_grpc_web_pb';
+
+const client = new grpcWeb.GameClient('http://localhost:8080');
 
 export default defineEventHandler(async (event) => {
     if (!event.context.params) {
@@ -13,11 +21,11 @@ export default defineEventHandler(async (event) => {
 
     const id = event.context.params.id;
 
-    const request = new GetPlayerRequest();
+    const request = new pb.GetPlayerRequest();
     request.setPlayerid(id)
 
     try {
-        const response = await new Promise<GetPlayerResponse>((resolve, reject) => {
+        const response = await new Promise<pb.GetPlayerResponse>((resolve, reject) => {
             client.getPlayer(request, {}, (err: any, response: any) => {
                 if (err) {
                     reject(err);

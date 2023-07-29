@@ -1,20 +1,11 @@
-import {
-    GetPlayerRequest,
-    GetPlayerResponse,
-    CreatePlayerRequest,
-    CreatePlayerResponse,
-    UpdatePlayerRequest,
-    UpdatePlayerResponse,
-    Player
-} from '~/pb/game/game_pb';
+import * as pb from '~/pb/game/game_pb';
+import * as grpcWeb from '~/pb/game/game_grpc_web_pb';
 
-import { GameClient } from '~/pb/game/game_grpc_web_pb';
-
-const client = new GameClient('http://localhost:8080');
+const client = new grpcWeb.GameClient('http://localhost:8080');
 
 export default defineEventHandler(async (event) => {
 
-    const player: Player = await readBody(event);
+    const player: pb.Player = await readBody(event);
 
     if (!event.context.params) {
         return {
@@ -25,17 +16,17 @@ export default defineEventHandler(async (event) => {
 
     const id = event.context.params.id;
 
-    const request = new GetPlayerRequest();
+    const request = new pb.GetPlayerRequest();
     request.setPlayerid(id);
 
     try {
 
-        const getResponse = await new Promise<GetPlayerResponse>(
+        const getResponse = await new Promise<pb.GetPlayerResponse>(
             (resolve, reject) => {
                 client.getPlayer(
                     request,
                     {},
-                    (err: any, response: GetPlayerResponse) => {
+                    (err: any, response: pb.GetPlayerResponse) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -63,16 +54,16 @@ export default defineEventHandler(async (event) => {
             existingPlayer.setDiscord(player.getDiscord());
             existingPlayer.setName(player.getName());
 
-            const updateRequest = new UpdatePlayerRequest();
+            const updateRequest = new pb.UpdatePlayerRequest();
             updateRequest.setPlayerId(id);
             updateRequest.setPlayer(existingPlayer);
 
-            const updateResponse = await new Promise<UpdatePlayerResponse>(
+            const updateResponse = await new Promise<pb.UpdatePlayerResponse>(
                 (resolve, reject) => {
                     client.updatePlayer(
                         updateRequest,
                         {},
-                        (err: any, response: UpdatePlayerResponse) => {
+                        (err: any, response: pb.UpdatePlayerResponse) => {
                             if (err) {
                                 reject(err);
                             } else {
@@ -91,20 +82,20 @@ export default defineEventHandler(async (event) => {
         } else {
 
             // Create new player
-            const newPlayer = new Player();
+            const newPlayer = new pb.Player();
             newPlayer.setId(id);
             newPlayer.setDiscord(player.getDiscord());
             newPlayer.setName(player.getName());
 
-            const createRequest = new CreatePlayerRequest();
+            const createRequest = new pb.CreatePlayerRequest();
             createRequest.setName(newPlayer.getName());
 
-            const createResponse = await new Promise<CreatePlayerResponse>(
+            const createResponse = await new Promise<pb.CreatePlayerResponse>(
                 (resolve, reject) => {
                     client.createPlayer(
                         createRequest,
                         {},
-                        (err: any, response: CreatePlayerResponse) => {
+                        (err: any, response: pb.CreatePlayerResponse) => {
                             if (err) {
                                 reject(err);
                             } else {
