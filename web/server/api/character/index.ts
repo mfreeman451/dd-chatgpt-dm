@@ -1,33 +1,20 @@
+import { ListPlayersRequest } from '~/pb/game';
+import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
+import {GameClient} from "~/pb/game.client";
 
-import * as pb from '~/proto/game_pb';
-import * as grpcWeb from '~/proto/game_grpc_pb';
-import * as grpc from '@grpc/grpc-js';
+const transport = new GrpcWebFetchTransport({
+    baseUrl: 'http://localhost:8080',
+    }
+);
 
-const client = new grpcWeb.GameClient('http://localhost:8080', grpc.credentials.createInsecure() );
-
+const client = new GameClient(transport)
 export default defineEventHandler(async () => {
 
     try {
 
-        const request = new pb.ListPlayersRequest();
-
-        const md = new grpc.Metadata();
-
-        const response = await new Promise<pb.ListPlayersResponse>(
-            (resolve, reject) => {
-                 client.listPlayers(request, md,
-                    (err: any, response: any) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(response);
-                        }
-                    }
-                );
-            }
-        );
-
-        const players = response.getPlayersList();
+        const request = ListPlayersRequest.create({});
+        const response = await client.listPlayers(request);
+        const players = response.response.players;
 
         return {
             statusCode: 200,

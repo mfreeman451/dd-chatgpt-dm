@@ -1,0 +1,181 @@
+syntax = "proto3";
+
+option go_package = "pb/game";
+
+service Game {
+  rpc CreatePlayer(CreatePlayerRequest) returns (CreatePlayerResponse) {}
+  rpc MovePlayer(MovePlayerRequest) returns (MovePlayerResponse) {}
+  rpc GetLocation(GetLocationRequest) returns (GetLocationResponse) {}
+  rpc ListPlayers(ListPlayersRequest) returns (ListPlayersResponse) {}
+  rpc GetPlayer(GetPlayerRequest) returns (GetPlayerResponse) {} // Added GetPlayer method
+  rpc SetPlayer(SetPlayerRequest) returns (SetPlayerResponse); // Added SetPlayer method
+  rpc UpdatePlayer(UpdatePlayerRequest) returns (UpdatePlayerResponse) {} // Added UpdatePlayer method
+}
+
+message Coordinates {
+  int32 x = 1;
+  int32 y = 2;
+  int32 z = 3;
+}
+
+message Player {
+  string id = 1;
+  string discord = 2;
+  string name = 3;
+  string race = 4;
+  string class = 5;
+  int32 level = 6;
+  string alignment = 7;
+  string background = 8;
+  int32 strength = 9;
+  int32 dexterity = 10;
+  int32 constitution = 11;
+  int32 intelligence = 12;
+  int32 wisdom = 13;
+  int32 charisma = 14;
+  int32 hitPoints = 15;
+  int32 temporaryHitPoints = 16;
+  int32 maxHitPoints = 17;
+  int32 armorClass = 18;
+  int32 proficiencyBonus = 19;
+  repeated Skill skills = 20;
+  repeated SavingThrow savingThrows = 21;
+  repeated Language languages = 22;
+  repeated Equipment equipment = 23;
+  repeated Feature features = 24;
+  repeated Spell spells = 25;
+  int32 spellSlots = 26;
+  int32 currentSpellSlots = 27;
+  int32 experiencePoints = 28;
+  int32 initiative = 29;
+  int32 speed = 30;
+  string hitDice = 31;
+  DeathSaves deathSaves = 32;
+  repeated AbilityScoreBonus abilityScoreBonuses = 33;
+  repeated SpecialAbility specialAbilities = 34;
+  RacialTraits racialTraits = 35;
+  Coordinates location = 36;
+  int64 LastLogin = 37;
+  int64 LastLogout = 38;
+}
+
+message Skill {
+  string name = 1;
+}
+
+message SavingThrow {
+  string name = 1;
+}
+
+message Language {
+  string name = 1;
+}
+
+message Equipment {
+  string name = 1;
+}
+
+message Feature {
+  string name = 1;
+}
+
+message Spell {
+  string name = 1;
+}
+
+message SpecialAbility {
+  string name = 1;
+}
+
+message AbilityScoreBonus {
+  string name = 1;
+  int32 value = 2;
+}
+
+message DeathSaves {
+  int32 successes = 1;
+  int32 failures = 2;
+}
+
+message RacialTraits {
+  string name = 1;
+  string description = 2;
+  int32 darkvision = 3;
+  string size = 4;
+  int32 speed = 5;
+  repeated Language languages = 6;
+  int32 abilityScoreBonuses = 7;
+  repeated SpecialAbility specialAbilities = 8;
+}
+
+message Location {
+  string id = 1;
+  string description = 2;
+  repeated Item items = 3;
+  repeated NPC npcs = 4;
+}
+
+message Item {
+  string name = 1;
+}
+
+message NPC {
+  string name = 1;
+}
+
+message CreatePlayerRequest {
+  string name = 1;
+  Player player = 2;
+}
+
+message CreatePlayerResponse {
+  Player player = 1;
+}
+
+message MovePlayerRequest {
+  string player_id = 1;
+  Coordinates new_location = 2;
+}
+
+message MovePlayerResponse {
+  Player player = 1;
+}
+
+message GetLocationRequest {
+  Coordinates coordinates = 1;
+}
+
+message GetLocationResponse {
+  Location location = 1;
+}
+
+message ListPlayersRequest {}
+
+message ListPlayersResponse {
+  repeated Player players = 1;
+}
+
+message GetPlayerRequest {
+  string playerId = 1; // Add the field to specify the player ID
+}
+
+message GetPlayerResponse {
+  Player player = 1; // Add the field to return the player
+}
+
+message SetPlayerRequest {
+  Player player = 1; // Add the field to specify the player
+}
+
+message SetPlayerResponse {
+  Player player = 1; // Add the field to return the player
+}
+
+message UpdatePlayerRequest { // Added message
+  string player_id = 1;
+  Player player = 2;
+}
+
+message UpdatePlayerResponse { // Added message
+  Player player = 1;
+}

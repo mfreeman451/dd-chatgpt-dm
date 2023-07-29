@@ -17,13 +17,17 @@
     "node-ray": "^1.21.0",
     "nuxt": "^3.6.2",
     "nuxt-icon": "^0.4.2",
-    "nuxt-windicss": "^2.6.1",
-    "uuid ": "link:@types/uuid "
+    "nuxt-windicss": "^2.6.1"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.363.0",
     "@grpc/grpc-js": "^1.8.21",
+    "@protobuf-ts/grpcweb-transport": "^2.9.0",
+    "@protobuf-ts/plugin": "^2.9.0",
+    "@protobuf-ts/runtime": "^2.9.0",
+    "@types/google-protobuf": "^3.15.6",
     "aws-sdk": "^2.1413.0",
+    "google-protobuf": "^3.21.2",
     "uuid": "^9.0.0"
   }
 }

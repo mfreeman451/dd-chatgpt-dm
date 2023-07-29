@@ -1,12 +1,23 @@
-import * as pb from '~/proto/game_pb';
-import * as grpcWeb from '~/proto/game_grpc_pb';
-import * as grpc from '@grpc/grpc-js';
+import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
+import {GameClient} from "~/pb/game.client";
+import {
+    CreatePlayerRequest, CreatePlayerResponse,
+    GetPlayerRequest,
+    GetPlayerResponse,
+    Player,
+    UpdatePlayerRequest,
+    UpdatePlayerResponse
+} from "~/pb/game";
 
-const client = new grpcWeb.GameClient('http://localhost:8080', grpc.credentials.createInsecure() );
+const transport = new GrpcWebFetchTransport({
+        baseUrl: 'http://localhost:8080',
+    }
+);
 
+const client = new GameClient(transport)
 export default defineEventHandler(async (event) => {
 
-    const player: pb.Player = await readBody(event);
+    const player: Player = await readBody(event);
 
     if (!event.context.params) {
         return {
@@ -16,33 +27,19 @@ export default defineEventHandler(async (event) => {
     }
 
     const id = event.context.params.id;
-
-    const request = new pb.GetPlayerRequest();
-    request.setPlayerid(id);
+    const request = GetPlayerRequest.create();
+    request.playerId = id;
 
     try {
 
-        const getResponse = await new Promise<pb.GetPlayerResponse>(
-            (resolve, reject) => {
-                client.getPlayer(
-                    request,
-                    (err: any, response: pb.GetPlayerResponse) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(response);
-                        }
-                    }
-                );
-            }
-        );
-
-        const existingPlayer = getResponse.getPlayer();
+        const getResponse = await client.getPlayer(request);
+        const existingPlayer = getResponse.response.player;
 
         if (existingPlayer) {
 
             // Check for duplicate Discord ID
-            if (existingPlayer.getDiscord() === player.getDiscord()) {
+            // if (existingPlayer.getDiscord() === player.getDiscord()) {
+            if (existingPlayer.discord === player.discord) {
                 return {
                     statusCode: 400,
                     body: JSON.stringify({ error: 'Duplicate Discord ID'})
@@ -50,63 +47,49 @@ export default defineEventHandler(async (event) => {
             }
 
             // Update existing player
-            existingPlayer.setId(id);
-            existingPlayer.setDiscord(player.getDiscord());
-            existingPlayer.setName(player.getName());
+            // existingPlayer.setId(id);
+            existingPlayer.id = id;
+            // existingPlayer.setDiscord(player.getDiscord());
+            existingPlayer.discord = player.discord;
+            // existingPlayer.setName(player.getName());
+            existingPlayer.name = player.name;
 
-            const updateRequest = new pb.UpdatePlayerRequest();
-            updateRequest.setPlayerId(id);
-            updateRequest.setPlayer(existingPlayer);
+            const updateRequest = UpdatePlayerRequest.create()
+            // updateRequest.setPlayerId(id);
+            updateRequest.playerId = id;
+            // updateRequest.setPlayer(existingPlayer);
+            updateRequest.player = existingPlayer;
 
-            const updateResponse = await new Promise<pb.UpdatePlayerResponse>(
-                (resolve, reject) => {
-                    client.updatePlayer(
-                        updateRequest,
-                        (err: any, response: pb.UpdatePlayerResponse) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                resolve(response);
-                            }
-                        }
-                    );
-                }
-            );
+            const updateResponse = await client.updatePlayer(updateRequest);
 
             return {
                 statusCode: 200,
-                body: JSON.stringify(updateResponse.toObject())
+                body: JSON.stringify(updateResponse)
             };
 
         } else {
 
             // Create new player
-            const newPlayer = new pb.Player();
-            newPlayer.setId(id);
-            newPlayer.setDiscord(player.getDiscord());
-            newPlayer.setName(player.getName());
+            // const newPlayer = new pb.Player();
+            const newPlayer = Player.create();
+            // newPlayer.setId(id);
+            newPlayer.id = id;
+            // newPlayer.setDiscord(player.getDiscord());
+            newPlayer.discord = player.discord;
+            // newPlayer.setName(player.getName());
+            newPlayer.name = player.name;
 
-            const createRequest = new pb.CreatePlayerRequest();
-            createRequest.setName(newPlayer.getName());
+            const createRequest = CreatePlayerRequest.create()
+            // createRequest.setName(newPlayer.getName());
+            createRequest.name = newPlayer.name;
+            createRequest.player = newPlayer;
+            createRequest.player.id = id;
 
-            const createResponse = await new Promise<pb.CreatePlayerResponse>(
-                (resolve, reject) => {
-                    client.createPlayer(
-                        createRequest,
-                        (err: any, response: pb.CreatePlayerResponse) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                resolve(response);
-                            }
-                        }
-                    );
-                }
-            );
+            const createResponse = await client.createPlayer(createRequest);
 
             return {
                 statusCode: 200,
-                body: JSON.stringify(createResponse.toObject())
+                body: JSON.stringify(createResponse)
             };
 
         }
