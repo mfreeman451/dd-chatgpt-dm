@@ -23,6 +23,3 @@ plugins:
   - name: ts
     out: ../web/proto
     opt: grpc_js
-    #opt: import_style=commonjs,binary
-    #path: protoc-gen-ts
-    #cmd: yarn ts-proto

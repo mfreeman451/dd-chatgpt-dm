@@ -1,7 +1,9 @@
-import * as pb from '~/pb/game/game_pb';
-import * as grpcWeb from '~/pb/game/game_grpc_web_pb';
 
-const client = new grpcWeb.GameClient('http://localhost:8080');
+import * as pb from '~/proto/game_pb';
+import * as grpcWeb from '~/proto/game_grpc_pb';
+import * as grpc from '@grpc/grpc-js';
+
+const client = new grpcWeb.GameClient('http://localhost:8080', grpc.credentials.createInsecure() );
 
 export default defineEventHandler(async () => {
 
@@ -9,10 +11,12 @@ export default defineEventHandler(async () => {
 
         const request = new pb.ListPlayersRequest();
 
+        const md = new grpc.Metadata();
+
         const response = await new Promise<pb.ListPlayersResponse>(
             (resolve, reject) => {
-                client.listPlayers(request, {},
-                    (err: any, response: pb.ListPlayersResponse) => {
+                 client.listPlayers(request, md,
+                    (err: any, response: any) => {
                         if (err) {
                             reject(err);
                         } else {

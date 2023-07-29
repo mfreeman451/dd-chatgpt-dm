@@ -1,20 +1,5 @@
 gen:
 	cd proto && buf generate
-	#protoc --proto_path=proto proto/*.proto --go_out=server --go-grpc_out=server
-	#protoc --proto_path=proto proto/*.proto --go_out=client --go-grpc_out=client
-	#protoc --proto_path=proto proto/*.proto --js_out=import_style=commonjs:web/pb/game
-	#protoc --proto_path=proto proto/*.proto --js_out=import_style=typescript:web/pb/game
-	#protoc --proto_path=proto proto/*.proto --grpc-web_out=import_style=typescript,mode=grpcwebtext:web/pb/game
-	#protoc --proto_path=proto proto/*.proto --grpc-web_out=import_style=typescript,mode=grpcwebtext:web/pb/game
-	#protoc --proto_path=proto proto/*.proto --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=web/pb/game --ts_opt=grpc-web,import_style=commonjs,binary:.
-	#protoc \
-	#	--plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts \
-	#	--js_out=import_style=commonjs,binary:web/pb/game \
-	#	--ts_out=service=grpc-web:web/pb/game \
-	#	proto/*.proto
-
-	# Convert to ESM
-	#npx cjs-to-es6 web/pb/game/*.js -d web/pb/game
 
 clean:
 	rm -rf server/pb/
