@@ -30,9 +30,12 @@ export default {
         console.error(error.value)
       } else if (data.value) {
         const parsedData = JSON.parse(data.value.body);
-        characters.value = parsedData as Character[];
+        console.log("ParsedData", parsedData)
+        characters.value = parsedData.players as Character[];
       }
     })
+
+    console.log("characters", characters.value)
 
     // return { characters, isLoading: fetch.isLoading, error: fetch.error }
     return { characters, isLoading: fetch.pending, error: fetch.error }
