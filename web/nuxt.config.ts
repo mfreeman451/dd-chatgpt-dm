@@ -2,8 +2,12 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
-  typescript: {
-    typeCheck: true,
+  nitro: {
+    esbuild: {
+      options: {
+        target: 'esnext'
+      }
+    }
   },
   devtools: { enabled: true },
   modules: [

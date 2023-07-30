@@ -17,8 +17,7 @@
     "node-ray": "^1.21.0",
     "nuxt": "^3.6.5",
     "nuxt-icon": "^0.4.2",
-    "nuxt-windicss": "^2.6.1",
-    "vue-tsc": "^1.8.8"
+    "nuxt-windicss": "^2.6.1"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.379.1",
@@ -31,6 +30,7 @@
     "aws-sdk": "^2.1425.0",
     "google-protobuf": "^3.21.2",
     "nuxi": "^3.6.5",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "vue-tsc": "^1.8.8"
   }
 }
