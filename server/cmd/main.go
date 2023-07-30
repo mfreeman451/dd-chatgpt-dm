@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus" // Import the grpc_prometheus package
+	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/prometheus/client_golang/prometheus"

@@ -21,18 +21,6 @@ func NewGRPCServer(service pb.GameServer) *GRPCServer {
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
 
-	/*
-		grpcWebServer := grpcweb.WrapServer(grpcServer)
-
-		// wrap in a go func
-		go func() {
-			log.Info().Msg("starting grpc-web server on port 8080")
-			if err := http.ListenAndServe(":8080", grpcWebServer); err != nil {
-				log.Log().Err(err).Msg("failed to start grpc-web server")
-			}
-		}()
-	*/
-
 	// Register service implementation
 	pb.RegisterGameServer(grpcServer, service)
 
