@@ -134,8 +134,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { DnDCharacter } from '~/classes/DnDCharacter'
+import { ref, reactive } from 'vue'
+import { Character } from '~/types/character'
 import { v4 as uuidv4 } from 'uuid';
 
 // Create a reactive object to store the ID
@@ -153,16 +153,16 @@ const generate = () => {
   generatedCharacter.value = generateCharacter(state.id, character.value.name, character.value.race, character.value.class, character.value.alignment, character.value.discord)
 }
 
-const createEmptyCharacter = (): DnDCharacter => {
-  return new DnDCharacter('', '', '', '', '', '')
+const createEmptyCharacter = (): Character => {
+  return new Character('', '', '', '', '', '')
 }
 
-const character = ref<DnDCharacter>(createEmptyCharacter())
-const generatedCharacter = ref<DnDCharacter | null>(null)
+const character = ref<Character>(createEmptyCharacter())
+const generatedCharacter = ref<Character | null>(null)
 const errorMessage = ref<string | null>(null);
 
-function generateCharacter(id: string, name: string, race: string, cClass: string, alignment: string, discord: string): DnDCharacter {
-  return new DnDCharacter(id, name, race, cClass, alignment, discord)
+function generateCharacter(id: string, name: string, race: string, cClass: string, alignment: string, discord: string): Character {
+  return new Character(id, name, race, cClass, alignment, discord)
 }
 
 const save = async () => {

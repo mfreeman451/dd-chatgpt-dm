@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus" // Import the grpc_prometheus package
+	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
+	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -78,6 +79,16 @@ func main() {
 
 	// Set options for the gRPC server
 	grpcServer.SetOptions(grpcOptions...)
+
+	grpcWebServer := grpcweb.WrapServer(grpcServer.GetGRPCServer())
+
+	// wrap in a go func
+	go func() {
+		log.Info().Msg("starting grpc-web server on port 8080")
+		if err := http.ListenAndServe(":8080", grpcWebServer); err != nil {
+			log.Log().Err(err).Msg("failed to start grpc-web server")
+		}
+	}()
 
 	// Register service implementation
 	pb.RegisterGameServer(grpcServer.GetGRPCServer(), srv)

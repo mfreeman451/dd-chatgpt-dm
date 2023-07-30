@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./*"]
+    },
     "moduleResolution": "node",
     "module": "esnext",
     "target": "ESNext",

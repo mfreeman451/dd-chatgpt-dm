@@ -2,12 +2,10 @@ package server
 
 import (
 	"fmt"
-	"github.com/redis/go-redis/v9"
-	"net"
-
-	"google.golang.org/grpc"
-
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	"github.com/redis/go-redis/v9"
+	"google.golang.org/grpc"
+	"net"
 )
 
 // GRPCServer is a gRPC server
@@ -18,6 +16,8 @@ type GRPCServer struct {
 
 // NewGRPCServer creates a new gRPC server
 func NewGRPCServer(service pb.GameServer) *GRPCServer {
+	// var log = logger.New()
+
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
 
