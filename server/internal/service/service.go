@@ -7,6 +7,7 @@ import (
 	redis "github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
+	"github.com/octoper/go-ray"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -48,6 +49,11 @@ func (s *Service) GetPlayer(ctx context.Context, req *pb.GetPlayerRequest) (*pb.
 	player, err := s.DB.GetPlayer(ctx, req.PlayerId)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to retrieve player: %v", err)
+	}
+
+	// Return NotFound error if the player with the provided ID does not exist
+	if player == nil {
+		return nil, status.Errorf(codes.NotFound, "player not found")
 	}
 
 	// Convert the player to protobuf format
@@ -188,8 +194,17 @@ func convertMapToPBMessages(m map[string]int32, msg proto.Message) interface{} {
 
 func convertPlayerToProto(player *model.Player) *pb.Player {
 
+	fmt.Println("convertPlayerToProto")
+	fmt.Println(player)
+	ray.Ray(player)
 	// Convert slices of strings to slices of pointers to protobuf messages
-	skills := convertStringsToPBMessages(player.Skills, &pb.Skill{}).([]*pb.Skill)
+	var skills []*pb.Skill
+	if player.Skills == nil {
+		// player.Skills = []string{}
+		skills = []*pb.Skill{}
+	} else {
+		skills = convertStringsToPBMessages(player.Skills, &pb.Skill{}).([]*pb.Skill)
+	}
 	features := convertStringsToPBMessages(player.Features, &pb.Feature{}).([]*pb.Feature)
 	savingThrows := convertStringsToPBMessages(player.SavingThrows, &pb.SavingThrow{}).([]*pb.SavingThrow)
 	languages := convertStringsToPBMessages(player.Languages, &pb.Language{}).([]*pb.Language)
