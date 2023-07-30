@@ -34,7 +34,8 @@ export default {
       }
     })
 
-    return { characters, isLoading: fetch.isLoading, error: fetch.error }
+    // return { characters, isLoading: fetch.isLoading, error: fetch.error }
+    return { characters, isLoading: fetch.pending, error: fetch.error }
   }
 }
 </script>

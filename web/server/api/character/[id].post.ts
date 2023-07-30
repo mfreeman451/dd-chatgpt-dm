@@ -1,12 +1,10 @@
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 import {GameClient} from "~/pb/game.client";
 import {
-    CreatePlayerRequest, CreatePlayerResponse,
+    CreatePlayerRequest,
     GetPlayerRequest,
-    GetPlayerResponse,
     Player,
-    UpdatePlayerRequest,
-    UpdatePlayerResponse
+    UpdatePlayerRequest
 } from "~/pb/game";
 
 const transport = new GrpcWebFetchTransport({
@@ -47,17 +45,12 @@ export default defineEventHandler(async (event) => {
             }
 
             // Update existing player
-            // existingPlayer.setId(id);
             existingPlayer.id = id;
-            // existingPlayer.setDiscord(player.getDiscord());
             existingPlayer.discord = player.discord;
-            // existingPlayer.setName(player.getName());
             existingPlayer.name = player.name;
 
             const updateRequest = UpdatePlayerRequest.create()
-            // updateRequest.setPlayerId(id);
             updateRequest.playerId = id;
-            // updateRequest.setPlayer(existingPlayer);
             updateRequest.player = existingPlayer;
 
             const updateResponse = await client.updatePlayer(updateRequest);
@@ -70,17 +63,12 @@ export default defineEventHandler(async (event) => {
         } else {
 
             // Create new player
-            // const newPlayer = new pb.Player();
             const newPlayer = Player.create();
-            // newPlayer.setId(id);
             newPlayer.id = id;
-            // newPlayer.setDiscord(player.getDiscord());
             newPlayer.discord = player.discord;
-            // newPlayer.setName(player.getName());
             newPlayer.name = player.name;
 
             const createRequest = CreatePlayerRequest.create()
-            // createRequest.setName(newPlayer.getName());
             createRequest.name = newPlayer.name;
             createRequest.player = newPlayer;
             createRequest.player.id = id;
