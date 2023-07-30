@@ -30,7 +30,7 @@ func main() {
 		conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(creds))
 	*/
 
-	conn, err := grpc.Dial("localhost:50051",
+	conn, err := grpc.Dial("localhost:8080",
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("failed to dial: %v", err)
@@ -53,4 +53,15 @@ func main() {
 	}
 
 	log.Printf("Created player: %v", resp.Player)
+
+	// List Players
+	req2 := &game.ListPlayersRequest{}
+	resp2, err := client.ListPlayers(context.Background(), req2)
+	if err != nil {
+		log.Fatalf("failed to list players: %v", err)
+	}
+
+	for _, player := range resp2.Players {
+		log.Printf("Player: %v\n", player)
+	}
 }
