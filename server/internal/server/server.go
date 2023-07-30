@@ -2,14 +2,10 @@ package server
 
 import (
 	"fmt"
-	grpcweb "github.com/improbable-eng/grpc-web/go/grpcweb"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/logger"
+	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc"
 	"net"
-	"net/http"
-
-	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 )
 
 // GRPCServer is a gRPC server
@@ -20,20 +16,22 @@ type GRPCServer struct {
 
 // NewGRPCServer creates a new gRPC server
 func NewGRPCServer(service pb.GameServer) *GRPCServer {
-	var log = logger.New()
+	// var log = logger.New()
 
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
 
-	grpcWebServer := grpcweb.WrapServer(grpcServer)
+	/*
+		grpcWebServer := grpcweb.WrapServer(grpcServer)
 
-	// wrap in a go func
-	go func() {
-		log.Info().Msg("starting grpc-web server on port 8080")
-		if err := http.ListenAndServe(":8080", grpcWebServer); err != nil {
-			log.Log().Err(err).Msg("failed to start grpc-web server")
-		}
-	}()
+		// wrap in a go func
+		go func() {
+			log.Info().Msg("starting grpc-web server on port 8080")
+			if err := http.ListenAndServe(":8080", grpcWebServer); err != nil {
+				log.Log().Err(err).Msg("failed to start grpc-web server")
+			}
+		}()
+	*/
 
 	// Register service implementation
 	pb.RegisterGameServer(grpcServer, service)
