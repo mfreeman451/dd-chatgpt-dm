@@ -101,7 +101,7 @@ func main() {
 
 	// Start GRPC server in a separate goroutine
 	go func() {
-		log.Info().Msg("Server starting up")
+		log.Info().Msgf("Starting GRPC server on port %s", os.Getenv("GRPC_PORT"))
 
 		grpcPort, err := strconv.Atoi(os.Getenv("GRPC_PORT"))
 		if err != nil {

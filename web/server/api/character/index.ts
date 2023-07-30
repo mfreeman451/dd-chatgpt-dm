@@ -1,29 +1,20 @@
-import { GameClient } from '~/pb/game/game_grpc_web_pb';
-import {ListPlayersRequest, ListPlayersResponse} from "~/pb/game/game_pb";
+import { ListPlayersRequest } from '~/pb/game';
+import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
+import {GameClient} from "~/pb/game.client";
 
-const client = new GameClient('http://localhost:8080');
+const transport = new GrpcWebFetchTransport({
+    baseUrl: 'http://localhost:8080',
+    }
+);
 
+const client = new GameClient(transport)
 export default defineEventHandler(async () => {
 
     try {
 
-        const request = new ListPlayersRequest();
-
-        const response = await new Promise<ListPlayersResponse>(
-            (resolve, reject) => {
-                client.listPlayers(request, {},
-                    (err: any, response: ListPlayersResponse) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(response);
-                        }
-                    }
-                );
-            }
-        );
-
-        const players = response.getPlayersList();
+        const request = ListPlayersRequest.create({});
+        const response = await client.listPlayers(request);
+        const players = response.response.players;
 
         return {
             statusCode: 200,

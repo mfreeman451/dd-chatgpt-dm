@@ -1,0 +1,25 @@
+version: v1
+
+plugins:
+  - name: go
+    out: client
+    opt: paths=source_relative
+    strategy: all
+
+  - name: go-grpc
+    out: server
+    opt: paths=source_relative
+    strategy: all
+
+  - name: js
+    out: ../web/proto
+    opt: import_style=commonjs,binary
+
+  - name: grpc
+    out: ../web/proto
+    opt: grpc_js
+    path: grpc_tools_node_protoc_plugin
+
+  - name: ts
+    out: ../web/proto
+    opt: grpc_js
