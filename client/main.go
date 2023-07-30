@@ -2,35 +2,22 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"github.com/joho/godotenv"
 	"github.com/mfreeman451/dd-chatgpt-dm/client/pb/game"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
+	"os"
 )
 
 func main() {
-
-	// Load certificate
-	/*
-		cert, err := tls.LoadX509KeyPair("cert.pem", "key.pem")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		// Create TLS config
-		config := &tls.Config{
-			Certificates: []tls.Certificate{cert},
-			ServerName:   "example.com", // For hostname verification
-		}
-
-		// Create client credentials
-		creds := credentials.NewTLS(config)
-
-		// Dial server
-		conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(creds))
-	*/
-
-	conn, err := grpc.Dial("localhost:8080",
+	// load .env
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("failed to load .env: %v", err)
+	}
+	grpcServer := fmt.Sprintf("%s:%s", "localhost", os.Getenv("GRPC_PORT"))
+	conn, err := grpc.Dial(grpcServer,
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("failed to dial: %v", err)
