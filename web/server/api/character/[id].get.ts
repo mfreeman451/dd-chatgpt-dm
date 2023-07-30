@@ -21,15 +21,13 @@ export default defineEventHandler(async (event) => {
     const request = GetPlayerRequest.create({playerId: id})
 
     try {
-
         const response = await client.getPlayer(request);
         if (response.response.player) {
-            // const player= response.getPlayer();
             const player = response.response.player;
             return {
                 statusCode: 200,
                 // @ts-ignore
-                body: JSON.stringify(player.toObject()),
+                body: JSON.stringify(player),
             };
         } else {
             return {

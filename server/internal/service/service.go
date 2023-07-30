@@ -7,7 +7,6 @@ import (
 	redis "github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
-	"github.com/octoper/go-ray"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -70,7 +69,10 @@ func (s *Service) GetPlayer(ctx context.Context, req *pb.GetPlayerRequest) (*pb.
 func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest) (*pb.CreatePlayerResponse, error) {
 	// Create the player object
 	player := &model.Player{
-		Name: req.Name,
+		Name:  req.Player.Name,
+		Race:  req.Player.Race,
+		Class: req.Player.Class,
+		Level: req.Player.Level,
 		DefaultRoom: &pb.Coordinates{
 			X: 0,
 			Y: 0,
@@ -194,9 +196,7 @@ func convertMapToPBMessages(m map[string]int32, msg proto.Message) interface{} {
 
 func convertPlayerToProto(player *model.Player) *pb.Player {
 
-	fmt.Println("convertPlayerToProto")
-	fmt.Println(player)
-	ray.Ray(player)
+	// ray.Ray(player)
 	// Convert slices of strings to slices of pointers to protobuf messages
 	var skills []*pb.Skill
 	if player.Skills == nil {

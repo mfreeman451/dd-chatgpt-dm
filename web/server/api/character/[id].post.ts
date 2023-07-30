@@ -26,8 +26,6 @@ export default defineEventHandler(async (event) => {
     }
 
     const id = event.context.params.id;
-    // const request = GetPlayerRequest.create();
-    // request.playerId = id;
 
     try {
         const getRequest = GetPlayerRequest.create({

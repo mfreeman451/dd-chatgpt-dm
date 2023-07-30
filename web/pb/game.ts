@@ -178,13 +178,13 @@ export interface Player {
      */
     location?: Coordinates;
     /**
-     * @generated from protobuf field: int64 LastLogin = 37 [json_name = "LastLogin"];
+     * @generated from protobuf field: string LastLogin = 37 [json_name = "LastLogin"];
      */
-    lastLogin: bigint;
+    lastLogin: string;
     /**
-     * @generated from protobuf field: int64 LastLogout = 38 [json_name = "LastLogout"];
+     * @generated from protobuf field: string LastLogout = 38 [json_name = "LastLogout"];
      */
-    lastLogout: bigint;
+    lastLogout: string;
 }
 /**
  * @generated from protobuf message Skill
@@ -355,10 +355,6 @@ export interface NPC {
  * @generated from protobuf message CreatePlayerRequest
  */
 export interface CreatePlayerRequest {
-    /**
-     * @generated from protobuf field: string name = 1;
-     */
-    name: string;
     /**
      * @generated from protobuf field: Player player = 2;
      */
@@ -590,12 +586,12 @@ class Player$Type extends MessageType<Player> {
             { no: 34, name: "specialAbilities", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => SpecialAbility },
             { no: 35, name: "racialTraits", kind: "message", T: () => RacialTraits },
             { no: 36, name: "location", kind: "message", T: () => Coordinates },
-            { no: 37, name: "LastLogin", kind: "scalar", jsonName: "LastLogin", T: 3 /*ScalarType.INT64*/, L: 0 /*LongType.BIGINT*/ },
-            { no: 38, name: "LastLogout", kind: "scalar", jsonName: "LastLogout", T: 3 /*ScalarType.INT64*/, L: 0 /*LongType.BIGINT*/ }
+            { no: 37, name: "LastLogin", kind: "scalar", jsonName: "LastLogin", T: 9 /*ScalarType.STRING*/ },
+            { no: 38, name: "LastLogout", kind: "scalar", jsonName: "LastLogout", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<Player>): Player {
-        const message = { id: "", discord: "", name: "", race: "", class: "", level: 0, alignment: "", background: "", strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0, hitPoints: 0, temporaryHitPoints: 0, maxHitPoints: 0, armorClass: 0, proficiencyBonus: 0, skills: [], savingThrows: [], languages: [], equipment: [], features: [], spells: [], spellSlots: 0, currentSpellSlots: 0, experiencePoints: 0, initiative: 0, speed: 0, hitDice: "", abilityScoreBonuses: [], specialAbilities: [], lastLogin: 0n, lastLogout: 0n };
+        const message = { id: "", discord: "", name: "", race: "", class: "", level: 0, alignment: "", background: "", strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0, hitPoints: 0, temporaryHitPoints: 0, maxHitPoints: 0, armorClass: 0, proficiencyBonus: 0, skills: [], savingThrows: [], languages: [], equipment: [], features: [], spells: [], spellSlots: 0, currentSpellSlots: 0, experiencePoints: 0, initiative: 0, speed: 0, hitDice: "", abilityScoreBonuses: [], specialAbilities: [], lastLogin: "", lastLogout: "" };
         globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
         if (value !== undefined)
             reflectionMergePartial<Player>(this, message, value);
@@ -714,11 +710,11 @@ class Player$Type extends MessageType<Player> {
                 case /* Coordinates location */ 36:
                     message.location = Coordinates.internalBinaryRead(reader, reader.uint32(), options, message.location);
                     break;
-                case /* int64 LastLogin = 37 [json_name = "LastLogin"];*/ 37:
-                    message.lastLogin = reader.int64().toBigInt();
+                case /* string LastLogin = 37 [json_name = "LastLogin"];*/ 37:
+                    message.lastLogin = reader.string();
                     break;
-                case /* int64 LastLogout = 38 [json_name = "LastLogout"];*/ 38:
-                    message.lastLogout = reader.int64().toBigInt();
+                case /* string LastLogout = 38 [json_name = "LastLogout"];*/ 38:
+                    message.lastLogout = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -840,12 +836,12 @@ class Player$Type extends MessageType<Player> {
         /* Coordinates location = 36; */
         if (message.location)
             Coordinates.internalBinaryWrite(message.location, writer.tag(36, WireType.LengthDelimited).fork(), options).join();
-        /* int64 LastLogin = 37 [json_name = "LastLogin"]; */
-        if (message.lastLogin !== 0n)
-            writer.tag(37, WireType.Varint).int64(message.lastLogin);
-        /* int64 LastLogout = 38 [json_name = "LastLogout"]; */
-        if (message.lastLogout !== 0n)
-            writer.tag(38, WireType.Varint).int64(message.lastLogout);
+        /* string LastLogin = 37 [json_name = "LastLogin"]; */
+        if (message.lastLogin !== "")
+            writer.tag(37, WireType.LengthDelimited).string(message.lastLogin);
+        /* string LastLogout = 38 [json_name = "LastLogout"]; */
+        if (message.lastLogout !== "")
+            writer.tag(38, WireType.LengthDelimited).string(message.lastLogout);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1555,12 +1551,11 @@ export const NPC = new NPC$Type();
 class CreatePlayerRequest$Type extends MessageType<CreatePlayerRequest> {
     constructor() {
         super("CreatePlayerRequest", [
-            { no: 1, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "player", kind: "message", T: () => Player }
         ]);
     }
     create(value?: PartialMessage<CreatePlayerRequest>): CreatePlayerRequest {
-        const message = { name: "" };
+        const message = {};
         globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
         if (value !== undefined)
             reflectionMergePartial<CreatePlayerRequest>(this, message, value);
@@ -1571,9 +1566,6 @@ class CreatePlayerRequest$Type extends MessageType<CreatePlayerRequest> {
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
-                case /* string name */ 1:
-                    message.name = reader.string();
-                    break;
                 case /* Player player */ 2:
                     message.player = Player.internalBinaryRead(reader, reader.uint32(), options, message.player);
                     break;
@@ -1589,9 +1581,6 @@ class CreatePlayerRequest$Type extends MessageType<CreatePlayerRequest> {
         return message;
     }
     internalBinaryWrite(message: CreatePlayerRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
-        /* string name = 1; */
-        if (message.name !== "")
-            writer.tag(1, WireType.LengthDelimited).string(message.name);
         /* Player player = 2; */
         if (message.player)
             Player.internalBinaryWrite(message.player, writer.tag(2, WireType.LengthDelimited).fork(), options).join();
