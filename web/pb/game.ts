@@ -218,6 +218,31 @@ export interface Player {
      * @generated from protobuf field: string LastLogout = 39 [json_name = "LastLogout"];
      */
     lastLogout: string;
+    /**
+     * @generated from protobuf field: Admin admin = 40;
+     */
+    admin?: Admin;
+    /**
+     * @generated from protobuf field: SocialProvider social_provider = 41;
+     */
+    socialProvider: SocialProvider;
+    /**
+     * @generated from protobuf field: string social_id = 42;
+     */
+    socialId: string;
+    /**
+     * @generated from protobuf field: string social_token = 43;
+     */
+    socialToken: string;
+}
+/**
+ * @generated from protobuf message Admin
+ */
+export interface Admin {
+    /**
+     * @generated from protobuf field: bool isAdmin = 1;
+     */
+    isAdmin: boolean;
 }
 /**
  * @generated from protobuf message Skill
@@ -557,6 +582,89 @@ export interface RoomState {
      */
     players: Player[]; // Other fields...
 }
+/**
+ * @generated from protobuf message SocialLoginResponse
+ */
+export interface SocialLoginResponse {
+    /**
+     * @generated from protobuf field: string player_id = 1;
+     */
+    playerId: string;
+    /**
+     * @generated from protobuf field: string token = 2;
+     */
+    token: string;
+}
+/**
+ * @generated from protobuf message SocialLoginRequest
+ */
+export interface SocialLoginRequest {
+    /**
+     * @generated from protobuf field: SocialProvider provider = 1;
+     */
+    provider: SocialProvider;
+    /**
+     * @generated from protobuf field: string social_id = 2;
+     */
+    socialId: string; // etc
+}
+/**
+ * @generated from protobuf message UnlinkSocialAccountRequest
+ */
+export interface UnlinkSocialAccountRequest {
+    /**
+     * @generated from protobuf field: string player_id = 1;
+     */
+    playerId: string;
+    /**
+     * @generated from protobuf field: SocialProvider provider = 2;
+     */
+    provider: SocialProvider;
+}
+/**
+ * @generated from protobuf message UnlinkSocialAccountResponse
+ */
+export interface UnlinkSocialAccountResponse {
+    /**
+     * @generated from protobuf field: string player_id = 1;
+     */
+    playerId: string;
+}
+/**
+ * @generated from protobuf message LinkSocialAccountRequest
+ */
+export interface LinkSocialAccountRequest {
+    /**
+     * @generated from protobuf field: string player_id = 1;
+     */
+    playerId: string;
+    /**
+     * @generated from protobuf field: SocialProvider provider = 2;
+     */
+    provider: SocialProvider;
+    /**
+     * @generated from protobuf field: string social_id = 3;
+     */
+    socialId: string; // etc
+}
+/**
+ * @generated from protobuf message LinkSocialAccountResponse
+ */
+export interface LinkSocialAccountResponse {
+    /**
+     * @generated from protobuf field: string player_id = 1;
+     */
+    playerId: string;
+}
+/**
+ * @generated from protobuf enum SocialProvider
+ */
+export enum SocialProvider {
+    /**
+     * @generated from protobuf enum value: GOOGLE = 0;
+     */
+    GOOGLE = 0
+}
 // @generated message type with reflection information, may provide speed optimized methods
 class Room$Type extends MessageType<Room> {
     constructor() {
@@ -742,11 +850,15 @@ class Player$Type extends MessageType<Player> {
             { no: 36, name: "location", kind: "message", T: () => Coordinates },
             { no: 37, name: "defaultRoom", kind: "message", T: () => Coordinates },
             { no: 38, name: "LastLogin", kind: "scalar", jsonName: "LastLogin", T: 9 /*ScalarType.STRING*/ },
-            { no: 39, name: "LastLogout", kind: "scalar", jsonName: "LastLogout", T: 9 /*ScalarType.STRING*/ }
+            { no: 39, name: "LastLogout", kind: "scalar", jsonName: "LastLogout", T: 9 /*ScalarType.STRING*/ },
+            { no: 40, name: "admin", kind: "message", T: () => Admin },
+            { no: 41, name: "social_provider", kind: "enum", T: () => ["SocialProvider", SocialProvider] },
+            { no: 42, name: "social_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 43, name: "social_token", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<Player>): Player {
-        const message = { id: "", discord: "", name: "", race: "", class: "", level: 0, alignment: "", background: "", strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0, hitPoints: 0, temporaryHitPoints: 0, maxHitPoints: 0, armorClass: 0, proficiencyBonus: 0, skills: [], savingThrows: [], languages: [], equipment: [], features: [], spells: [], spellSlots: 0, currentSpellSlots: 0, experiencePoints: 0, initiative: 0, speed: 0, hitDice: "", abilityScoreBonuses: [], specialAbilities: [], lastLogin: "", lastLogout: "" };
+        const message = { id: "", discord: "", name: "", race: "", class: "", level: 0, alignment: "", background: "", strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0, hitPoints: 0, temporaryHitPoints: 0, maxHitPoints: 0, armorClass: 0, proficiencyBonus: 0, skills: [], savingThrows: [], languages: [], equipment: [], features: [], spells: [], spellSlots: 0, currentSpellSlots: 0, experiencePoints: 0, initiative: 0, speed: 0, hitDice: "", abilityScoreBonuses: [], specialAbilities: [], lastLogin: "", lastLogout: "", socialProvider: 0, socialId: "", socialToken: "" };
         globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
         if (value !== undefined)
             reflectionMergePartial<Player>(this, message, value);
@@ -873,6 +985,18 @@ class Player$Type extends MessageType<Player> {
                     break;
                 case /* string LastLogout = 39 [json_name = "LastLogout"];*/ 39:
                     message.lastLogout = reader.string();
+                    break;
+                case /* Admin admin */ 40:
+                    message.admin = Admin.internalBinaryRead(reader, reader.uint32(), options, message.admin);
+                    break;
+                case /* SocialProvider social_provider */ 41:
+                    message.socialProvider = reader.int32();
+                    break;
+                case /* string social_id */ 42:
+                    message.socialId = reader.string();
+                    break;
+                case /* string social_token */ 43:
+                    message.socialToken = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1003,6 +1127,18 @@ class Player$Type extends MessageType<Player> {
         /* string LastLogout = 39 [json_name = "LastLogout"]; */
         if (message.lastLogout !== "")
             writer.tag(39, WireType.LengthDelimited).string(message.lastLogout);
+        /* Admin admin = 40; */
+        if (message.admin)
+            Admin.internalBinaryWrite(message.admin, writer.tag(40, WireType.LengthDelimited).fork(), options).join();
+        /* SocialProvider social_provider = 41; */
+        if (message.socialProvider !== 0)
+            writer.tag(41, WireType.Varint).int32(message.socialProvider);
+        /* string social_id = 42; */
+        if (message.socialId !== "")
+            writer.tag(42, WireType.LengthDelimited).string(message.socialId);
+        /* string social_token = 43; */
+        if (message.socialToken !== "")
+            writer.tag(43, WireType.LengthDelimited).string(message.socialToken);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1013,6 +1149,53 @@ class Player$Type extends MessageType<Player> {
  * @generated MessageType for protobuf message Player
  */
 export const Player = new Player$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class Admin$Type extends MessageType<Admin> {
+    constructor() {
+        super("Admin", [
+            { no: 1, name: "isAdmin", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+        ]);
+    }
+    create(value?: PartialMessage<Admin>): Admin {
+        const message = { isAdmin: false };
+        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+        if (value !== undefined)
+            reflectionMergePartial<Admin>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: Admin): Admin {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* bool isAdmin */ 1:
+                    message.isAdmin = reader.bool();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: Admin, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* bool isAdmin = 1; */
+        if (message.isAdmin !== false)
+            writer.tag(1, WireType.Varint).bool(message.isAdmin);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message Admin
+ */
+export const Admin = new Admin$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class Skill$Type extends MessageType<Skill> {
     constructor() {
@@ -2514,6 +2697,323 @@ class RoomState$Type extends MessageType<RoomState> {
  * @generated MessageType for protobuf message RoomState
  */
 export const RoomState = new RoomState$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class SocialLoginResponse$Type extends MessageType<SocialLoginResponse> {
+    constructor() {
+        super("SocialLoginResponse", [
+            { no: 1, name: "player_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "token", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<SocialLoginResponse>): SocialLoginResponse {
+        const message = { playerId: "", token: "" };
+        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+        if (value !== undefined)
+            reflectionMergePartial<SocialLoginResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: SocialLoginResponse): SocialLoginResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string player_id */ 1:
+                    message.playerId = reader.string();
+                    break;
+                case /* string token */ 2:
+                    message.token = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: SocialLoginResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string player_id = 1; */
+        if (message.playerId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.playerId);
+        /* string token = 2; */
+        if (message.token !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.token);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message SocialLoginResponse
+ */
+export const SocialLoginResponse = new SocialLoginResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class SocialLoginRequest$Type extends MessageType<SocialLoginRequest> {
+    constructor() {
+        super("SocialLoginRequest", [
+            { no: 1, name: "provider", kind: "enum", T: () => ["SocialProvider", SocialProvider] },
+            { no: 2, name: "social_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<SocialLoginRequest>): SocialLoginRequest {
+        const message = { provider: 0, socialId: "" };
+        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+        if (value !== undefined)
+            reflectionMergePartial<SocialLoginRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: SocialLoginRequest): SocialLoginRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* SocialProvider provider */ 1:
+                    message.provider = reader.int32();
+                    break;
+                case /* string social_id */ 2:
+                    message.socialId = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: SocialLoginRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* SocialProvider provider = 1; */
+        if (message.provider !== 0)
+            writer.tag(1, WireType.Varint).int32(message.provider);
+        /* string social_id = 2; */
+        if (message.socialId !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.socialId);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message SocialLoginRequest
+ */
+export const SocialLoginRequest = new SocialLoginRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class UnlinkSocialAccountRequest$Type extends MessageType<UnlinkSocialAccountRequest> {
+    constructor() {
+        super("UnlinkSocialAccountRequest", [
+            { no: 1, name: "player_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "provider", kind: "enum", T: () => ["SocialProvider", SocialProvider] }
+        ]);
+    }
+    create(value?: PartialMessage<UnlinkSocialAccountRequest>): UnlinkSocialAccountRequest {
+        const message = { playerId: "", provider: 0 };
+        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+        if (value !== undefined)
+            reflectionMergePartial<UnlinkSocialAccountRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: UnlinkSocialAccountRequest): UnlinkSocialAccountRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string player_id */ 1:
+                    message.playerId = reader.string();
+                    break;
+                case /* SocialProvider provider */ 2:
+                    message.provider = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: UnlinkSocialAccountRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string player_id = 1; */
+        if (message.playerId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.playerId);
+        /* SocialProvider provider = 2; */
+        if (message.provider !== 0)
+            writer.tag(2, WireType.Varint).int32(message.provider);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message UnlinkSocialAccountRequest
+ */
+export const UnlinkSocialAccountRequest = new UnlinkSocialAccountRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class UnlinkSocialAccountResponse$Type extends MessageType<UnlinkSocialAccountResponse> {
+    constructor() {
+        super("UnlinkSocialAccountResponse", [
+            { no: 1, name: "player_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<UnlinkSocialAccountResponse>): UnlinkSocialAccountResponse {
+        const message = { playerId: "" };
+        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+        if (value !== undefined)
+            reflectionMergePartial<UnlinkSocialAccountResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: UnlinkSocialAccountResponse): UnlinkSocialAccountResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string player_id */ 1:
+                    message.playerId = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: UnlinkSocialAccountResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string player_id = 1; */
+        if (message.playerId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.playerId);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message UnlinkSocialAccountResponse
+ */
+export const UnlinkSocialAccountResponse = new UnlinkSocialAccountResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class LinkSocialAccountRequest$Type extends MessageType<LinkSocialAccountRequest> {
+    constructor() {
+        super("LinkSocialAccountRequest", [
+            { no: 1, name: "player_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "provider", kind: "enum", T: () => ["SocialProvider", SocialProvider] },
+            { no: 3, name: "social_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<LinkSocialAccountRequest>): LinkSocialAccountRequest {
+        const message = { playerId: "", provider: 0, socialId: "" };
+        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+        if (value !== undefined)
+            reflectionMergePartial<LinkSocialAccountRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: LinkSocialAccountRequest): LinkSocialAccountRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string player_id */ 1:
+                    message.playerId = reader.string();
+                    break;
+                case /* SocialProvider provider */ 2:
+                    message.provider = reader.int32();
+                    break;
+                case /* string social_id */ 3:
+                    message.socialId = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: LinkSocialAccountRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string player_id = 1; */
+        if (message.playerId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.playerId);
+        /* SocialProvider provider = 2; */
+        if (message.provider !== 0)
+            writer.tag(2, WireType.Varint).int32(message.provider);
+        /* string social_id = 3; */
+        if (message.socialId !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.socialId);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message LinkSocialAccountRequest
+ */
+export const LinkSocialAccountRequest = new LinkSocialAccountRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class LinkSocialAccountResponse$Type extends MessageType<LinkSocialAccountResponse> {
+    constructor() {
+        super("LinkSocialAccountResponse", [
+            { no: 1, name: "player_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<LinkSocialAccountResponse>): LinkSocialAccountResponse {
+        const message = { playerId: "" };
+        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+        if (value !== undefined)
+            reflectionMergePartial<LinkSocialAccountResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: LinkSocialAccountResponse): LinkSocialAccountResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string player_id */ 1:
+                    message.playerId = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: LinkSocialAccountResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string player_id = 1; */
+        if (message.playerId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.playerId);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message LinkSocialAccountResponse
+ */
+export const LinkSocialAccountResponse = new LinkSocialAccountResponse$Type();
 /**
  * @generated ServiceType for protobuf service Game
  */
@@ -2525,5 +3025,8 @@ export const Game = new ServiceType("Game", [
     { name: "GetPlayer", options: {}, I: GetPlayerRequest, O: GetPlayerResponse },
     { name: "SetPlayer", options: {}, I: SetPlayerRequest, O: SetPlayerResponse },
     { name: "UpdatePlayer", options: {}, I: UpdatePlayerRequest, O: UpdatePlayerResponse },
-    { name: "GetRoomState", options: {}, I: GetRoomStateRequest, O: GetRoomStateResponse }
+    { name: "GetRoomState", options: {}, I: GetRoomStateRequest, O: GetRoomStateResponse },
+    { name: "SocialLogin", options: {}, I: SocialLoginRequest, O: SocialLoginResponse },
+    { name: "LinkSocialAccount", options: {}, I: LinkSocialAccountRequest, O: LinkSocialAccountResponse },
+    { name: "UnlinkSocialAccount", options: {}, I: UnlinkSocialAccountRequest, O: UnlinkSocialAccountResponse }
 ]);

@@ -43,6 +43,8 @@ export default defineEventHandler(async (event) => {
                 // Create new player
                 let newPlayer = Player.create();
                 const createRequest = CreatePlayerRequest.create()
+                // stop anyone from trying to set the admin flag
+                delete player.admin;
                 // createRequest.player = newPlayer;
                 const playerObj = Object.assign({}, player);
                 createRequest.player = Player.create(playerObj);

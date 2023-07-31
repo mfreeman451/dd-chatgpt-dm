@@ -93,7 +93,6 @@ export default {
         console.error("[id].vue Error: ", error.value)
       } else if (data.value) {
         const parsedData = JSON.parse(data.value.body);
-        console.log(parsedData)
         isLoading.value = false
         if (parsedData.error) {
           console.error("parsedData.error: ", parsedData.error)
