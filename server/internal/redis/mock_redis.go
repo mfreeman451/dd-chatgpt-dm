@@ -2,13 +2,13 @@ package redis
 
 import (
 	"context"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"time"
 )
 
 // mockRedis is a mock implementation of the Redis interface.
 type mockRedis struct {
-	roomState *model.RoomState
+	roomState *game.RoomState
 	err       error
 	data      map[string]interface{}
 }
@@ -20,12 +20,12 @@ func NewMockRedis() Client {
 	}
 }
 
-func (m *mockRedis) GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error) {
+func (m *mockRedis) GetRoomState(ctx context.Context, roomID string) (*game.RoomState, error) {
 	// Return the mock room state
 	return m.roomState, m.err
 }
 
-func (m *mockRedis) SetRoomState(ctx context.Context, roomID string, state *model.RoomState) error {
+func (m *mockRedis) SetRoomState(ctx context.Context, roomID string, state *game.RoomState) error {
 	// Update the mock room state
 	m.roomState = state
 	return m.err

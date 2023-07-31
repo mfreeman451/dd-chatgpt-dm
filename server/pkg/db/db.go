@@ -3,18 +3,17 @@ package db
 import (
 	"context"
 	"fmt"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 )
 
 // DB is a database interface
 type DB interface {
-	GetPlayer(ctx context.Context, id string) (*model.Player, error)
-	CreatePlayer(ctx context.Context, player *model.Player) (string, error)
-	UpdatePlayer(ctx context.Context, player *model.Player) error
-	ListPlayers(ctx context.Context) ([]*model.Player, error)
-	GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error)
-	GetLocationByCoordinates(ctx context.Context, coordinates *game.Coordinates) (*model.Location, error)
+	GetPlayer(ctx context.Context, id string) (*game.Player, error)
+	CreatePlayer(ctx context.Context, player *game.Player) (string, error)
+	UpdatePlayer(ctx context.Context, player *game.Player) error
+	ListPlayers(ctx context.Context) ([]*game.Player, error)
+	GetRoomState(ctx context.Context, roomID string) (*game.RoomState, error)
+	GetLocationByCoordinates(ctx context.Context, coordinates *game.Coordinates) (*game.Location, error)
 	// Other data access methods...
 }
 

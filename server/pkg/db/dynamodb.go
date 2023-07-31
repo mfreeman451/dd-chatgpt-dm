@@ -9,7 +9,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/google/uuid"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 )
 
@@ -31,7 +30,7 @@ func NewDynamoDB(region string) (DB, error) {
 }
 
 // GetLocationByCoordinates retrieves a location from the database based on the provided coordinates.
-func (db *DynamoDB) GetLocationByCoordinates(ctx context.Context, coordinates *game.Coordinates) (*model.Location, error) {
+func (db *DynamoDB) GetLocationByCoordinates(ctx context.Context, coordinates *game.Coordinates) (*game.Location, error) {
 	// Fetch location from the database based on the given coordinates
 	// Note: Implement the logic to fetch the location using the provided coordinates.
 	// For example, you can use the Scan method or GetItem method with a proper filter condition.
@@ -71,7 +70,7 @@ func (db *DynamoDB) GetLocationByCoordinates(ctx context.Context, coordinates *g
 	}
 
 	// Unmarshal the first item into a Location object
-	location := &model.Location{}
+	location := &game.Location{}
 	err = dynamodbattribute.UnmarshalMap(result.Items[0], location)
 	if err != nil {
 		fmt.Println("Error unmarshalling location:", err)
@@ -82,9 +81,9 @@ func (db *DynamoDB) GetLocationByCoordinates(ctx context.Context, coordinates *g
 }
 
 // UpdatePlayer updates an existing player in the database based on the provided player object.
-func (db *DynamoDB) UpdatePlayer(ctx context.Context, player *model.Player) error {
+func (db *DynamoDB) UpdatePlayer(ctx context.Context, player *game.Player) error {
 	// Check if the player ID is empty
-	if player.ID == "" {
+	if player.Id == "" {
 		return errors.New("player ID is empty")
 	}
 
@@ -109,10 +108,10 @@ func (db *DynamoDB) UpdatePlayer(ctx context.Context, player *model.Player) erro
 }
 
 // CreatePlayer creates a new player
-func (db *DynamoDB) CreatePlayer(ctx context.Context, player *model.Player) (string, error) {
+func (db *DynamoDB) CreatePlayer(ctx context.Context, player *game.Player) (string, error) {
 	fmt.Println("Creating player in Dynamo..")
 	// Generate ID
-	player.ID = uuid.New().String()
+	player.Id = uuid.New().String()
 
 	av, err := dynamodbattribute.MarshalMap(player)
 	if err != nil {
@@ -131,11 +130,11 @@ func (db *DynamoDB) CreatePlayer(ctx context.Context, player *model.Player) (str
 		return "", err
 	}
 
-	return player.ID, nil
+	return player.Id, nil
 }
 
 // GetPlayer retrieves a player by ID
-func (db *DynamoDB) GetPlayer(ctx context.Context, id string) (*model.Player, error) {
+func (db *DynamoDB) GetPlayer(ctx context.Context, id string) (*game.Player, error) {
 	// Fetch player from the database based on the given ID
 	result, err := db.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String("Players"),
@@ -154,7 +153,7 @@ func (db *DynamoDB) GetPlayer(ctx context.Context, id string) (*model.Player, er
 		return nil, nil // Return nil if player not found
 	}
 
-	player := &model.Player{}
+	player := &game.Player{}
 	err = dynamodbattribute.UnmarshalMap(result.Item, player)
 	if err != nil {
 		fmt.Println("Error unmarshalling player:", err)
@@ -165,9 +164,9 @@ func (db *DynamoDB) GetPlayer(ctx context.Context, id string) (*model.Player, er
 }
 
 // ListPlayers retrieves all players
-func (db *DynamoDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
+func (db *DynamoDB) ListPlayers(ctx context.Context) ([]*game.Player, error) {
 	// Define an empty slice to store the players
-	var players []*model.Player
+	var players []*game.Player
 
 	// Scan the "Players" table to retrieve all players
 	input := &dynamodb.ScanInput{
@@ -181,7 +180,7 @@ func (db *DynamoDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
 
 	// Unmarshal each item into a Player object and add it to the slice
 	for _, item := range result.Items {
-		player := &model.Player{}
+		player := &game.Player{}
 		err = dynamodbattribute.UnmarshalMap(item, player)
 		if err != nil {
 			fmt.Println("Error unmarshalling player:", err)
@@ -194,6 +193,6 @@ func (db *DynamoDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
 }
 
 // GetRoomState retrieves the state of a room by ID
-func (db *DynamoDB) GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error) {
+func (db *DynamoDB) GetRoomState(ctx context.Context, roomID string) (*game.RoomState, error) {
 	return nil, errors.New("not implemented")
 }

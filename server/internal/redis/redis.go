@@ -2,15 +2,15 @@ package redis
 
 import (
 	"context"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/redis/go-redis/v9"
 	"time"
 )
 
 // Redis is an interface for a Redis client.
 type Redis interface {
-	GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error)
-	SetRoomState(ctx context.Context, roomID string, state *model.RoomState) error
+	GetRoomState(ctx context.Context, roomID string) (*game.RoomState, error)
+	SetRoomState(ctx context.Context, roomID string, state *game.RoomState) error
 	// Set a key/value pair
 	Set(ctx context.Context, key string, value interface{}, expiration time.Duration) error
 	// Get a value by key
@@ -25,8 +25,8 @@ type Client interface {
 	Set(ctx context.Context, key string, value interface{}, expiration time.Duration) error
 	Get(ctx context.Context, key string) (interface{}, error)
 	Delete(ctx context.Context, key string) error
-	GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error)
-	SetRoomState(ctx context.Context, roomID string, state *model.RoomState) error
+	GetRoomState(ctx context.Context, roomID string) (*game.RoomState, error)
+	SetRoomState(ctx context.Context, roomID string, state *game.RoomState) error
 	Publish(ctx context.Context, channel string, message interface{}) error
 	Ping(ctx context.Context) (string, error)
 }
@@ -61,12 +61,12 @@ func NewClient(options *Options) Client {
 	}
 }
 
-func (c *client) GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error) {
+func (c *client) GetRoomState(ctx context.Context, roomID string) (*game.RoomState, error) {
 	// Implementation for GetRoomState method
 	return nil, nil
 }
 
-func (c *client) SetRoomState(ctx context.Context, roomID string, state *model.RoomState) error {
+func (c *client) SetRoomState(ctx context.Context, roomID string, state *game.RoomState) error {
 	// Implementation for SetRoomState method
 	return nil
 }

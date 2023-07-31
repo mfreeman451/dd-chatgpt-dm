@@ -2,26 +2,25 @@ package db
 
 import (
 	"context"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 )
 
 // MockDB is a mock database implementation for testing
 type MockDB struct {
-	players    map[string]*model.Player
-	roomStates map[string]*model.RoomState
+	players    map[string]*game.Player
+	roomStates map[string]*game.RoomState
 	err        error
 }
 
 // NewMockDB creates a new instance of the MockDB
 func NewMockDB() *MockDB {
 	return &MockDB{
-		players:    make(map[string]*model.Player),
-		roomStates: make(map[string]*model.RoomState),
+		players:    make(map[string]*game.Player),
+		roomStates: make(map[string]*game.RoomState),
 	}
 }
 
-func (m *MockDB) GetPlayer(ctx context.Context, id string) (*model.Player, error) {
+func (m *MockDB) GetPlayer(ctx context.Context, id string) (*game.Player, error) {
 	player, ok := m.players[id]
 	if !ok {
 		return nil, nil
@@ -29,27 +28,27 @@ func (m *MockDB) GetPlayer(ctx context.Context, id string) (*model.Player, error
 	return player, m.err
 }
 
-func (m *MockDB) CreatePlayer(ctx context.Context, player *model.Player) (string, error) {
+func (m *MockDB) CreatePlayer(ctx context.Context, player *game.Player) (string, error) {
 	id := "123" // For testing purposes, generate a mock ID
-	player.ID = id
+	player.Id = id
 	m.players[id] = player
 	return id, m.err
 }
 
-func (m *MockDB) UpdatePlayer(ctx context.Context, player *model.Player) error {
-	m.players[player.ID] = player
+func (m *MockDB) UpdatePlayer(ctx context.Context, player *game.Player) error {
+	m.players[player.Id] = player
 	return m.err
 }
 
-func (m *MockDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
-	players := make([]*model.Player, 0, len(m.players))
+func (m *MockDB) ListPlayers(ctx context.Context) ([]*game.Player, error) {
+	players := make([]*game.Player, 0, len(m.players))
 	for _, player := range m.players {
 		players = append(players, player)
 	}
 	return players, m.err
 }
 
-func (m *MockDB) GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error) {
+func (m *MockDB) GetRoomState(ctx context.Context, roomID string) (*game.RoomState, error) {
 	roomState, ok := m.roomStates[roomID]
 	if !ok {
 		return nil, nil
@@ -57,7 +56,7 @@ func (m *MockDB) GetRoomState(ctx context.Context, roomID string) (*model.RoomSt
 	return roomState, m.err
 }
 
-func (m *MockDB) GetLocationByCoordinates(ctx context.Context, coordinates *game.Coordinates) (*model.Location, error) {
+func (m *MockDB) GetLocationByCoordinates(ctx context.Context, coordinates *game.Coordinates) (*game.Location, error) {
 	// Implement this method for testing if needed.
 	return nil, m.err
 }
