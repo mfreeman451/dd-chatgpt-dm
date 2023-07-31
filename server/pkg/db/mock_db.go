@@ -28,14 +28,16 @@ func (m *MockDB) GetPlayer(ctx context.Context, id string) (*game.Player, error)
 	return player, m.err
 }
 
-func (m *MockDB) CreatePlayer(ctx context.Context, player *game.Player) (string, error) {
+func (m *MockDB) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (string, error) {
+	player := req.Player
 	id := "123" // For testing purposes, generate a mock ID
 	player.Id = id
 	m.players[id] = player
 	return id, m.err
 }
 
-func (m *MockDB) UpdatePlayer(ctx context.Context, player *game.Player) error {
+func (m *MockDB) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerRequest) error {
+	player := req.Player
 	m.players[player.Id] = player
 	return m.err
 }
