@@ -55,7 +55,8 @@ export default defineEventHandler(async (event) => {
 
                 return {
                     statusCode: 200,
-                    body: JSON.stringify(createResponse)
+                    // body: JSON.stringify(createResponse)
+                    body: createResponse.response,
                 };
             }
         }
@@ -98,7 +99,7 @@ export default defineEventHandler(async (event) => {
         let errMsg = "Error updating/creating player: " + err;
         return {
             statusCode: 500,
-            body: JSON.stringify({error: errMsg })
+            body: err,
         };
     }
 
