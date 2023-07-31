@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
-	"github.com/octoper/go-ray"
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -52,15 +51,13 @@ func (db *MongoDB) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerReque
 // CreatePlayer creates a new player
 func (db *MongoDB) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (string, error) {
 	player := req.Player
-	ray.Ray("Creating player in MongoDB..", player)
-
 	// Create player in the database
 	res, err := db.Collection("players").InsertOne(ctx, player)
 	if err != nil {
 		fmt.Println("Error inserting player:", err)
 		return "", err
 	}
-	fmt.Println("Inserted player with ID:", res.InsertedID)
+	log.Info().Msgf("Inserted player with ID: %v", res.InsertedID)
 
 	return player.Id, nil
 }
@@ -89,7 +86,7 @@ func (db *MongoDB) ListPlayers(ctx context.Context) ([]*game.Player, error) {
 	// Find all players in the database
 	cursor, err := db.Collection("players").Find(ctx, bson.M{})
 	if err != nil {
-		fmt.Println("Error retrieving players:", err)
+		log.Err(err).Msg("failed to retrieve players")
 		return nil, err
 	}
 	defer func(cursor *mongo.Cursor, ctx context.Context) {
@@ -104,7 +101,7 @@ func (db *MongoDB) ListPlayers(ctx context.Context) ([]*game.Player, error) {
 		player := &game.Player{}
 
 		if err := cursor.Decode(player); err != nil {
-			fmt.Println("Error decoding player:", err)
+			log.Err(err).Msg("failed to decode player")
 			return nil, err
 		}
 		players = append(players, player)
@@ -127,7 +124,7 @@ func (db *MongoDB) GetLocationByCoordinates(ctx context.Context, coordinates *ga
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, nil // Return nil if location not found
 		}
-		fmt.Println("Error retrieving location:", err)
+		log.Err(err).Msg("failed to retrieve location")
 		return nil, err
 	}
 	return location, nil
