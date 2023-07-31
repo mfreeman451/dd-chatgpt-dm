@@ -4,6 +4,8 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { Game } from "./game";
+import type { GetRoomStateResponse } from "./game";
+import type { GetRoomStateRequest } from "./game";
 import type { UpdatePlayerResponse } from "./game";
 import type { UpdatePlayerRequest } from "./game";
 import type { SetPlayerResponse } from "./game";
@@ -55,6 +57,10 @@ export interface IGameClient {
      * @generated from protobuf rpc: UpdatePlayer(UpdatePlayerRequest) returns (UpdatePlayerResponse);
      */
     updatePlayer(input: UpdatePlayerRequest, options?: RpcOptions): UnaryCall<UpdatePlayerRequest, UpdatePlayerResponse>;
+    /**
+     * @generated from protobuf rpc: GetRoomState(GetRoomStateRequest) returns (GetRoomStateResponse);
+     */
+    getRoomState(input: GetRoomStateRequest, options?: RpcOptions): UnaryCall<GetRoomStateRequest, GetRoomStateResponse>;
 }
 /**
  * @generated from protobuf service Game
@@ -115,5 +121,12 @@ export class GameClient implements IGameClient, ServiceInfo {
     updatePlayer(input: UpdatePlayerRequest, options?: RpcOptions): UnaryCall<UpdatePlayerRequest, UpdatePlayerResponse> {
         const method = this.methods[6], opt = this._transport.mergeOptions(options);
         return stackIntercept<UpdatePlayerRequest, UpdatePlayerResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: GetRoomState(GetRoomStateRequest) returns (GetRoomStateResponse);
+     */
+    getRoomState(input: GetRoomStateRequest, options?: RpcOptions): UnaryCall<GetRoomStateRequest, GetRoomStateResponse> {
+        const method = this.methods[7], opt = this._transport.mergeOptions(options);
+        return stackIntercept<GetRoomStateRequest, GetRoomStateResponse>("unary", this._transport, method, opt, input);
     }
 }

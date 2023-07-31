@@ -171,6 +171,7 @@ const save = async () => {
       console.log('Saving character', generatedCharacter.value)
       let fetchURL = `/api/character/${generatedCharacter.value.id}`
       const { data, error } = await useFetch(fetchURL, { method: 'POST', body: JSON.stringify(generatedCharacter.value) })
+      console.log('Response', data.value.body, error.value)
 
       if (error.value) {
         console.error('Error creating character', error.value)
@@ -182,7 +183,7 @@ const save = async () => {
 
         generatedCharacter.value = null
       } else {
-        console.error('Unexpected response creating character', data.value)
+        console.error('Unexpected response creating character', data)
         alert(`Unexpected response creating character: ${data.value ? data.value.body : 'No response data'}`)
       }
     } catch (err) {

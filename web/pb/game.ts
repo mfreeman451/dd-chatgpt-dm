@@ -13,6 +13,35 @@ import { reflectionMergePartial } from "@protobuf-ts/runtime";
 import { MESSAGE_TYPE } from "@protobuf-ts/runtime";
 import { MessageType } from "@protobuf-ts/runtime";
 /**
+ * @generated from protobuf message Room
+ */
+export interface Room {
+    /**
+     * @generated from protobuf field: string id = 1;
+     */
+    id: string;
+    /**
+     * @generated from protobuf field: string description = 2;
+     */
+    description: string;
+    /**
+     * @generated from protobuf field: repeated Item items = 3;
+     */
+    items: Item[];
+    /**
+     * @generated from protobuf field: repeated NPC npcs = 4;
+     */
+    npcs: NPC[];
+    /**
+     * @generated from protobuf field: repeated Player players = 5;
+     */
+    players: Player[];
+    /**
+     * @generated from protobuf field: Coordinates coordinates = 6;
+     */
+    coordinates?: Coordinates;
+}
+/**
  * @generated from protobuf message Coordinates
  */
 export interface Coordinates {
@@ -178,11 +207,15 @@ export interface Player {
      */
     location?: Coordinates;
     /**
-     * @generated from protobuf field: string LastLogin = 37 [json_name = "LastLogin"];
+     * @generated from protobuf field: Coordinates defaultRoom = 37;
+     */
+    defaultRoom?: Coordinates; // New field
+    /**
+     * @generated from protobuf field: string LastLogin = 38 [json_name = "LastLogin"];
      */
     lastLogin: string;
     /**
-     * @generated from protobuf field: string LastLogout = 38 [json_name = "LastLogout"];
+     * @generated from protobuf field: string LastLogout = 39 [json_name = "LastLogout"];
      */
     lastLogout: string;
 }
@@ -352,9 +385,35 @@ export interface NPC {
     name: string;
 }
 /**
+ * Added message
+ *
+ * @generated from protobuf message GetRoomStateRequest
+ */
+export interface GetRoomStateRequest {
+    /**
+     * @generated from protobuf field: string room_id = 1;
+     */
+    roomId: string;
+}
+/**
+ * Added message
+ *
+ * @generated from protobuf message GetRoomStateResponse
+ */
+export interface GetRoomStateResponse {
+    /**
+     * @generated from protobuf field: RoomState room_state = 1;
+     */
+    roomState?: RoomState;
+}
+/**
  * @generated from protobuf message CreatePlayerRequest
  */
 export interface CreatePlayerRequest {
+    /**
+     * @generated from protobuf field: string player_id = 1;
+     */
+    playerId: string;
     /**
      * @generated from protobuf field: Player player = 2;
      */
@@ -485,6 +544,101 @@ export interface UpdatePlayerResponse {
      */
     player?: Player;
 }
+/**
+ * @generated from protobuf message RoomState
+ */
+export interface RoomState {
+    /**
+     * @generated from protobuf field: string id = 1;
+     */
+    id: string;
+    /**
+     * @generated from protobuf field: repeated Player players = 2;
+     */
+    players: Player[]; // Other fields...
+}
+// @generated message type with reflection information, may provide speed optimized methods
+class Room$Type extends MessageType<Room> {
+    constructor() {
+        super("Room", [
+            { no: 1, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "items", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Item },
+            { no: 4, name: "npcs", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => NPC },
+            { no: 5, name: "players", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Player },
+            { no: 6, name: "coordinates", kind: "message", T: () => Coordinates }
+        ]);
+    }
+    create(value?: PartialMessage<Room>): Room {
+        const message = { id: "", description: "", items: [], npcs: [], players: [] };
+        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+        if (value !== undefined)
+            reflectionMergePartial<Room>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: Room): Room {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string id */ 1:
+                    message.id = reader.string();
+                    break;
+                case /* string description */ 2:
+                    message.description = reader.string();
+                    break;
+                case /* repeated Item items */ 3:
+                    message.items.push(Item.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* repeated NPC npcs */ 4:
+                    message.npcs.push(NPC.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* repeated Player players */ 5:
+                    message.players.push(Player.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* Coordinates coordinates */ 6:
+                    message.coordinates = Coordinates.internalBinaryRead(reader, reader.uint32(), options, message.coordinates);
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: Room, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string id = 1; */
+        if (message.id !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.id);
+        /* string description = 2; */
+        if (message.description !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.description);
+        /* repeated Item items = 3; */
+        for (let i = 0; i < message.items.length; i++)
+            Item.internalBinaryWrite(message.items[i], writer.tag(3, WireType.LengthDelimited).fork(), options).join();
+        /* repeated NPC npcs = 4; */
+        for (let i = 0; i < message.npcs.length; i++)
+            NPC.internalBinaryWrite(message.npcs[i], writer.tag(4, WireType.LengthDelimited).fork(), options).join();
+        /* repeated Player players = 5; */
+        for (let i = 0; i < message.players.length; i++)
+            Player.internalBinaryWrite(message.players[i], writer.tag(5, WireType.LengthDelimited).fork(), options).join();
+        /* Coordinates coordinates = 6; */
+        if (message.coordinates)
+            Coordinates.internalBinaryWrite(message.coordinates, writer.tag(6, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message Room
+ */
+export const Room = new Room$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class Coordinates$Type extends MessageType<Coordinates> {
     constructor() {
@@ -586,8 +740,9 @@ class Player$Type extends MessageType<Player> {
             { no: 34, name: "specialAbilities", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => SpecialAbility },
             { no: 35, name: "racialTraits", kind: "message", T: () => RacialTraits },
             { no: 36, name: "location", kind: "message", T: () => Coordinates },
-            { no: 37, name: "LastLogin", kind: "scalar", jsonName: "LastLogin", T: 9 /*ScalarType.STRING*/ },
-            { no: 38, name: "LastLogout", kind: "scalar", jsonName: "LastLogout", T: 9 /*ScalarType.STRING*/ }
+            { no: 37, name: "defaultRoom", kind: "message", T: () => Coordinates },
+            { no: 38, name: "LastLogin", kind: "scalar", jsonName: "LastLogin", T: 9 /*ScalarType.STRING*/ },
+            { no: 39, name: "LastLogout", kind: "scalar", jsonName: "LastLogout", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<Player>): Player {
@@ -710,10 +865,13 @@ class Player$Type extends MessageType<Player> {
                 case /* Coordinates location */ 36:
                     message.location = Coordinates.internalBinaryRead(reader, reader.uint32(), options, message.location);
                     break;
-                case /* string LastLogin = 37 [json_name = "LastLogin"];*/ 37:
+                case /* Coordinates defaultRoom */ 37:
+                    message.defaultRoom = Coordinates.internalBinaryRead(reader, reader.uint32(), options, message.defaultRoom);
+                    break;
+                case /* string LastLogin = 38 [json_name = "LastLogin"];*/ 38:
                     message.lastLogin = reader.string();
                     break;
-                case /* string LastLogout = 38 [json_name = "LastLogout"];*/ 38:
+                case /* string LastLogout = 39 [json_name = "LastLogout"];*/ 39:
                     message.lastLogout = reader.string();
                     break;
                 default:
@@ -836,12 +994,15 @@ class Player$Type extends MessageType<Player> {
         /* Coordinates location = 36; */
         if (message.location)
             Coordinates.internalBinaryWrite(message.location, writer.tag(36, WireType.LengthDelimited).fork(), options).join();
-        /* string LastLogin = 37 [json_name = "LastLogin"]; */
+        /* Coordinates defaultRoom = 37; */
+        if (message.defaultRoom)
+            Coordinates.internalBinaryWrite(message.defaultRoom, writer.tag(37, WireType.LengthDelimited).fork(), options).join();
+        /* string LastLogin = 38 [json_name = "LastLogin"]; */
         if (message.lastLogin !== "")
-            writer.tag(37, WireType.LengthDelimited).string(message.lastLogin);
-        /* string LastLogout = 38 [json_name = "LastLogout"]; */
+            writer.tag(38, WireType.LengthDelimited).string(message.lastLogin);
+        /* string LastLogout = 39 [json_name = "LastLogout"]; */
         if (message.lastLogout !== "")
-            writer.tag(38, WireType.LengthDelimited).string(message.lastLogout);
+            writer.tag(39, WireType.LengthDelimited).string(message.lastLogout);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1548,14 +1709,109 @@ class NPC$Type extends MessageType<NPC> {
  */
 export const NPC = new NPC$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class GetRoomStateRequest$Type extends MessageType<GetRoomStateRequest> {
+    constructor() {
+        super("GetRoomStateRequest", [
+            { no: 1, name: "room_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<GetRoomStateRequest>): GetRoomStateRequest {
+        const message = { roomId: "" };
+        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+        if (value !== undefined)
+            reflectionMergePartial<GetRoomStateRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: GetRoomStateRequest): GetRoomStateRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string room_id */ 1:
+                    message.roomId = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: GetRoomStateRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string room_id = 1; */
+        if (message.roomId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.roomId);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message GetRoomStateRequest
+ */
+export const GetRoomStateRequest = new GetRoomStateRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class GetRoomStateResponse$Type extends MessageType<GetRoomStateResponse> {
+    constructor() {
+        super("GetRoomStateResponse", [
+            { no: 1, name: "room_state", kind: "message", T: () => RoomState }
+        ]);
+    }
+    create(value?: PartialMessage<GetRoomStateResponse>): GetRoomStateResponse {
+        const message = {};
+        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+        if (value !== undefined)
+            reflectionMergePartial<GetRoomStateResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: GetRoomStateResponse): GetRoomStateResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* RoomState room_state */ 1:
+                    message.roomState = RoomState.internalBinaryRead(reader, reader.uint32(), options, message.roomState);
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: GetRoomStateResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* RoomState room_state = 1; */
+        if (message.roomState)
+            RoomState.internalBinaryWrite(message.roomState, writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message GetRoomStateResponse
+ */
+export const GetRoomStateResponse = new GetRoomStateResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class CreatePlayerRequest$Type extends MessageType<CreatePlayerRequest> {
     constructor() {
         super("CreatePlayerRequest", [
+            { no: 1, name: "player_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "player", kind: "message", T: () => Player }
         ]);
     }
     create(value?: PartialMessage<CreatePlayerRequest>): CreatePlayerRequest {
-        const message = {};
+        const message = { playerId: "" };
         globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
         if (value !== undefined)
             reflectionMergePartial<CreatePlayerRequest>(this, message, value);
@@ -1566,6 +1822,9 @@ class CreatePlayerRequest$Type extends MessageType<CreatePlayerRequest> {
         while (reader.pos < end) {
             let [fieldNo, wireType] = reader.tag();
             switch (fieldNo) {
+                case /* string player_id */ 1:
+                    message.playerId = reader.string();
+                    break;
                 case /* Player player */ 2:
                     message.player = Player.internalBinaryRead(reader, reader.uint32(), options, message.player);
                     break;
@@ -1581,6 +1840,9 @@ class CreatePlayerRequest$Type extends MessageType<CreatePlayerRequest> {
         return message;
     }
     internalBinaryWrite(message: CreatePlayerRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string player_id = 1; */
+        if (message.playerId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.playerId);
         /* Player player = 2; */
         if (message.player)
             Player.internalBinaryWrite(message.player, writer.tag(2, WireType.LengthDelimited).fork(), options).join();
@@ -2198,6 +2460,60 @@ class UpdatePlayerResponse$Type extends MessageType<UpdatePlayerResponse> {
  * @generated MessageType for protobuf message UpdatePlayerResponse
  */
 export const UpdatePlayerResponse = new UpdatePlayerResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class RoomState$Type extends MessageType<RoomState> {
+    constructor() {
+        super("RoomState", [
+            { no: 1, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "players", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Player }
+        ]);
+    }
+    create(value?: PartialMessage<RoomState>): RoomState {
+        const message = { id: "", players: [] };
+        globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+        if (value !== undefined)
+            reflectionMergePartial<RoomState>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: RoomState): RoomState {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string id */ 1:
+                    message.id = reader.string();
+                    break;
+                case /* repeated Player players */ 2:
+                    message.players.push(Player.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: RoomState, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string id = 1; */
+        if (message.id !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.id);
+        /* repeated Player players = 2; */
+        for (let i = 0; i < message.players.length; i++)
+            Player.internalBinaryWrite(message.players[i], writer.tag(2, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message RoomState
+ */
+export const RoomState = new RoomState$Type();
 /**
  * @generated ServiceType for protobuf service Game
  */
@@ -2208,5 +2524,6 @@ export const Game = new ServiceType("Game", [
     { name: "ListPlayers", options: {}, I: ListPlayersRequest, O: ListPlayersResponse },
     { name: "GetPlayer", options: {}, I: GetPlayerRequest, O: GetPlayerResponse },
     { name: "SetPlayer", options: {}, I: SetPlayerRequest, O: SetPlayerResponse },
-    { name: "UpdatePlayer", options: {}, I: UpdatePlayerRequest, O: UpdatePlayerResponse }
+    { name: "UpdatePlayer", options: {}, I: UpdatePlayerRequest, O: UpdatePlayerResponse },
+    { name: "GetRoomState", options: {}, I: GetRoomStateRequest, O: GetRoomStateResponse }
 ]);

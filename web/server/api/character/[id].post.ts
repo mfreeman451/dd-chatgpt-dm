@@ -1,5 +1,5 @@
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
-import {GameClient} from "~/pb/game.client";
+import { GameClient } from "~/pb/game.client";
 import {
     CreatePlayerRequest,
     GetPlayerRequest,
@@ -7,6 +7,7 @@ import {
     UpdatePlayerRequest
 } from "~/pb/game";
 import { v4 as uuidv4 } from 'uuid';
+import { util } from "protobufjs";
 
 const transport = new GrpcWebFetchTransport({
         baseUrl: 'http://localhost:8080',
@@ -40,22 +41,17 @@ export default defineEventHandler(async (event) => {
         } catch(err: any) {
             if (err.code === 'NOT_FOUND') {
                 // Create new player
-                const newPlayer = Player.create();
-                const newId = generateId()
-                newPlayer.id = newId;
-                newPlayer.discord = player.discord;
-                newPlayer.name = player.name;
-
+                let newPlayer = Player.create();
                 const createRequest = CreatePlayerRequest.create()
-                createRequest.name = newPlayer.name;
-                createRequest.player = newPlayer;
-                createRequest.player.id = newId;
+                // createRequest.player = newPlayer;
+                const playerObj = Object.assign({}, player);
+                createRequest.player = Player.create(playerObj);
 
+                console.log("Create request: ", createRequest)
                 const createResponse = await client.createPlayer(createRequest);
 
                 return {
                     statusCode: 200,
-                    // body: JSON.stringify(createResponse)
                     body: createResponse.response,
                 };
             }
@@ -63,9 +59,8 @@ export default defineEventHandler(async (event) => {
 
         const existingPlayer = getResponse?.response.player;
 
-        console.log("Existing player: ", existingPlayer)
-
         if (existingPlayer) {
+            console.log("Existing player: ", existingPlayer)
 
             // Check for duplicate Discord ID
             // if (existingPlayer.getDiscord() === player.getDiscord()) {
@@ -89,7 +84,7 @@ export default defineEventHandler(async (event) => {
 
             return {
                 statusCode: 200,
-                body: JSON.stringify(updateResponse)
+                body: updateResponse.response,
             };
         }
     }

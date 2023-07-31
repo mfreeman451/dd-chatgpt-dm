@@ -9,6 +9,7 @@ import (
 	"github.com/octoper/go-ray"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"time"
 )
 
 // Service is a gRPC service
@@ -61,14 +62,25 @@ func (s *Service) GetPlayer(ctx context.Context, req *game.GetPlayerRequest) (*g
 
 func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (*game.CreatePlayerResponse, error) {
 
-	player := req.Player
+	ray.Ray("service/CreatePlayer: ", req.Player)
+
+	// Set the default room ID on the player object
+	req.Player.DefaultRoom = &game.Coordinates{
+		X: 0,
+		Y: 0,
+		Z: 0,
+	}
+	// set the lastLogin to now
+	req.Player.LastLogin = time.Now().Format(time.RFC3339Nano)
+
 	// Create the player in the database
 	id, err := s.DB.CreatePlayer(ctx, req)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create player: %v", err)
 	}
 
-	// Set the ID and default room ID on the player object
+	// Set the ID
+	player := req.Player
 	player.Id = id
 
 	// Create the response with the player object
