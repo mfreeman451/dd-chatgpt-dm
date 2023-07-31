@@ -32,7 +32,11 @@ func main() {
 	client := game.NewGameClient(conn)
 
 	// Create player
-	req := &game.CreatePlayerRequest{Name: "John"}
+	req := &game.CreatePlayerRequest{
+		Player: &game.Player{
+			Name: "Test Player",
+		},
+	}
 	resp, err := client.CreatePlayer(context.Background(), req)
 
 	if err != nil {

@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/model"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/bson"
@@ -29,14 +28,14 @@ func NewMongoDB(connStr string) (DB, error) {
 }
 
 // UpdatePlayer updates an existing player in the database based on the provided player object.
-func (db *MongoDB) UpdatePlayer(ctx context.Context, player *model.Player) error {
+func (db *MongoDB) UpdatePlayer(ctx context.Context, player *game.Player) error {
 	// Check if the player ID is empty
-	if player.ID == "" {
+	if player.Id == "" {
 		return errors.New("player ID is empty")
 	}
 
 	// Update the player in the database
-	filter := bson.M{"id": player.ID}
+	filter := bson.M{"id": player.Id}
 	update := bson.M{"$set": player}
 
 	_, err := db.Collection("players").UpdateOne(ctx, filter, update)
@@ -49,10 +48,10 @@ func (db *MongoDB) UpdatePlayer(ctx context.Context, player *model.Player) error
 }
 
 // CreatePlayer creates a new player
-func (db *MongoDB) CreatePlayer(ctx context.Context, player *model.Player) (string, error) {
+func (db *MongoDB) CreatePlayer(ctx context.Context, player *game.Player) (string, error) {
 	fmt.Println("Creating player in MongoDB..")
 	// Generate ID
-	player.ID = uuid.New().String()
+	player.Id = uuid.New().String()
 
 	// Create player in the database
 	res, err := db.Collection("players").InsertOne(ctx, player)
@@ -62,13 +61,13 @@ func (db *MongoDB) CreatePlayer(ctx context.Context, player *model.Player) (stri
 	}
 	fmt.Println("Inserted player with ID:", res.InsertedID)
 
-	return player.ID, nil
+	return player.Id, nil
 }
 
 // GetPlayer retrieves a player by ID
-func (db *MongoDB) GetPlayer(ctx context.Context, id string) (*model.Player, error) {
+func (db *MongoDB) GetPlayer(ctx context.Context, id string) (*game.Player, error) {
 	// Fetch player from the database based on the given ID
-	player := &model.Player{}
+	player := &game.Player{}
 	err := db.Collection("players").FindOne(ctx, bson.M{"id": id}).Decode(player)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
@@ -82,9 +81,9 @@ func (db *MongoDB) GetPlayer(ctx context.Context, id string) (*model.Player, err
 }
 
 // ListPlayers retrieves all players
-func (db *MongoDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
+func (db *MongoDB) ListPlayers(ctx context.Context) ([]*game.Player, error) {
 	// Define an empty slice to store the players
-	var players []*model.Player
+	var players []*game.Player
 
 	// Find all players in the database
 	cursor, err := db.Collection("players").Find(ctx, bson.M{})
@@ -99,9 +98,10 @@ func (db *MongoDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
 		}
 	}(cursor, ctx)
 
-	// Iterate over the cursor and decode each player into a model.Player object
+	// Iterate over the cursor and decode each player into a game.Player object
 	for cursor.Next(ctx) {
-		player := &model.Player{}
+		player := &game.Player{}
+
 		if err := cursor.Decode(player); err != nil {
 			fmt.Println("Error decoding player:", err)
 			return nil, err
@@ -118,9 +118,9 @@ func (db *MongoDB) ListPlayers(ctx context.Context) ([]*model.Player, error) {
 }
 
 // GetLocationByCoordinates retrieves a location by coordinates
-func (db *MongoDB) GetLocationByCoordinates(ctx context.Context, coordinates *game.Coordinates) (*model.Location, error) {
+func (db *MongoDB) GetLocationByCoordinates(ctx context.Context, coordinates *game.Coordinates) (*game.Location, error) {
 	filter := bson.M{"coordinates": coordinates}
-	location := &model.Location{}
+	location := &game.Location{}
 	err := db.Collection("rooms").FindOne(ctx, filter).Decode(location)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
@@ -134,6 +134,6 @@ func (db *MongoDB) GetLocationByCoordinates(ctx context.Context, coordinates *ga
 }
 
 // GetRoomState retrieves the state of a room
-func (db *MongoDB) GetRoomState(ctx context.Context, roomID string) (*model.RoomState, error) {
+func (db *MongoDB) GetRoomState(ctx context.Context, roomID string) (*game.RoomState, error) {
 	return nil, errors.New("GetRoomState not implemented")
 }

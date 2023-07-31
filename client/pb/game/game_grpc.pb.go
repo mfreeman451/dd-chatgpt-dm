@@ -26,6 +26,7 @@ const (
 	Game_GetPlayer_FullMethodName    = "/Game/GetPlayer"
 	Game_SetPlayer_FullMethodName    = "/Game/SetPlayer"
 	Game_UpdatePlayer_FullMethodName = "/Game/UpdatePlayer"
+	Game_GetRoomState_FullMethodName = "/Game/GetRoomState"
 )
 
 // GameClient is the client API for Game service.
@@ -39,6 +40,7 @@ type GameClient interface {
 	GetPlayer(ctx context.Context, in *GetPlayerRequest, opts ...grpc.CallOption) (*GetPlayerResponse, error)
 	SetPlayer(ctx context.Context, in *SetPlayerRequest, opts ...grpc.CallOption) (*SetPlayerResponse, error)
 	UpdatePlayer(ctx context.Context, in *UpdatePlayerRequest, opts ...grpc.CallOption) (*UpdatePlayerResponse, error)
+	GetRoomState(ctx context.Context, in *GetRoomStateRequest, opts ...grpc.CallOption) (*GetRoomStateResponse, error)
 }
 
 type gameClient struct {
@@ -112,6 +114,15 @@ func (c *gameClient) UpdatePlayer(ctx context.Context, in *UpdatePlayerRequest, 
 	return out, nil
 }
 
+func (c *gameClient) GetRoomState(ctx context.Context, in *GetRoomStateRequest, opts ...grpc.CallOption) (*GetRoomStateResponse, error) {
+	out := new(GetRoomStateResponse)
+	err := c.cc.Invoke(ctx, Game_GetRoomState_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GameServer is the server API for Game service.
 // All implementations must embed UnimplementedGameServer
 // for forward compatibility
@@ -123,6 +134,7 @@ type GameServer interface {
 	GetPlayer(context.Context, *GetPlayerRequest) (*GetPlayerResponse, error)
 	SetPlayer(context.Context, *SetPlayerRequest) (*SetPlayerResponse, error)
 	UpdatePlayer(context.Context, *UpdatePlayerRequest) (*UpdatePlayerResponse, error)
+	GetRoomState(context.Context, *GetRoomStateRequest) (*GetRoomStateResponse, error)
 	mustEmbedUnimplementedGameServer()
 }
 
@@ -150,6 +162,9 @@ func (UnimplementedGameServer) SetPlayer(context.Context, *SetPlayerRequest) (*S
 }
 func (UnimplementedGameServer) UpdatePlayer(context.Context, *UpdatePlayerRequest) (*UpdatePlayerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePlayer not implemented")
+}
+func (UnimplementedGameServer) GetRoomState(context.Context, *GetRoomStateRequest) (*GetRoomStateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRoomState not implemented")
 }
 func (UnimplementedGameServer) mustEmbedUnimplementedGameServer() {}
 
@@ -290,6 +305,24 @@ func _Game_UpdatePlayer_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Game_GetRoomState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRoomStateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameServer).GetRoomState(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Game_GetRoomState_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameServer).GetRoomState(ctx, req.(*GetRoomStateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Game_ServiceDesc is the grpc.ServiceDesc for Game service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -324,6 +357,10 @@ var Game_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdatePlayer",
 			Handler:    _Game_UpdatePlayer_Handler,
+		},
+		{
+			MethodName: "GetRoomState",
+			Handler:    _Game_GetRoomState_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

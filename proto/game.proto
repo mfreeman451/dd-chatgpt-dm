@@ -10,6 +10,16 @@ service Game {
   rpc GetPlayer(GetPlayerRequest) returns (GetPlayerResponse) {} // Added GetPlayer method
   rpc SetPlayer(SetPlayerRequest) returns (SetPlayerResponse); // Added SetPlayer method
   rpc UpdatePlayer(UpdatePlayerRequest) returns (UpdatePlayerResponse) {} // Added UpdatePlayer method
+  rpc GetRoomState(GetRoomStateRequest) returns (GetRoomStateResponse) {} // Added GetRoomState method
+}
+
+message Room {
+  string id = 1;
+  string description = 2;
+  repeated Item items = 3;
+  repeated NPC npcs = 4;
+  repeated Player players = 5;
+  Coordinates coordinates = 6;
 }
 
 message Coordinates {
@@ -55,8 +65,9 @@ message Player {
   repeated SpecialAbility specialAbilities = 34;
   RacialTraits racialTraits = 35;
   Coordinates location = 36;
-  int64 LastLogin = 37;
-  int64 LastLogout = 38;
+  Coordinates defaultRoom = 37; // New field
+  string LastLogin = 38;
+  string LastLogout = 39;
 }
 
 message Skill {
@@ -123,6 +134,14 @@ message NPC {
   string name = 1;
 }
 
+message GetRoomStateRequest { // Added message
+  string room_id = 1;
+}
+
+message GetRoomStateResponse { // Added message
+  RoomState room_state = 1;
+}
+
 message CreatePlayerRequest {
   Player player = 2;
 }
@@ -177,4 +196,10 @@ message UpdatePlayerRequest { // Added message
 
 message UpdatePlayerResponse { // Added message
   Player player = 1;
+}
+
+message RoomState {
+  string id = 1;
+  repeated Player players = 2;
+  // Other fields...
 }
