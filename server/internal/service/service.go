@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
@@ -93,15 +92,12 @@ func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerReques
 
 // ListPlayers lists all players
 func (s *Service) ListPlayers(ctx context.Context, _ *game.ListPlayersRequest) (*game.ListPlayersResponse, error) {
-	fmt.Println("ListPlayers")
-
 	// Get all players from the database
 	players, err := s.DB.ListPlayers(ctx)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to retrieve players: %v", err)
 	}
 
-	ray.Ray(players)
 	// Create the response with the list of players
 	response := &game.ListPlayersResponse{
 		Players: players,
