@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	"github.com/octoper/go-ray"
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -28,7 +29,9 @@ func NewMongoDB(connStr string) (DB, error) {
 }
 
 // UpdatePlayer updates an existing player in the database based on the provided player object.
-func (db *MongoDB) UpdatePlayer(ctx context.Context, player *game.Player) error {
+func (db *MongoDB) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerRequest) error {
+	player := req.Player
+
 	// Check if the player ID is empty
 	if player.Id == "" {
 		return errors.New("player ID is empty")
@@ -48,10 +51,13 @@ func (db *MongoDB) UpdatePlayer(ctx context.Context, player *game.Player) error 
 }
 
 // CreatePlayer creates a new player
-func (db *MongoDB) CreatePlayer(ctx context.Context, player *game.Player) (string, error) {
+func (db *MongoDB) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (string, error) {
 	fmt.Println("Creating player in MongoDB..")
+	player := req.Player
 	// Generate ID
 	player.Id = uuid.New().String()
+
+	ray.Ray("Creating player in MongoDB..", player)
 
 	// Create player in the database
 	res, err := db.Collection("players").InsertOne(ctx, player)
