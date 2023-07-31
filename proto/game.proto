@@ -79,6 +79,7 @@ message Player {
 
 enum SocialProvider {
   GOOGLE = 0;
+  GITHUB = 1;
 }
 
 message Admin {

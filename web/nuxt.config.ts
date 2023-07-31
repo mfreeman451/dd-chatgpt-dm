@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     'nuxt-windicss',
-    'nuxt-icon'
+    'nuxt-icon',
+    '@sidebase/nuxt-auth'
   ]
 })
