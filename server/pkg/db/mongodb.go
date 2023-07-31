@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/octoper/go-ray"
 	"github.com/rs/zerolog/log"
@@ -52,11 +51,7 @@ func (db *MongoDB) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerReque
 
 // CreatePlayer creates a new player
 func (db *MongoDB) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (string, error) {
-	fmt.Println("Creating player in MongoDB..")
 	player := req.Player
-	// Generate ID
-	player.Id = uuid.New().String()
-
 	ray.Ray("Creating player in MongoDB..", player)
 
 	// Create player in the database
