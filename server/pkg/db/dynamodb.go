@@ -81,7 +81,8 @@ func (db *DynamoDB) GetLocationByCoordinates(ctx context.Context, coordinates *g
 }
 
 // UpdatePlayer updates an existing player in the database based on the provided player object.
-func (db *DynamoDB) UpdatePlayer(ctx context.Context, player *game.Player) error {
+func (db *DynamoDB) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerRequest) error {
+	player := req.Player
 	// Check if the player ID is empty
 	if player.Id == "" {
 		return errors.New("player ID is empty")
@@ -108,8 +109,10 @@ func (db *DynamoDB) UpdatePlayer(ctx context.Context, player *game.Player) error
 }
 
 // CreatePlayer creates a new player
-func (db *DynamoDB) CreatePlayer(ctx context.Context, player *game.Player) (string, error) {
+func (db *DynamoDB) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (string, error) {
 	fmt.Println("Creating player in Dynamo..")
+	player := req.Player
+
 	// Generate ID
 	player.Id = uuid.New().String()
 

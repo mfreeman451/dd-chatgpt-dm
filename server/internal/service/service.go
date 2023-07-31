@@ -3,25 +3,24 @@ package service
 import (
 	"context"
 	"fmt"
-	redis "github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
-	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
 	"github.com/octoper/go-ray"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"time"
 )
 
 // Service is a gRPC service
 type Service struct {
-	pb.UnimplementedGameServer
+	game.UnimplementedGameServer
 	mydb.DB
 	redis redis.Client
 }
 
 // NewService creates a new gRPC service
 func NewService(db mydb.DB, redisClient redis.Client) *Service {
-	return &Service{pb.UnimplementedGameServer{}, db, redisClient}
+	return &Service{game.UnimplementedGameServer{}, db, redisClient}
 }
 
 // PublishNewPlayerEvent sends a message to the room channel notifying other players about the new player
@@ -40,7 +39,7 @@ func (s *Service) PublishNewPlayerEvent(ctx context.Context, roomID, newPlayerID
 }
 
 // GetPlayer retrieves a player by ID
-func (s *Service) GetPlayer(ctx context.Context, req *pb.GetPlayerRequest) (*pb.GetPlayerResponse, error) {
+func (s *Service) GetPlayer(ctx context.Context, req *game.GetPlayerRequest) (*game.GetPlayerResponse, error) {
 	// Fetch player from the database based on the given ID
 	player, err := s.DB.GetPlayer(ctx, req.PlayerId)
 	if err != nil {
@@ -53,30 +52,18 @@ func (s *Service) GetPlayer(ctx context.Context, req *pb.GetPlayerRequest) (*pb.
 	}
 
 	// Create the response with the player
-	response := &pb.GetPlayerResponse{
+	response := &game.GetPlayerResponse{
 		Player: player,
 	}
 
 	return response, nil
 }
 
-func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest) (*pb.CreatePlayerResponse, error) {
-	// Create the player object
-	player := &pb.Player{
-		Name:  req.Player.Name,
-		Race:  req.Player.Race,
-		Class: req.Player.Class,
-		Level: req.Player.Level,
-		DefaultRoom: &pb.Coordinates{
-			X: 0,
-			Y: 0,
-			Z: 0,
-		},
-		LastLogin: time.Now().String(),
-	}
+func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (*game.CreatePlayerResponse, error) {
 
+	player := req.Player
 	// Create the player in the database
-	id, err := s.DB.CreatePlayer(ctx, player)
+	id, err := s.DB.CreatePlayer(ctx, req)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create player: %v", err)
 	}
@@ -85,7 +72,7 @@ func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest)
 	player.Id = id
 
 	// Create the response with the player object
-	response := &pb.CreatePlayerResponse{
+	response := &game.CreatePlayerResponse{
 		Player: player,
 	}
 
@@ -93,7 +80,7 @@ func (s *Service) CreatePlayer(ctx context.Context, req *pb.CreatePlayerRequest)
 }
 
 // ListPlayers lists all players
-func (s *Service) ListPlayers(ctx context.Context, _ *pb.ListPlayersRequest) (*pb.ListPlayersResponse, error) {
+func (s *Service) ListPlayers(ctx context.Context, _ *game.ListPlayersRequest) (*game.ListPlayersResponse, error) {
 	fmt.Println("ListPlayers")
 
 	// Get all players from the database
@@ -104,7 +91,7 @@ func (s *Service) ListPlayers(ctx context.Context, _ *pb.ListPlayersRequest) (*p
 
 	ray.Ray(players)
 	// Create the response with the list of players
-	response := &pb.ListPlayersResponse{
+	response := &game.ListPlayersResponse{
 		Players: players,
 	}
 
@@ -112,7 +99,7 @@ func (s *Service) ListPlayers(ctx context.Context, _ *pb.ListPlayersRequest) (*p
 }
 
 // UpdatePlayer updates an existing player in the database based on the provided player object.
-func (s *Service) UpdatePlayer(ctx context.Context, req *pb.UpdatePlayerRequest) (*pb.UpdatePlayerResponse, error) {
+func (s *Service) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerRequest) (*game.UpdatePlayerResponse, error) {
 	// Get the player from the database based on the provided player ID
 	playerID := req.PlayerId
 	existingPlayer, err := s.DB.GetPlayer(ctx, playerID)
@@ -132,13 +119,13 @@ func (s *Service) UpdatePlayer(ctx context.Context, req *pb.UpdatePlayerRequest)
 	// Add more fields here for updating other player properties...
 
 	// Update the player in the database
-	err = s.DB.UpdatePlayer(ctx, existingPlayer)
+	err = s.DB.UpdatePlayer(ctx, req)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to update player: %v", err)
 	}
 
 	// Create the response with the updated player object
-	response := &pb.UpdatePlayerResponse{
+	response := &game.UpdatePlayerResponse{
 		Player: existingPlayer,
 	}
 
@@ -146,7 +133,7 @@ func (s *Service) UpdatePlayer(ctx context.Context, req *pb.UpdatePlayerRequest)
 }
 
 // GetRoomState retrieves the state of a room
-func (s *Service) GetRoomState(ctx context.Context, req *pb.GetRoomStateRequest) (*pb.GetRoomStateResponse, error) {
+func (s *Service) GetRoomState(ctx context.Context, req *game.GetRoomStateRequest) (*game.GetRoomStateResponse, error) {
 	// Fetch room from the database based on the given ID
 	room, err := s.DB.GetRoomState(ctx, req.RoomId)
 	if err != nil {
@@ -159,7 +146,7 @@ func (s *Service) GetRoomState(ctx context.Context, req *pb.GetRoomStateRequest)
 	}
 
 	// Create the response with the room
-	response := &pb.GetRoomStateResponse{
+	response := &game.GetRoomStateResponse{
 		RoomState: room,
 	}
 
