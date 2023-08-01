@@ -9,6 +9,7 @@ import (
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/thejerf/suture/v4"
 	"net/http"
 	"os"
 	"os/signal"
@@ -21,7 +22,6 @@ import (
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/server"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/service"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
-
 	"google.golang.org/grpc" // Import the grpc package
 )
 
@@ -64,11 +64,33 @@ func main() {
 	}
 	log.Info().Msgf("Redis ping result: %s", redRes)
 
+	// Create a new suture supervisor
+	supervisor := suture.New("main", suture.Spec{})
+
 	// Create Service
 	srv := service.NewService(dbInstance, rdb)
 
 	// Create GRPC server
-	grpcServer := server.NewGRPCServer(srv)
+	grpcPort, err := strconv.Atoi(os.Getenv("GRPC_PORT"))
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to convert GRPC_PORT to int")
+	}
+	grpcServer := server.NewGRPCServer(srv, grpcPort)
+
+	// Add the GRPC server as a service to the supervisor
+	supervisor.Add(grpcServer)
+
+	// Create a context for the supervisor
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	// Start the supervisor in a separate goroutine
+	go func() {
+		err := supervisor.Serve(ctx)
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to start supervisor")
+		}
+	}()
 
 	// Apply Prometheus middleware to the gRPC server
 	grpcOptions := []grpc.ServerOption{
@@ -82,13 +104,12 @@ func main() {
 
 	grpcWebServer := grpcweb.WrapServer(grpcServer.GetGRPCServer())
 
-	// wrap in a go func
-	go func() {
-		log.Info().Msg("starting grpc-web server on port 8080")
-		if err := http.ListenAndServe(":8080", grpcWebServer); err != nil {
-			log.Log().Err(err).Msg("failed to start grpc-web server")
-		}
-	}()
+	grpcWebService := &server.GRPCWebService{
+		GrpcWebServer: grpcWebServer,
+		Port:          8080, // replace with the actual port
+		Log:           log,
+	}
+	supervisor.Add(grpcWebService)
 
 	// Register service implementation
 	pb.RegisterGameServer(grpcServer.GetGRPCServer(), srv)
@@ -110,19 +131,6 @@ func main() {
 		}
 	}()
 
-	// Start GRPC server in a separate goroutine
-	go func() {
-		log.Info().Msgf("Starting GRPC server on port %s", os.Getenv("GRPC_PORT"))
-
-		grpcPort, err := strconv.Atoi(os.Getenv("GRPC_PORT"))
-		if err != nil {
-			log.Fatal().Err(err).Msg("failed to convert GRPC_PORT to int")
-		}
-		if err := grpcServer.Start(grpcPort); err != nil {
-			log.Fatal().Err(err).Msg("failed to start server")
-		}
-	}()
-
 	// Set up signal handling for graceful shutdown
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
@@ -133,7 +141,7 @@ func main() {
 	log.Info().Msg("Shutting down server...")
 
 	// Gracefully stop the GRPC server
-	grpcServer.Stop()
+	cancel()
 
 	log.Info().Msg("Server gracefully stopped")
 }
