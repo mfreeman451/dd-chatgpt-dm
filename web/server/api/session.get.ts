@@ -1,4 +1,5 @@
 // file: e.g: ~/server/api/session.get.ts
+/*
 import { getServerSession } from '#auth'
 export default eventHandler(async (event) => {
     const session = await getServerSession(event)
@@ -7,3 +8,4 @@ export default eventHandler(async (event) => {
     }
     return { status: 'authenticated!', text: 'im protected by an in-endpoint check', session }
 })
+ */
