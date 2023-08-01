@@ -19,14 +19,17 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Game_CreatePlayer_FullMethodName = "/Game/CreatePlayer"
-	Game_MovePlayer_FullMethodName   = "/Game/MovePlayer"
-	Game_GetLocation_FullMethodName  = "/Game/GetLocation"
-	Game_ListPlayers_FullMethodName  = "/Game/ListPlayers"
-	Game_GetPlayer_FullMethodName    = "/Game/GetPlayer"
-	Game_SetPlayer_FullMethodName    = "/Game/SetPlayer"
-	Game_UpdatePlayer_FullMethodName = "/Game/UpdatePlayer"
-	Game_GetRoomState_FullMethodName = "/Game/GetRoomState"
+	Game_CreatePlayer_FullMethodName        = "/Game/CreatePlayer"
+	Game_MovePlayer_FullMethodName          = "/Game/MovePlayer"
+	Game_GetLocation_FullMethodName         = "/Game/GetLocation"
+	Game_ListPlayers_FullMethodName         = "/Game/ListPlayers"
+	Game_GetPlayer_FullMethodName           = "/Game/GetPlayer"
+	Game_SetPlayer_FullMethodName           = "/Game/SetPlayer"
+	Game_UpdatePlayer_FullMethodName        = "/Game/UpdatePlayer"
+	Game_GetRoomState_FullMethodName        = "/Game/GetRoomState"
+	Game_SocialLogin_FullMethodName         = "/Game/SocialLogin"
+	Game_LinkSocialAccount_FullMethodName   = "/Game/LinkSocialAccount"
+	Game_UnlinkSocialAccount_FullMethodName = "/Game/UnlinkSocialAccount"
 )
 
 // GameClient is the client API for Game service.
@@ -41,6 +44,9 @@ type GameClient interface {
 	SetPlayer(ctx context.Context, in *SetPlayerRequest, opts ...grpc.CallOption) (*SetPlayerResponse, error)
 	UpdatePlayer(ctx context.Context, in *UpdatePlayerRequest, opts ...grpc.CallOption) (*UpdatePlayerResponse, error)
 	GetRoomState(ctx context.Context, in *GetRoomStateRequest, opts ...grpc.CallOption) (*GetRoomStateResponse, error)
+	SocialLogin(ctx context.Context, in *SocialLoginRequest, opts ...grpc.CallOption) (*SocialLoginResponse, error)
+	LinkSocialAccount(ctx context.Context, in *LinkSocialAccountRequest, opts ...grpc.CallOption) (*LinkSocialAccountResponse, error)
+	UnlinkSocialAccount(ctx context.Context, in *UnlinkSocialAccountRequest, opts ...grpc.CallOption) (*UnlinkSocialAccountResponse, error)
 }
 
 type gameClient struct {
@@ -123,6 +129,33 @@ func (c *gameClient) GetRoomState(ctx context.Context, in *GetRoomStateRequest, 
 	return out, nil
 }
 
+func (c *gameClient) SocialLogin(ctx context.Context, in *SocialLoginRequest, opts ...grpc.CallOption) (*SocialLoginResponse, error) {
+	out := new(SocialLoginResponse)
+	err := c.cc.Invoke(ctx, Game_SocialLogin_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameClient) LinkSocialAccount(ctx context.Context, in *LinkSocialAccountRequest, opts ...grpc.CallOption) (*LinkSocialAccountResponse, error) {
+	out := new(LinkSocialAccountResponse)
+	err := c.cc.Invoke(ctx, Game_LinkSocialAccount_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gameClient) UnlinkSocialAccount(ctx context.Context, in *UnlinkSocialAccountRequest, opts ...grpc.CallOption) (*UnlinkSocialAccountResponse, error) {
+	out := new(UnlinkSocialAccountResponse)
+	err := c.cc.Invoke(ctx, Game_UnlinkSocialAccount_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GameServer is the server API for Game service.
 // All implementations must embed UnimplementedGameServer
 // for forward compatibility
@@ -135,6 +168,9 @@ type GameServer interface {
 	SetPlayer(context.Context, *SetPlayerRequest) (*SetPlayerResponse, error)
 	UpdatePlayer(context.Context, *UpdatePlayerRequest) (*UpdatePlayerResponse, error)
 	GetRoomState(context.Context, *GetRoomStateRequest) (*GetRoomStateResponse, error)
+	SocialLogin(context.Context, *SocialLoginRequest) (*SocialLoginResponse, error)
+	LinkSocialAccount(context.Context, *LinkSocialAccountRequest) (*LinkSocialAccountResponse, error)
+	UnlinkSocialAccount(context.Context, *UnlinkSocialAccountRequest) (*UnlinkSocialAccountResponse, error)
 	mustEmbedUnimplementedGameServer()
 }
 
@@ -165,6 +201,15 @@ func (UnimplementedGameServer) UpdatePlayer(context.Context, *UpdatePlayerReques
 }
 func (UnimplementedGameServer) GetRoomState(context.Context, *GetRoomStateRequest) (*GetRoomStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRoomState not implemented")
+}
+func (UnimplementedGameServer) SocialLogin(context.Context, *SocialLoginRequest) (*SocialLoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SocialLogin not implemented")
+}
+func (UnimplementedGameServer) LinkSocialAccount(context.Context, *LinkSocialAccountRequest) (*LinkSocialAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LinkSocialAccount not implemented")
+}
+func (UnimplementedGameServer) UnlinkSocialAccount(context.Context, *UnlinkSocialAccountRequest) (*UnlinkSocialAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnlinkSocialAccount not implemented")
 }
 func (UnimplementedGameServer) mustEmbedUnimplementedGameServer() {}
 
@@ -323,6 +368,60 @@ func _Game_GetRoomState_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Game_SocialLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SocialLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameServer).SocialLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Game_SocialLogin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameServer).SocialLogin(ctx, req.(*SocialLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Game_LinkSocialAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LinkSocialAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameServer).LinkSocialAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Game_LinkSocialAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameServer).LinkSocialAccount(ctx, req.(*LinkSocialAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Game_UnlinkSocialAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnlinkSocialAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameServer).UnlinkSocialAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Game_UnlinkSocialAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameServer).UnlinkSocialAccount(ctx, req.(*UnlinkSocialAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Game_ServiceDesc is the grpc.ServiceDesc for Game service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -361,6 +460,18 @@ var Game_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetRoomState",
 			Handler:    _Game_GetRoomState_Handler,
+		},
+		{
+			MethodName: "SocialLogin",
+			Handler:    _Game_SocialLogin_Handler,
+		},
+		{
+			MethodName: "LinkSocialAccount",
+			Handler:    _Game_LinkSocialAccount_Handler,
+		},
+		{
+			MethodName: "UnlinkSocialAccount",
+			Handler:    _Game_UnlinkSocialAccount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

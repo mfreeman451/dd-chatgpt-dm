@@ -4,6 +4,12 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { Game } from "./game";
+import type { UnlinkSocialAccountResponse } from "./game";
+import type { UnlinkSocialAccountRequest } from "./game";
+import type { LinkSocialAccountResponse } from "./game";
+import type { LinkSocialAccountRequest } from "./game";
+import type { SocialLoginResponse } from "./game";
+import type { SocialLoginRequest } from "./game";
 import type { GetRoomStateResponse } from "./game";
 import type { GetRoomStateRequest } from "./game";
 import type { UpdatePlayerResponse } from "./game";
@@ -61,6 +67,18 @@ export interface IGameClient {
      * @generated from protobuf rpc: GetRoomState(GetRoomStateRequest) returns (GetRoomStateResponse);
      */
     getRoomState(input: GetRoomStateRequest, options?: RpcOptions): UnaryCall<GetRoomStateRequest, GetRoomStateResponse>;
+    /**
+     * @generated from protobuf rpc: SocialLogin(SocialLoginRequest) returns (SocialLoginResponse);
+     */
+    socialLogin(input: SocialLoginRequest, options?: RpcOptions): UnaryCall<SocialLoginRequest, SocialLoginResponse>;
+    /**
+     * @generated from protobuf rpc: LinkSocialAccount(LinkSocialAccountRequest) returns (LinkSocialAccountResponse);
+     */
+    linkSocialAccount(input: LinkSocialAccountRequest, options?: RpcOptions): UnaryCall<LinkSocialAccountRequest, LinkSocialAccountResponse>;
+    /**
+     * @generated from protobuf rpc: UnlinkSocialAccount(UnlinkSocialAccountRequest) returns (UnlinkSocialAccountResponse);
+     */
+    unlinkSocialAccount(input: UnlinkSocialAccountRequest, options?: RpcOptions): UnaryCall<UnlinkSocialAccountRequest, UnlinkSocialAccountResponse>;
 }
 /**
  * @generated from protobuf service Game
@@ -128,5 +146,26 @@ export class GameClient implements IGameClient, ServiceInfo {
     getRoomState(input: GetRoomStateRequest, options?: RpcOptions): UnaryCall<GetRoomStateRequest, GetRoomStateResponse> {
         const method = this.methods[7], opt = this._transport.mergeOptions(options);
         return stackIntercept<GetRoomStateRequest, GetRoomStateResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: SocialLogin(SocialLoginRequest) returns (SocialLoginResponse);
+     */
+    socialLogin(input: SocialLoginRequest, options?: RpcOptions): UnaryCall<SocialLoginRequest, SocialLoginResponse> {
+        const method = this.methods[8], opt = this._transport.mergeOptions(options);
+        return stackIntercept<SocialLoginRequest, SocialLoginResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: LinkSocialAccount(LinkSocialAccountRequest) returns (LinkSocialAccountResponse);
+     */
+    linkSocialAccount(input: LinkSocialAccountRequest, options?: RpcOptions): UnaryCall<LinkSocialAccountRequest, LinkSocialAccountResponse> {
+        const method = this.methods[9], opt = this._transport.mergeOptions(options);
+        return stackIntercept<LinkSocialAccountRequest, LinkSocialAccountResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: UnlinkSocialAccount(UnlinkSocialAccountRequest) returns (UnlinkSocialAccountResponse);
+     */
+    unlinkSocialAccount(input: UnlinkSocialAccountRequest, options?: RpcOptions): UnaryCall<UnlinkSocialAccountRequest, UnlinkSocialAccountResponse> {
+        const method = this.methods[10], opt = this._transport.mergeOptions(options);
+        return stackIntercept<UnlinkSocialAccountRequest, UnlinkSocialAccountResponse>("unary", this._transport, method, opt, input);
     }
 }

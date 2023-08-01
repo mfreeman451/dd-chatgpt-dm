@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "NODE_TLS_REJECT_UNAUTHORIZED=0 nuxt dev --https --ssl-cert ./certs/localhost.pem --ssl-key ./certs/localhost-key.pem",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -11,6 +11,7 @@
   "devDependencies": {
     "@aws-sdk/lib-dynamodb": "^3.379.1",
     "@nuxt/devtools": "latest",
+    "@sidebase/nuxt-auth": "0.6.0-beta.3",
     "@types/node": "^18.17.1",
     "@types/uuid": "^9.0.2",
     "@vercel/node": "^2.15.6",
@@ -29,6 +30,7 @@
     "@types/google-protobuf": "^3.15.6",
     "aws-sdk": "^2.1425.0",
     "google-protobuf": "^3.21.2",
+    "next-auth": "^4.22.3",
     "nuxi": "^3.6.5",
     "uuid": "^9.0.0",
     "uuidv4": "^6.2.13",

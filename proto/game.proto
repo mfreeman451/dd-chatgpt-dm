@@ -11,6 +11,9 @@ service Game {
   rpc SetPlayer(SetPlayerRequest) returns (SetPlayerResponse); // Added SetPlayer method
   rpc UpdatePlayer(UpdatePlayerRequest) returns (UpdatePlayerResponse) {} // Added UpdatePlayer method
   rpc GetRoomState(GetRoomStateRequest) returns (GetRoomStateResponse) {} // Added GetRoomState method
+  rpc SocialLogin(SocialLoginRequest) returns (SocialLoginResponse) {}
+  rpc LinkSocialAccount(LinkSocialAccountRequest) returns (LinkSocialAccountResponse) {}
+  rpc UnlinkSocialAccount(UnlinkSocialAccountRequest) returns (UnlinkSocialAccountResponse) {}
 }
 
 message Room {
@@ -68,6 +71,19 @@ message Player {
   Coordinates defaultRoom = 37; // New field
   string LastLogin = 38;
   string LastLogout = 39;
+  Admin admin = 40;
+  SocialProvider social_provider = 41;
+  string social_id = 42;
+  string social_token = 43;
+}
+
+enum SocialProvider {
+  GOOGLE = 0;
+  GITHUB = 1;
+}
+
+message Admin {
+  bool isAdmin = 1;
 }
 
 message Skill {
@@ -203,4 +219,35 @@ message RoomState {
   string id = 1;
   repeated Player players = 2;
   // Other fields...
+}
+
+message SocialLoginResponse {
+  string player_id = 1;
+  string token = 2;
+}
+
+message SocialLoginRequest {
+  SocialProvider provider = 1;
+  string social_id = 2;
+  // etc
+}
+
+message UnlinkSocialAccountRequest {
+  string player_id = 1;
+  SocialProvider provider = 2;
+}
+
+message UnlinkSocialAccountResponse {
+  string player_id = 1;
+}
+
+message LinkSocialAccountRequest {
+  string player_id = 1;
+  SocialProvider provider = 2;
+  string social_id = 3;
+  // etc
+}
+
+message LinkSocialAccountResponse {
+  string player_id = 1;
 }

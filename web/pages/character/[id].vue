@@ -20,6 +20,26 @@
           <td class="border px-4 py-2 font-bold">Race</td>
           <td class="border px-4 py-2">{{ character.race }}</td>
         </tr>
+        <!-- Strength -->
+        <tr>
+          <td class="border px-4 py-2 font-bold">Strength</td>
+          <td class="border px-4 py-2">{{ character.strength }}</td>
+        </tr>
+        <!-- Dexterity -->
+        <tr>
+          <td class="border px-4 py-2 font-bold">Dexterity</td>
+          <td class="border px-4 py-2">{{ character.dexterity }}</td>
+        </tr>
+        <!-- Wisdom -->
+        <tr>
+          <td class="border px-4 py-2 font-bold">Wisdom</td>
+          <td class="border px-4 py-2">{{ character.wisdom }}</td>
+        </tr>
+        <!-- Constitution -->
+        <tr>
+          <td class="border px-4 py-2 font-bold">Constitution</td>
+          <td class="border px-4 py-2">{{ character.constitution }}</td>
+        </tr>
         <tr>
           <td class="border px-4 py-2 font-bold">Level</td>
           <td class="border px-4 py-2">{{ character.level }}</td>
@@ -27,6 +47,10 @@
         <tr>
           <td class="border px-4 py-2 font-bold">Alignment</td>
           <td class="border px-4 py-2">{{ character.alignment }}</td>
+        </tr>
+        <tr>
+          <td class="border px-4 py-2 font-bold">Background</td>
+          <td class="border px-4 py-2">{{ character.background }}</td>
         </tr>
         <tr>
           <td class="border px-4 py-2 font-bold">Skills</td>
@@ -69,7 +93,6 @@ export default {
         console.error("[id].vue Error: ", error.value)
       } else if (data.value) {
         const parsedData = JSON.parse(data.value.body);
-        console.log(parsedData)
         isLoading.value = false
         if (parsedData.error) {
           console.error("parsedData.error: ", parsedData.error)
