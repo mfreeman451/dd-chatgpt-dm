@@ -22,7 +22,7 @@ import (
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/server"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/service"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
-	"google.golang.org/grpc" // Import the grpc package
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -36,7 +36,7 @@ func main() {
 
 	// Register a counter metric to track incoming requests.
 	requestsCounter := prometheus.NewCounter(prometheus.CounterOpts{
-		Name: "myapp_requests_total",
+		Name: "dnd_requests_total",
 		Help: "Total number of incoming requests",
 	})
 	prometheus.MustRegister(requestsCounter)
