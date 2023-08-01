@@ -75,7 +75,7 @@ func main() {
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to convert GRPC_PORT to int")
 	}
-	grpcServer := server.NewGRPCServer(srv, grpcPort)
+	grpcServer := server.NewGRPCServer(srv, grpcPort, log)
 
 	// Add the GRPC server as a service to the supervisor
 	supervisor.Add(grpcServer)

@@ -7,7 +7,6 @@ import (
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 	"net"
 	"net/http"
@@ -30,7 +29,7 @@ type GRPCWebService struct {
 func (s *GRPCWebService) Serve(ctx context.Context) error {
 	// Start the server in a separate goroutine
 	go func() {
-		log.Info().Msg("starting grpc-web server on port 8080")
+		s.Log.Info().Msg("starting grpc-web server on port 8080")
 		if err := http.ListenAndServe(fmt.Sprintf(":%d", s.Port), s.GrpcWebServer); err != nil {
 			s.Log.Fatal().Err(err).Msg("failed to start grpc-web server")
 		}
@@ -65,7 +64,7 @@ func (s *GRPCServer) Serve(ctx context.Context) error {
 }
 
 // NewGRPCServer creates a new gRPC server
-func NewGRPCServer(service pb.GameServer, port int) *GRPCServer {
+func NewGRPCServer(service pb.GameServer, port int, log *zerolog.Logger) *GRPCServer {
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
 
@@ -76,6 +75,7 @@ func NewGRPCServer(service pb.GameServer, port int) *GRPCServer {
 	return &GRPCServer{
 		grpc: grpcServer,
 		port: port,
+		log:  log,
 	}
 }
 
