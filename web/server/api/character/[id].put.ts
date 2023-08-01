@@ -1,11 +1,10 @@
 import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
 import { GameClient } from "~/pb/game.client";
 import {
-    CreatePlayerRequest,
+    UpdatePlayerRequest,
     GetPlayerRequest,
     Player
 } from "~/pb/game";
-import { v4 as uuidv4 } from 'uuid';
 
 const transport = new GrpcWebFetchTransport({
         baseUrl: 'http://localhost:8080',
@@ -36,24 +35,28 @@ export default defineEventHandler(async (event) => {
         try {
             getResponse = await client.getPlayer(getRequest);
         } catch(err: any) {
-            if (err.code === 'NOT_FOUND') {
-                // Create new player
-                let newPlayer = Player.create();
-                const createRequest = CreatePlayerRequest.create()
-                // stop anyone from trying to set the admin flag
-                delete player.admin;
-                // createRequest.player = newPlayer;
-                const playerObj = Object.assign({}, player);
-                createRequest.player = Player.create(playerObj);
+        }
 
-                console.log("Create request: ", createRequest)
-                const createResponse = await client.createPlayer(createRequest);
+        // this should be moved to [id].put.ts
+        const existingPlayer = getResponse?.response.player;
 
-                return {
-                    statusCode: 200,
-                    body: createResponse.response,
-                };
-            }
+        if (existingPlayer) {
+
+            const playerObj = Object.assign({}, player);
+            const updateRequest = UpdatePlayerRequest.create()
+            updateRequest.player = Player.create(playerObj);
+
+            // Update existing player
+            existingPlayer.id = id;
+            existingPlayer.discord = player.discord;
+            existingPlayer.name = player.name;
+
+            const updateResponse = await client.updatePlayer(updateRequest);
+
+            return {
+                statusCode: 200,
+                body: updateResponse.response,
+            };
         }
     }
 
@@ -67,10 +70,3 @@ export default defineEventHandler(async (event) => {
     }
 
 });
-
-// generateId is a helper function that generates a random ID.
-// It is used in the createPlayer function.
-function generateId() {
-    // return a uuidv4
-    return uuidv4();
-}

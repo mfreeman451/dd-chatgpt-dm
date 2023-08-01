@@ -31,8 +31,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import {useAuth} from "@sidebase/nuxt-auth/dist/runtime/composables/local/useAuth";
 
-const { status, data, signIn, signOut } = useAuth()
+const { data, signIn } = useAuth()
 
 let email = ref('')
 let password = ref('')
