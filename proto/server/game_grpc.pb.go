@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             (unknown)
-// source: game.proto
+// source: watermill.proto
 
 package game
 
@@ -327,5 +327,5 @@ var Game_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "game.proto",
+	Metadata: "watermill.proto",
 }

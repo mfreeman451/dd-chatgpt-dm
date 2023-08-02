@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "pb/game";
+option go_package = "pb/watermill";
 
 service Game {
   rpc CreatePlayer(CreatePlayerRequest) returns (CreatePlayerResponse) {}
@@ -14,6 +14,10 @@ service Game {
   rpc SocialLogin(SocialLoginRequest) returns (SocialLoginResponse) {}
   rpc LinkSocialAccount(LinkSocialAccountRequest) returns (LinkSocialAccountResponse) {}
   rpc UnlinkSocialAccount(UnlinkSocialAccountRequest) returns (UnlinkSocialAccountResponse) {}
+  // New methods for handling commands and events
+  rpc CreateGame(CreateGameCommand) returns (GameCreatedEvent);
+  rpc StartGame(StartGameCommand) returns (GameStartedEvent);
+  rpc EndGame(EndGameCommand) returns (GameEndedEvent);
 }
 
 message Room {
@@ -251,3 +255,50 @@ message LinkSocialAccountRequest {
 message LinkSocialAccountResponse {
   string player_id = 1;
 }
+
+// Command to create a new game
+message CreateGameCommand {
+  string game_id = 1;
+  string player_id = 2;
+}
+
+// Event that a game was created
+message GameCreatedEvent {
+  string game_id = 1;
+  string player_id = 2;
+}
+
+// Command to start a game
+message StartGameCommand {
+  string game_id = 1;
+}
+
+// Event that a game was started
+message GameStartedEvent {
+  string game_id = 1;
+}
+
+// Command to end a game
+message EndGameCommand {
+  string game_id = 1;
+}
+
+// Event that a game was ended
+message GameEndedEvent {
+  string game_id = 1;
+}
+
+// Command to move a player
+message MovePlayerCommand {
+  string game_id = 1;
+  string player_id = 2;
+  string direction = 3; // could be an enum depending on your game's rules
+}
+
+// Event that a player moved
+message PlayerMovedEvent {
+  string game_id = 1;
+  string player_id = 2;
+  string direction = 3; // could be an enum depending on your game's rules
+}
+

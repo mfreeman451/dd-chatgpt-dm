@@ -22,6 +22,7 @@ import (
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/server"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/service"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/watermill"
 	"google.golang.org/grpc"
 )
 
@@ -130,6 +131,30 @@ func main() {
 			log.Fatal().Err(err).Msg("failed to start Prometheus metrics server")
 		}
 	}()
+
+	// Create the CQRS components
+	commandProcessor, eventProcessor, err := watermill.NewCQRS()
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to create CQRS components")
+	}
+
+	// Create the command handler
+	createGameCommandHandler := &watermill.CreateGameCommandHandler{}
+
+	// Add the command handler to the command processor
+	err = commandProcessor.AddHandlers(createGameCommandHandler)
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to add command handler")
+	}
+
+	// Create the event handler
+	gameCreatedEventHandler := &watermill.GameCreatedEventHandler{}
+
+	// Add the event handler to the event processor
+	err = eventProcessor.AddHandlers(gameCreatedEventHandler)
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to add event handler")
+	}
 
 	// Set up signal handling for graceful shutdown
 	stop := make(chan os.Signal, 1)

@@ -1,5 +1,5 @@
 // package: 
-// file: game.proto
+// file: watermill.proto
 
 /* tslint:disable */
 /* eslint-disable */
