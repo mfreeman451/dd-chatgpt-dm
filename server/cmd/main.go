@@ -68,8 +68,32 @@ func main() {
 	// Create a new suture supervisor
 	supervisor := suture.New("main", suture.Spec{})
 
+	// Create the CQRS components
+	commandProcessor, eventProcessor, publisher, err := watermill.NewCQRS()
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to create CQRS components")
+	}
+
+	// Create the command handler
+	createGameCommandHandler := &watermill.CreateGameCommandHandler{}
+
+	// Add the command handler to the command processor
+	err = commandProcessor.AddHandlers(createGameCommandHandler)
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to add command handler")
+	}
+
+	// Create the event handler
+	gameCreatedEventHandler := &watermill.GameCreatedEventHandler{}
+
+	// Add the event handler to the event processor
+	err = eventProcessor.AddHandlers(gameCreatedEventHandler)
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to add event handler")
+	}
+
 	// Create Service
-	srv := service.NewService(dbInstance, rdb)
+	srv := service.NewService(dbInstance, rdb, publisher)
 
 	// Create GRPC server
 	grpcPort, err := strconv.Atoi(os.Getenv("GRPC_PORT"))
@@ -131,30 +155,6 @@ func main() {
 			log.Fatal().Err(err).Msg("failed to start Prometheus metrics server")
 		}
 	}()
-
-	// Create the CQRS components
-	commandProcessor, eventProcessor, err := watermill.NewCQRS()
-	if err != nil {
-		log.Fatal().Err(err).Msg("failed to create CQRS components")
-	}
-
-	// Create the command handler
-	createGameCommandHandler := &watermill.CreateGameCommandHandler{}
-
-	// Add the command handler to the command processor
-	err = commandProcessor.AddHandlers(createGameCommandHandler)
-	if err != nil {
-		log.Fatal().Err(err).Msg("failed to add command handler")
-	}
-
-	// Create the event handler
-	gameCreatedEventHandler := &watermill.GameCreatedEventHandler{}
-
-	// Add the event handler to the event processor
-	err = eventProcessor.AddHandlers(gameCreatedEventHandler)
-	if err != nil {
-		log.Fatal().Err(err).Msg("failed to add event handler")
-	}
 
 	// Set up signal handling for graceful shutdown
 	stop := make(chan os.Signal, 1)

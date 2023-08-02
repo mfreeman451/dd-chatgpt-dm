@@ -2,11 +2,13 @@ package service
 
 import (
 	"context"
+	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
 	"time"
 )
 
@@ -14,21 +16,22 @@ import (
 type Service struct {
 	game.UnimplementedGameServer
 	mydb.DB
-	redis redis.Client
+	redis     redis.Client
+	publisher message.Publisher
 }
 
 // NewService creates a new gRPC service
-func NewService(db mydb.DB, redisClient redis.Client) *Service {
-	return &Service{game.UnimplementedGameServer{}, db, redisClient}
+func NewService(db mydb.DB, redisClient redis.Client, publisher message.Publisher) *Service {
+	return &Service{game.UnimplementedGameServer{}, db, redisClient, publisher}
 }
 
 // PublishNewPlayerEvent sends a message to the room channel notifying other players about the new player
 func (s *Service) PublishNewPlayerEvent(ctx context.Context, roomID, newPlayerID string) error {
 	// Create a message indicating that a new player has joined the room
-	message := "Player " + newPlayerID + " has joined the room."
+	myMsg := "Player " + newPlayerID + " has joined the room."
 
 	// Publish the message to the room channel
-	err := s.redis.Publish(ctx, roomID, message)
+	err := s.redis.Publish(ctx, roomID, myMsg)
 	if err != nil {
 		// Handle error
 		return err
@@ -153,6 +156,34 @@ func (s *Service) GetRoomState(ctx context.Context, req *game.GetRoomStateReques
 	// Create the response with the room
 	response := &game.GetRoomStateResponse{
 		RoomState: room,
+	}
+
+	return response, nil
+}
+
+func (s *Service) CreateGame(ctx context.Context, req *game.CreateGameCommand) (*game.GameCreatedEvent, error) {
+	// Implement your game creation logic here.
+	// For example, you might create a new game in your database and return its ID.
+
+	// ... game creation logic ...
+
+	// Create the response with the game ID
+	response := &game.GameCreatedEvent{
+		GameId: "123",
+	}
+
+	// Marshal the response into a protobuf message
+	data, err := proto.Marshal(response)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create a new Watermill message with the protobuf data
+	msg := message.NewMessage("1", data)
+
+	// Publish the message to the "game_created" topic
+	if err := s.publisher.Publish("game_created", msg); err != nil {
+		return nil, err
 	}
 
 	return response, nil
