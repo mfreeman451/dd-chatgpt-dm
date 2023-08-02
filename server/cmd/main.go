@@ -138,10 +138,17 @@ func main() {
 		log.Fatal().Err(err).Msg("failed to create CQRS components")
 	}
 
-	// TODO: Add your command and event handlers to the processors here
-	// TODO: Set up Watermill and add the handlers to the router
-	// router.AddHandler("create_game", "game_commands", watermill.CreateGameCommandHandler)
-	// router.AddHandler("game_created", "game_events", watermill.GameCreatedEventHandler)
+	createGameCommandHandler := watermill.CreateGameCommandHandler{}
+	err = commandProcessor.AddHandlers(createGameCommandHandler)
+	if err != nil {
+		return
+	}
+
+	gameCreatedEventHandler := watermill.GameCreatedEventHandler{}
+	err = eventProcessor.AddHandlers(gameCreatedEventHandler)
+	if err != nil {
+		return
+	}
 
 	// Set up signal handling for graceful shutdown
 	stop := make(chan os.Signal, 1)

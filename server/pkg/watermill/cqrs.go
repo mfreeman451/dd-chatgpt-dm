@@ -70,6 +70,8 @@ func NewCQRS() (*cqrs.CommandProcessor, *cqrs.EventProcessor, error) {
 		SubscriberConstructor: func(params cqrs.EventProcessorSubscriberConstructorParams) (message.Subscriber, error) {
 			return pubsub, nil
 		},
+		Marshaler: marshaler,
+		Logger:    logger,
 	}
 
 	eventProcessor, err := cqrs.NewEventProcessorWithConfig(
