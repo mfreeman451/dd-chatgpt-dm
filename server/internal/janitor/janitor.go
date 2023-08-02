@@ -2,6 +2,7 @@ package janitor
 
 import (
 	"context"
+	"errors"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/logger"
 )
@@ -9,15 +10,19 @@ import (
 type Bot struct {
 	subscriber message.Subscriber
 	logger     logger.Logger
-	ctx        context.Context
 	cancel     context.CancelFunc
 }
 
-func (j *Bot) Serve() {
+func (j *Bot) Serve(ctx context.Context) error {
 	// Start the JanitorBot here
-	if err := j.Start(j.ctx, "game_created"); err != nil {
-		j.logger.Fatal().Err(err).Msg("Failed to start JanitorBot")
+	if err := j.Start(ctx, "game_created"); err != nil {
+		return errors.New("failed to start JanitorBot")
 	}
+
+	// Wait for the context to be cancelled
+	<-ctx.Done()
+
+	return nil
 }
 
 func (j *Bot) Stop() {
@@ -26,12 +31,9 @@ func (j *Bot) Stop() {
 }
 
 func NewJanitorBot(subscriber message.Subscriber, logger logger.Logger) *Bot {
-	ctx, cancel := context.WithCancel(context.Background())
 	return &Bot{
 		subscriber: subscriber,
 		logger:     logger,
-		ctx:        ctx,
-		cancel:     cancel,
 	}
 }
 
@@ -47,11 +49,17 @@ func (j *Bot) Start(ctx context.Context, topic string) error {
 }
 
 func (j *Bot) processMessages(ctx context.Context, msgs <-chan *message.Message) {
-	for msg := range msgs {
-		j.logger.Info().Msgf("Received message: %s", msg.UUID)
+	for {
+		select {
+		case msg := <-msgs:
+			j.logger.Info().Msgf("Received message: %s", msg.UUID)
 
-		// TODO: Add logic for processing the message here
+			// TODO: Add logic for processing the message here
 
-		msg.Ack()
+			msg.Ack()
+		case <-ctx.Done():
+			// The context has been cancelled, so stop processing messages
+			return
+		}
 	}
 }
