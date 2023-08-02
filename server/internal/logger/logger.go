@@ -7,8 +7,35 @@ import (
 	"os"
 )
 
+type Logger interface {
+	Info() *zerolog.Event
+	Error() *zerolog.Event
+	Debug() *zerolog.Event
+	Fatal() *zerolog.Event
+}
+
+type ZerologLogger struct {
+	logger *zerolog.Logger
+}
+
+func (z *ZerologLogger) Info() *zerolog.Event {
+	return z.logger.Info()
+}
+
+func (z *ZerologLogger) Error() *zerolog.Event {
+	return z.logger.Error()
+}
+
+func (z *ZerologLogger) Debug() *zerolog.Event {
+	return z.logger.Debug()
+}
+
+func (z *ZerologLogger) Fatal() *zerolog.Event {
+	return z.logger.Fatal()
+}
+
 // New creates a logger with both stdout and file output
-func New() *zerolog.Logger {
+func New() Logger {
 	// Open the log file
 	f, err := os.OpenFile("logs.txt", os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
 	if err != nil {
@@ -21,5 +48,5 @@ func New() *zerolog.Logger {
 	// Create a new logger with the multi-writer as the output
 	logger := log.Output(zerolog.ConsoleWriter{Out: multiWriter})
 
-	return &logger
+	return &ZerologLogger{logger: &logger}
 }

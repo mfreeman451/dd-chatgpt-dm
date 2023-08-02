@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/logger"
 	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/redis/go-redis/v9"
-	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"net"
 	"net/http"
@@ -17,13 +17,13 @@ type GRPCServer struct {
 	// Embedded gRPC server
 	grpc *grpc.Server
 	port int
-	log  *zerolog.Logger
+	Log  logger.Logger
 }
 
 type GRPCWebService struct {
 	GrpcWebServer *grpcweb.WrappedGrpcServer
 	Port          int
-	Log           *zerolog.Logger
+	Log           logger.Logger
 }
 
 func (s *GRPCWebService) Serve(ctx context.Context) error {
@@ -50,7 +50,7 @@ func (s *GRPCServer) Serve(ctx context.Context) error {
 	go func() {
 		if err := s.Start(s.port); err != nil {
 			// If the server returns an error, log it and exit
-			s.log.Fatal().Err(err).Msg("failed to start server")
+			s.Log.Fatal().Err(err).Msg("failed to start server")
 		}
 	}()
 
@@ -64,7 +64,7 @@ func (s *GRPCServer) Serve(ctx context.Context) error {
 }
 
 // NewGRPCServer creates a new gRPC server
-func NewGRPCServer(service pb.GameServer, port int, log *zerolog.Logger) *GRPCServer {
+func NewGRPCServer(service pb.GameServer, port int, log logger.Logger) *GRPCServer {
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
 
@@ -75,7 +75,7 @@ func NewGRPCServer(service pb.GameServer, port int, log *zerolog.Logger) *GRPCSe
 	return &GRPCServer{
 		grpc: grpcServer,
 		port: port,
-		log:  log,
+		Log:  log,
 	}
 }
 
