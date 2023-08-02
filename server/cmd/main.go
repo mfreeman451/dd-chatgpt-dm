@@ -138,16 +138,22 @@ func main() {
 		log.Fatal().Err(err).Msg("failed to create CQRS components")
 	}
 
-	createGameCommandHandler := watermill.CreateGameCommandHandler{}
+	// Create the command handler
+	createGameCommandHandler := &watermill.CreateGameCommandHandler{}
+
+	// Add the command handler to the command processor
 	err = commandProcessor.AddHandlers(createGameCommandHandler)
 	if err != nil {
-		return
+		log.Fatal().Err(err).Msg("failed to add command handler")
 	}
 
-	gameCreatedEventHandler := watermill.GameCreatedEventHandler{}
+	// Create the event handler
+	gameCreatedEventHandler := &watermill.GameCreatedEventHandler{}
+
+	// Add the event handler to the event processor
 	err = eventProcessor.AddHandlers(gameCreatedEventHandler)
 	if err != nil {
-		return
+		log.Fatal().Err(err).Msg("failed to add event handler")
 	}
 
 	// Set up signal handling for graceful shutdown
