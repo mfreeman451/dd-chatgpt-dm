@@ -17,6 +17,7 @@ import (
 	"syscall"
 
 	"github.com/joho/godotenv"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/janitor"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/logger"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis" // Use the custom redis package
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/server"
@@ -70,7 +71,7 @@ func main() {
 	supervisor := suture.New("main", suture.Spec{})
 
 	// Create the CQRS components
-	commandProcessor, eventProcessor, publisher, err := watermill.NewCQRS(log)
+	commandProcessor, eventProcessor, publisher, subscriber, err := watermill.NewCQRS(log)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to create CQRS components")
 	}
@@ -156,6 +157,15 @@ func main() {
 			log.Fatal().Err(err).Msg("failed to start Prometheus metrics server")
 		}
 	}()
+
+	// Start the Janitor Bot
+
+	janitorBot := janitor.NewJanitorBot(subscriber, log)
+
+	janErr := janitorBot.Start(context.Background(), "game_created")
+	if janErr != nil {
+		log.Fatal().Err(err).Msg("failed to start JanitorBot")
+	}
 
 	// Set up signal handling for graceful shutdown
 	stop := make(chan os.Signal, 1)

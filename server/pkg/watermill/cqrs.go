@@ -12,7 +12,7 @@ func NewProtobufMarshaler() *ProtobufMarshaler {
 	return &ProtobufMarshaler{}
 }
 
-func NewCQRS(log logger.Logger) (*cqrs.CommandProcessor, *cqrs.EventProcessor, message.Publisher, error) {
+func NewCQRS(log logger.Logger) (*cqrs.CommandProcessor, *cqrs.EventProcessor, message.Publisher, message.Subscriber, error) {
 	// Create a Pub/Sub
 	watermillLogger := logger.NewWatermillLoggerAdapter(log)
 	publisher := gochannel.NewGoChannel(
@@ -23,7 +23,7 @@ func NewCQRS(log logger.Logger) (*cqrs.CommandProcessor, *cqrs.EventProcessor, m
 	// Create a router
 	router, err := message.NewRouter(message.RouterConfig{}, watermillLogger)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 
 	// Create a marshaler
@@ -48,7 +48,7 @@ func NewCQRS(log logger.Logger) (*cqrs.CommandProcessor, *cqrs.EventProcessor, m
 	)
 
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 
 	// Create an event processor
@@ -69,8 +69,8 @@ func NewCQRS(log logger.Logger) (*cqrs.CommandProcessor, *cqrs.EventProcessor, m
 	)
 
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 
-	return commandProcessor, eventProcessor, publisher, nil
+	return commandProcessor, eventProcessor, publisher, publisher, nil
 }
