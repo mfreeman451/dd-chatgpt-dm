@@ -12,10 +12,11 @@ type Logger interface {
 	Error() *zerolog.Event
 	Debug() *zerolog.Event
 	Fatal() *zerolog.Event
+	Zerolog() *zerolog.Logger
 }
 
 type ZerologLogger struct {
-	logger *zerolog.Logger
+	logger zerolog.Logger
 }
 
 func (z *ZerologLogger) Info() *zerolog.Event {
@@ -34,6 +35,10 @@ func (z *ZerologLogger) Fatal() *zerolog.Event {
 	return z.logger.Fatal()
 }
 
+func (z *ZerologLogger) Zerolog() *zerolog.Logger {
+	return &z.logger
+}
+
 // New creates a logger with both stdout and file output
 func New() Logger {
 	// Open the log file
@@ -46,7 +51,7 @@ func New() Logger {
 	multiWriter := io.MultiWriter(os.Stdout, f)
 
 	// Create a new logger with the multi-writer as the output
-	logger := log.Output(zerolog.ConsoleWriter{Out: multiWriter})
+	logger := zerolog.New(multiWriter).With().Timestamp().Logger()
 
-	return &ZerologLogger{logger: &logger}
+	return &ZerologLogger{logger: logger}
 }

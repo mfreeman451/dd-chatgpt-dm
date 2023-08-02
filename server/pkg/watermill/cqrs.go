@@ -2,28 +2,27 @@
 package watermill
 
 import (
-	"github.com/ThreeDotsLabs/watermill"
+	"context"
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/ThreeDotsLabs/watermill/pubsub/gochannel"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/logger"
 )
 
 func NewProtobufMarshaler() *ProtobufMarshaler {
 	return &ProtobufMarshaler{}
 }
 
-func NewCQRS() (*cqrs.CommandProcessor, *cqrs.EventProcessor, message.Publisher, error) {
-	// Create a logger
-	logger := watermill.NewStdLogger(false, false)
-
+func NewCQRS(ctx *context.Context, log logger.Logger) (*cqrs.CommandProcessor, *cqrs.EventProcessor, message.Publisher, error) {
 	// Create a Pub/Sub
+	watermillLogger := logger.NewWatermillLoggerAdapter(log)
 	publisher := gochannel.NewGoChannel(
 		gochannel.Config{},
-		logger,
+		watermillLogger,
 	)
 
 	// Create a router
-	router, err := message.NewRouter(message.RouterConfig{}, logger)
+	router, err := message.NewRouter(message.RouterConfig{}, watermillLogger)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -39,17 +38,8 @@ func NewCQRS() (*cqrs.CommandProcessor, *cqrs.EventProcessor, message.Publisher,
 		SubscriberConstructor: func(params cqrs.CommandProcessorSubscriberConstructorParams) (message.Subscriber, error) {
 			return publisher, nil
 		},
-		/*
-			OnHandle: func(params cqrs.CommandProcessorOnHandleParams) error {
-				if params.Err != nil {
-					logger.Error(params.Err, "Error occurred while handling command", "command", params.CommandName)
-					return params.Err
-				}
-				return nil
-			},
-		*/
 		Marshaler:                marshaler,
-		Logger:                   logger,
+		Logger:                   watermillLogger,
 		AckCommandHandlingErrors: false,
 	}
 
@@ -71,7 +61,7 @@ func NewCQRS() (*cqrs.CommandProcessor, *cqrs.EventProcessor, message.Publisher,
 			return publisher, nil
 		},
 		Marshaler: marshaler,
-		Logger:    logger,
+		Logger:    watermillLogger,
 	}
 
 	eventProcessor, err := cqrs.NewEventProcessorWithConfig(

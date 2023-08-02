@@ -28,6 +28,7 @@ import (
 
 func main() {
 	var log = logger.New()
+	ctx := logger.SetLoggerInContext(context.Background(), log)
 
 	// Read in .env
 	err := godotenv.Load()
@@ -69,7 +70,7 @@ func main() {
 	supervisor := suture.New("main", suture.Spec{})
 
 	// Create the CQRS components
-	commandProcessor, eventProcessor, publisher, err := watermill.NewCQRS()
+	commandProcessor, eventProcessor, publisher, err := watermill.NewCQRS(&ctx, log)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to create CQRS components")
 	}
