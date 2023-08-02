@@ -5,18 +5,27 @@ import (
 	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"google.golang.org/protobuf/proto"
+	"reflect"
 )
 
 type ProtobufMarshaler struct{}
 
 func (m *ProtobufMarshaler) Name(v interface{}) string {
-	//TODO implement me
-	panic("implement me")
+	// Get the type of the value
+	t := reflect.TypeOf(v)
+
+	// If the value is a pointer, dereference it
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+
+	// Return the name of the type
+	return t.Name()
 }
 
 func (m *ProtobufMarshaler) NameFromMessage(msg *message.Message) string {
-	//TODO implement me
-	panic("implement me")
+	// The metadata of the message should contain the name of the protobuf message
+	return msg.Metadata.Get("name")
 }
 
 func (m *ProtobufMarshaler) Marshal(v interface{}) (*message.Message, error) {
