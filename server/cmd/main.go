@@ -28,7 +28,7 @@ import (
 
 func main() {
 	var log = logger.New()
-	ctx := logger.SetLoggerInContext(context.Background(), log)
+	// logCtx := logger.SetLoggerInContext(context.Background(), log)
 
 	// Read in .env
 	err := godotenv.Load()
@@ -70,7 +70,7 @@ func main() {
 	supervisor := suture.New("main", suture.Spec{})
 
 	// Create the CQRS components
-	commandProcessor, eventProcessor, publisher, err := watermill.NewCQRS(&ctx, log)
+	commandProcessor, eventProcessor, publisher, err := watermill.NewCQRS(log)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to create CQRS components")
 	}
@@ -107,12 +107,12 @@ func main() {
 	supervisor.Add(grpcServer)
 
 	// Create a context for the supervisor
-	ctx, cancel := context.WithCancel(context.Background())
+	supCtx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	// Start the supervisor in a separate goroutine
 	go func() {
-		err := supervisor.Serve(ctx)
+		err := supervisor.Serve(supCtx)
 		if err != nil {
 			log.Fatal().Err(err).Msg("failed to start supervisor")
 		}

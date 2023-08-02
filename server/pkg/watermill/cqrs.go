@@ -2,7 +2,6 @@
 package watermill
 
 import (
-	"context"
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/ThreeDotsLabs/watermill/pubsub/gochannel"
@@ -13,7 +12,7 @@ func NewProtobufMarshaler() *ProtobufMarshaler {
 	return &ProtobufMarshaler{}
 }
 
-func NewCQRS(ctx *context.Context, log logger.Logger) (*cqrs.CommandProcessor, *cqrs.EventProcessor, message.Publisher, error) {
+func NewCQRS(log logger.Logger) (*cqrs.CommandProcessor, *cqrs.EventProcessor, message.Publisher, error) {
 	// Create a Pub/Sub
 	watermillLogger := logger.NewWatermillLoggerAdapter(log)
 	publisher := gochannel.NewGoChannel(
