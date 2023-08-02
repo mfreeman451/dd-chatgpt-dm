@@ -17,6 +17,7 @@ import (
 	"syscall"
 
 	"github.com/joho/godotenv"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/janitor"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/logger"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis" // Use the custom redis package
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/server"
@@ -28,6 +29,7 @@ import (
 
 func main() {
 	var log = logger.New()
+	// logCtx := logger.SetLoggerInContext(context.Background(), log)
 
 	// Read in .env
 	err := godotenv.Load()
@@ -69,7 +71,7 @@ func main() {
 	supervisor := suture.New("main", suture.Spec{})
 
 	// Create the CQRS components
-	commandProcessor, eventProcessor, publisher, err := watermill.NewCQRS()
+	commandProcessor, eventProcessor, publisher, subscriber, err := watermill.NewCQRS(log)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to create CQRS components")
 	}
@@ -106,12 +108,12 @@ func main() {
 	supervisor.Add(grpcServer)
 
 	// Create a context for the supervisor
-	ctx, cancel := context.WithCancel(context.Background())
+	supCtx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	// Start the supervisor in a separate goroutine
 	go func() {
-		err := supervisor.Serve(ctx)
+		err := supervisor.Serve(supCtx)
 		if err != nil {
 			log.Fatal().Err(err).Msg("failed to start supervisor")
 		}
@@ -155,6 +157,20 @@ func main() {
 			log.Fatal().Err(err).Msg("failed to start Prometheus metrics server")
 		}
 	}()
+
+	// Start the Janitor Bot
+	janitorBot := janitor.NewJanitorBot(subscriber, log)
+
+	// Add the Janitor Bot as a service to the supervisor
+	supervisor.Add(janitorBot)
+
+	/*
+		janErr := janitorBot.Start(context.Background(), "game_created")
+		if janErr != nil {
+			log.Fatal().Err(err).Msg("failed to start JanitorBot")
+		}
+
+	*/
 
 	// Set up signal handling for graceful shutdown
 	stop := make(chan os.Signal, 1)
