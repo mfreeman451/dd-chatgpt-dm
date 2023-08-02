@@ -6,7 +6,7 @@ import (
 	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
-	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/thejerf/suture/v4"
@@ -112,7 +112,7 @@ func main() {
 	supervisor.Add(grpcWebService)
 
 	// Register service implementation
-	pb.RegisterGameServer(grpcServer.GetGRPCServer(), srv)
+	game.RegisterGameServer(grpcServer.GetGRPCServer(), srv)
 
 	// Expose Prometheus metrics via HTTP endpoint
 	http.Handle("/metrics", promhttp.Handler())

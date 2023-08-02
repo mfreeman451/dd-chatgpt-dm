@@ -5,7 +5,6 @@ import (
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
-	"github.com/octoper/go-ray"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"time"
@@ -60,8 +59,6 @@ func (s *Service) GetPlayer(ctx context.Context, req *game.GetPlayerRequest) (*g
 }
 
 func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (*game.CreatePlayerResponse, error) {
-
-	ray.Ray("service/CreatePlayer: ", req.Player)
 
 	// Set the default room ID on the player object
 	req.Player.DefaultRoom = &game.Coordinates{
