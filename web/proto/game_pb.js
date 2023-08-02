@@ -1,4 +1,4 @@
-// source: game.proto
+// source: watermill.proto
 /**
  * @fileoverview
  * @enhanceable
