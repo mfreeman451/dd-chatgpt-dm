@@ -13,9 +13,17 @@ type Bot struct {
 	cancel     context.CancelFunc
 }
 
+// create a slice of topics for the bot to subscribe to
+var topics = []string{
+	"janitor",
+	"game_created",
+	"user_created",
+	"user_joined",
+}
+
 func (j *Bot) Serve(ctx context.Context) error {
 	// Start the JanitorBot here
-	if err := j.Start(ctx, "game_created"); err != nil {
+	if err := j.Start(ctx); err != nil {
 		return errors.New("failed to start JanitorBot")
 	}
 
@@ -37,13 +45,16 @@ func NewJanitorBot(subscriber message.Subscriber, logger logger.Logger) *Bot {
 	}
 }
 
-func (j *Bot) Start(ctx context.Context, topic string) error {
-	msgs, err := j.subscriber.Subscribe(ctx, topic)
-	if err != nil {
-		return err
-	}
+func (j *Bot) Start(ctx context.Context) error {
+	// go through the list of topics and subscribe to each one
+	for _, topic := range topics {
+		msgs, err := j.subscriber.Subscribe(ctx, topic)
+		if err != nil {
+			return err
+		}
 
-	go j.processMessages(ctx, msgs)
+		go j.processMessages(ctx, msgs)
+	}
 
 	return nil
 }

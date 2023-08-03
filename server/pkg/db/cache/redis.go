@@ -1,4 +1,4 @@
-package redis
+package cache
 
 import (
 	"context"
@@ -49,7 +49,7 @@ func NewClient(options *Options) Client {
 	// For example, you can create a connection to the Redis server and return the client instance.
 	// The 'options' parameter can be used to configure the Redis client with address, password, etc.
 
-	// Example implementation (using the go-redis library):
+	// Example implementation (using the go-cache library):
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     options.Address,
 		Password: options.Password,

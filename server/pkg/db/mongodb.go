@@ -7,7 +7,6 @@ import (
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -55,12 +54,6 @@ func (db *MongoDB) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerReque
 
 func (db *MongoDB) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (string, error) {
 	player := req.Player
-	// Explicitly set the DefaultRoom field on the player document
-	player.DefaultRoom = &game.Coordinates{
-		X: 0,
-		Y: 0,
-		Z: 0,
-	}
 
 	// Create player in the database
 	res, err := db.Collection("players").InsertOne(ctx, player)
