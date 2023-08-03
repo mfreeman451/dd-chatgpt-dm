@@ -25,6 +25,27 @@ func NewService(db mydb.DB, redisClient cache.Client, publisher message.Publishe
 	return &Service{game.UnimplementedGameServer{}, db, publisher}
 }
 
+func (s *Service) Login(ctx context.Context, req *game.LoginRequest) (*game.LoginResponse, error) {
+	player, err := s.DB.GetPlayer(ctx, req.PlayerId)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to retrieve player: %v", err)
+	}
+
+	if player == nil {
+		return nil, status.Errorf(codes.NotFound, "player not found")
+	}
+
+	// TODO: Verify the password. This is just a placeholder.
+	if req.Password != "password" {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid password")
+	}
+
+	// TODO: Generate a token. This is just a placeholder.
+	token := "token"
+
+	return &game.LoginResponse{Token: token}, nil
+}
+
 // PublishNewPlayerEvent sends a message to the room channel notifying other players about the new player
 func (s *Service) PublishNewPlayerEvent(ctx context.Context, newPlayerID string, roomID game.Coordinates) error {
 	// Create a message indicating that a new player has joined the room

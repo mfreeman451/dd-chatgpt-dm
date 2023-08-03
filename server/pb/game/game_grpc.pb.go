@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v4.23.4
-// source: watermill.proto
+// source: game.proto
 
 package game
 
@@ -31,6 +31,7 @@ type GameClient interface {
 	UpdatePlayer(ctx context.Context, in *UpdatePlayerRequest, opts ...grpc.CallOption) (*UpdatePlayerResponse, error)
 	GetRoomState(ctx context.Context, in *GetRoomStateRequest, opts ...grpc.CallOption) (*GetRoomStateResponse, error)
 	SocialLogin(ctx context.Context, in *SocialLoginRequest, opts ...grpc.CallOption) (*SocialLoginResponse, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	LinkSocialAccount(ctx context.Context, in *LinkSocialAccountRequest, opts ...grpc.CallOption) (*LinkSocialAccountResponse, error)
 	UnlinkSocialAccount(ctx context.Context, in *UnlinkSocialAccountRequest, opts ...grpc.CallOption) (*UnlinkSocialAccountResponse, error)
 	// New methods for handling commands and events
@@ -128,6 +129,15 @@ func (c *gameClient) SocialLogin(ctx context.Context, in *SocialLoginRequest, op
 	return out, nil
 }
 
+func (c *gameClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, "/Game/Login", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *gameClient) LinkSocialAccount(ctx context.Context, in *LinkSocialAccountRequest, opts ...grpc.CallOption) (*LinkSocialAccountResponse, error) {
 	out := new(LinkSocialAccountResponse)
 	err := c.cc.Invoke(ctx, "/Game/LinkSocialAccount", in, out, opts...)
@@ -186,6 +196,7 @@ type GameServer interface {
 	UpdatePlayer(context.Context, *UpdatePlayerRequest) (*UpdatePlayerResponse, error)
 	GetRoomState(context.Context, *GetRoomStateRequest) (*GetRoomStateResponse, error)
 	SocialLogin(context.Context, *SocialLoginRequest) (*SocialLoginResponse, error)
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	LinkSocialAccount(context.Context, *LinkSocialAccountRequest) (*LinkSocialAccountResponse, error)
 	UnlinkSocialAccount(context.Context, *UnlinkSocialAccountRequest) (*UnlinkSocialAccountResponse, error)
 	// New methods for handling commands and events
@@ -225,6 +236,9 @@ func (UnimplementedGameServer) GetRoomState(context.Context, *GetRoomStateReques
 }
 func (UnimplementedGameServer) SocialLogin(context.Context, *SocialLoginRequest) (*SocialLoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SocialLogin not implemented")
+}
+func (UnimplementedGameServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 func (UnimplementedGameServer) LinkSocialAccount(context.Context, *LinkSocialAccountRequest) (*LinkSocialAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LinkSocialAccount not implemented")
@@ -416,6 +430,24 @@ func _Game_SocialLogin_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Game_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Game/Login",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Game_LinkSocialAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LinkSocialAccountRequest)
 	if err := dec(in); err != nil {
@@ -550,6 +582,10 @@ var Game_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Game_SocialLogin_Handler,
 		},
 		{
+			MethodName: "Login",
+			Handler:    _Game_Login_Handler,
+		},
+		{
 			MethodName: "LinkSocialAccount",
 			Handler:    _Game_LinkSocialAccount_Handler,
 		},
@@ -571,5 +607,5 @@ var Game_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "watermill.proto",
+	Metadata: "game.proto",
 }

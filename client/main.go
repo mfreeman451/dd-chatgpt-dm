@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/mfreeman451/dd-chatgpt-dm/client/pb/game"
+	"github.com/mfreeman451/dd-chatgpt-dm/client/pkg/client"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -17,14 +19,36 @@ func main() {
 	createUserFlag := flag.Bool("create-user", false, "Create a new user")
 	listUsersFlag := flag.Bool("list-users", false, "List all users")
 	createGameFlag := flag.Bool("create-game", false, "Create a new game")
+	loginFlag := flag.String("login", "", "Login to the game")
 	flag.Parse()
 
 	// Check if any flags were provided
-	if !*createUserFlag && !*createGameFlag {
+	if !*createUserFlag && !*createGameFlag && !*listUsersFlag && *loginFlag == "" {
 		fmt.Println("Usage: main [-create-user] [-create-game]")
 		fmt.Println("  -create-user: Create a new user")
 		fmt.Println("  -create-game: Create a new game")
+		fmt.Println("  -login: Login to the game")
 		os.Exit(0)
+	}
+
+	if *loginFlag != "" {
+		parts := strings.SplitN(*loginFlag, ":", 2)
+		if len(parts) != 2 {
+			log.Fatalf("invalid login format, expected player_id:password")
+		}
+		playerID, password := parts[0], parts[1]
+
+		req := &game.LoginRequest{
+			PlayerId: playerID,
+			Password: password,
+		}
+
+		resp, err := client.Login(context.Background(), req)
+		if err != nil {
+			log.Fatalf("failed to login: %v", err)
+		}
+
+		log.Printf("Logged in with token: %v", resp.Token)
 	}
 
 	// load .env

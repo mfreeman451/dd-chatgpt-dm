@@ -31,16 +31,16 @@
 
 <script setup>
 import { ref } from 'vue'
-import {useAuth} from "@sidebase/nuxt-auth/dist/runtime/composables/local/useAuth";
-
-const { data, signIn } = useAuth()
 
 let email = ref('')
 let password = ref('')
 
+/*
 const handleLogin = async () => {
   await signIn(email.value, password.value)
 }
+
+ */
 </script>
 
 <style scoped>

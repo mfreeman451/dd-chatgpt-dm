@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "pb/watermill";
+option go_package = "pb/game";
 
 service Game {
   rpc CreatePlayer(CreatePlayerRequest) returns (CreatePlayerResponse) {}
@@ -12,12 +12,22 @@ service Game {
   rpc UpdatePlayer(UpdatePlayerRequest) returns (UpdatePlayerResponse) {} // Added UpdatePlayer method
   rpc GetRoomState(GetRoomStateRequest) returns (GetRoomStateResponse) {} // Added GetRoomState method
   rpc SocialLogin(SocialLoginRequest) returns (SocialLoginResponse) {}
+  rpc Login(LoginRequest) returns (LoginResponse) {}
   rpc LinkSocialAccount(LinkSocialAccountRequest) returns (LinkSocialAccountResponse) {}
   rpc UnlinkSocialAccount(UnlinkSocialAccountRequest) returns (UnlinkSocialAccountResponse) {}
   // New methods for handling commands and events
   rpc CreateGame(CreateGameCommand) returns (GameCreatedEvent);
   rpc StartGame(StartGameCommand) returns (GameStartedEvent);
   rpc EndGame(EndGameCommand) returns (GameEndedEvent);
+}
+
+message LoginRequest {
+  string player_id = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
 }
 
 message Room {
@@ -33,6 +43,12 @@ message Coordinates {
   int32 x = 1;
   int32 y = 2;
   int32 z = 3;
+}
+
+// lets store user credentials in a different object
+message UserCredentials {
+  string player_id = 1;
+  string password = 2;
 }
 
 message Player {
@@ -80,6 +96,7 @@ message Player {
   string social_id = 42;
   string social_token = 43;
 }
+
 
 enum SocialProvider {
   GOOGLE = 0;
