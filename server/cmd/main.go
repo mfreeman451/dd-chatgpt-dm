@@ -164,14 +164,6 @@ func main() {
 	// Add the Janitor Bot as a service to the supervisor
 	supervisor.Add(janitorBot)
 
-	/*
-		janErr := janitorBot.Start(context.Background(), "game_created")
-		if janErr != nil {
-			log.Fatal().Err(err).Msg("failed to start JanitorBot")
-		}
-
-	*/
-
 	// Set up signal handling for graceful shutdown
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)

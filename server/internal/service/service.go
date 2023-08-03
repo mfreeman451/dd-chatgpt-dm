@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
@@ -62,13 +63,14 @@ func (s *Service) GetPlayer(ctx context.Context, req *game.GetPlayerRequest) (*g
 }
 
 func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (*game.CreatePlayerResponse, error) {
-
 	// Set the default room ID on the player object
-	req.Player.DefaultRoom = &game.Coordinates{
+	defaultRoom := &game.Coordinates{
 		X: 0,
 		Y: 0,
 		Z: 0,
 	}
+	req.Player.DefaultRoom = defaultRoom
+
 	// set the lastLogin to now
 	req.Player.LastLogin = time.Now().Format(time.RFC3339Nano)
 
@@ -85,6 +87,14 @@ func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerReques
 	// Create the response with the player object
 	response := &game.CreatePlayerResponse{
 		Player: player,
+	}
+
+	fmt.Println("DefaultRoom: ", player.DefaultRoom, "PlayerID: ", player.Id, "Req", req.Player.DefaultRoom)
+
+	// Publish a message to the room channel notifying other players that a new player has joined
+	err = s.PublishNewPlayerEvent(ctx, player.DefaultRoom.String(), player.Id)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to publish new player event: %v", err)
 	}
 
 	return response, nil

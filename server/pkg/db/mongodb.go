@@ -7,6 +7,7 @@ import (
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -57,9 +58,14 @@ func (db *MongoDB) CreatePlayer(ctx context.Context, req *game.CreatePlayerReque
 		fmt.Println("Error inserting player:", err)
 		return "", err
 	}
-	log.Info().Msgf("Inserted player with ID: %v", res.InsertedID)
+	// convert res.InsertedID to string
+	objectId, ok := res.InsertedID.(primitive.ObjectID)
+	if !ok {
+		log.Error().Msg("InsertedID is not an ObjectID")
+		return "", errors.New("InsertedID is not an ObjectID")
+	}
 
-	return player.Id, nil
+	return objectId.Hex(), nil
 }
 
 // GetPlayer retrieves a player by ID
