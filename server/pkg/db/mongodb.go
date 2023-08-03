@@ -35,19 +35,15 @@ func (db *MongoDB) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerReque
 		return errors.New("player ID is empty")
 	}
 
-	fmt.Println("UpdatePlayer ID:", player.Id)
-
 	// Update the player in the database
 	filter := bson.M{"_id": player.Id}
 	update := bson.M{"$set": player}
 
-	res, err := db.Collection("players").UpdateOne(ctx, filter, update)
+	_, err := db.Collection("players").UpdateOne(ctx, filter, update)
 	if err != nil {
 		fmt.Println("Error updating player:", err)
 		return err
 	}
-
-	fmt.Println("UpdatePlayer result:", res.UpsertedID, res.ModifiedCount, res.MatchedCount)
 
 	return nil
 }
@@ -56,13 +52,12 @@ func (db *MongoDB) CreatePlayer(ctx context.Context, req *game.CreatePlayerReque
 	player := req.Player
 
 	// Create player in the database
-	res, err := db.Collection("players").InsertOne(ctx, player)
+	_, err := db.Collection("players").InsertOne(ctx, player)
 	if err != nil {
 		fmt.Println("Error inserting player:", err)
 		return "", err
 	}
 
-	fmt.Println("CreatePlayer result:", res.InsertedID)
 	// Return the ID of the newly created player
 	return player.Id, nil
 

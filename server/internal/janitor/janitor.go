@@ -63,7 +63,7 @@ func (j *Bot) processMessages(ctx context.Context, msgs <-chan *message.Message)
 	for {
 		select {
 		case msg := <-msgs:
-			j.logger.Info().Msgf("Received message: %s", msg.UUID)
+			j.logger.Info().Msgf("Received message: %s, Content: %s", msg.UUID, string(msg.Payload))
 
 			// TODO: Add logic for processing the message here
 

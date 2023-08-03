@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/google/uuid"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
@@ -28,7 +27,6 @@ func NewService(db mydb.DB, redisClient cache.Client, publisher message.Publishe
 
 // PublishNewPlayerEvent sends a message to the room channel notifying other players about the new player
 func (s *Service) PublishNewPlayerEvent(ctx context.Context, newPlayerID string, roomID game.Coordinates) error {
-	fmt.Println("PublishNewPlayerEvent: ", roomID, newPlayerID)
 	// Create a message indicating that a new player has joined the room
 	myMsg := "Player " + newPlayerID + " has joined the room."
 
