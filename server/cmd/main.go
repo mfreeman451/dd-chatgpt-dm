@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"github.com/joho/godotenv"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/janitor"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/mfreeman451/dd-chatgpt-dm/server/cmd/janitor"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/cmd/server"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/logger"
 	"github.com/thejerf/suture/v4"
@@ -40,14 +40,13 @@ func main() {
 		supervisor.Add(grpcServer)
 		supervisor.Add(grpcWebService)
 
-		// Create the Janitor Bot
-		janitorBot := janitor.NewJanitorBot(subscriber, log)
+		// Setup the Janitor Bot
+		janitorBot := janitor.SetupJanitorBot(subscriber, log)
 
 		// Add the Janitor Bot as a service to the supervisor
 		supervisor.Add(janitorBot)
 
 		// You can also add the subscriber to the supervisor if it implements the suture.Service interface
-
 		err = supervisor.Serve(supCtx)
 		if err != nil {
 			log.Fatal().Err(err).Msg("failed to start supervisor")
