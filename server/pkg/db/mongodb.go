@@ -7,6 +7,7 @@ import (
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -71,6 +72,7 @@ func (db *MongoDB) CreatePlayer(ctx context.Context, req *game.CreatePlayerReque
 	fmt.Println("CreatePlayer result:", res.InsertedID)
 	// Return the ID of the newly created player
 	return player.Id, nil
+
 }
 
 // GetPlayer retrieves a player by ID
