@@ -97,7 +97,7 @@ func (db *MongoDB) ListPlayers(ctx context.Context) ([]*game.Player, error) {
 		}
 	}(cursor, ctx)
 
-	// Iterate over the cursor and decode each player into a watermill.Player object
+	// Iterate over the cursor and decode each player into a game.Player object
 	for cursor.Next(ctx) {
 		player := &game.Player{}
 

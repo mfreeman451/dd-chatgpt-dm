@@ -30,6 +30,7 @@ const (
 	Game_SocialLogin_FullMethodName         = "/Game/SocialLogin"
 	Game_LinkSocialAccount_FullMethodName   = "/Game/LinkSocialAccount"
 	Game_UnlinkSocialAccount_FullMethodName = "/Game/UnlinkSocialAccount"
+	Game_ExecuteCommand_FullMethodName      = "/Game/ExecuteCommand"
 	Game_CreateGame_FullMethodName          = "/Game/CreateGame"
 	Game_StartGame_FullMethodName           = "/Game/StartGame"
 	Game_EndGame_FullMethodName             = "/Game/EndGame"
@@ -51,6 +52,7 @@ type GameClient interface {
 	LinkSocialAccount(ctx context.Context, in *LinkSocialAccountRequest, opts ...grpc.CallOption) (*LinkSocialAccountResponse, error)
 	UnlinkSocialAccount(ctx context.Context, in *UnlinkSocialAccountRequest, opts ...grpc.CallOption) (*UnlinkSocialAccountResponse, error)
 	// New methods for handling commands and events
+	ExecuteCommand(ctx context.Context, in *ExecuteCommandRequest, opts ...grpc.CallOption) (*ExecuteCommandResponse, error)
 	CreateGame(ctx context.Context, in *CreateGameCommand, opts ...grpc.CallOption) (*GameCreatedEvent, error)
 	StartGame(ctx context.Context, in *StartGameCommand, opts ...grpc.CallOption) (*GameStartedEvent, error)
 	EndGame(ctx context.Context, in *EndGameCommand, opts ...grpc.CallOption) (*GameEndedEvent, error)
@@ -163,6 +165,15 @@ func (c *gameClient) UnlinkSocialAccount(ctx context.Context, in *UnlinkSocialAc
 	return out, nil
 }
 
+func (c *gameClient) ExecuteCommand(ctx context.Context, in *ExecuteCommandRequest, opts ...grpc.CallOption) (*ExecuteCommandResponse, error) {
+	out := new(ExecuteCommandResponse)
+	err := c.cc.Invoke(ctx, Game_ExecuteCommand_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *gameClient) CreateGame(ctx context.Context, in *CreateGameCommand, opts ...grpc.CallOption) (*GameCreatedEvent, error) {
 	out := new(GameCreatedEvent)
 	err := c.cc.Invoke(ctx, Game_CreateGame_FullMethodName, in, out, opts...)
@@ -206,6 +217,7 @@ type GameServer interface {
 	LinkSocialAccount(context.Context, *LinkSocialAccountRequest) (*LinkSocialAccountResponse, error)
 	UnlinkSocialAccount(context.Context, *UnlinkSocialAccountRequest) (*UnlinkSocialAccountResponse, error)
 	// New methods for handling commands and events
+	ExecuteCommand(context.Context, *ExecuteCommandRequest) (*ExecuteCommandResponse, error)
 	CreateGame(context.Context, *CreateGameCommand) (*GameCreatedEvent, error)
 	StartGame(context.Context, *StartGameCommand) (*GameStartedEvent, error)
 	EndGame(context.Context, *EndGameCommand) (*GameEndedEvent, error)
@@ -248,6 +260,9 @@ func (UnimplementedGameServer) LinkSocialAccount(context.Context, *LinkSocialAcc
 }
 func (UnimplementedGameServer) UnlinkSocialAccount(context.Context, *UnlinkSocialAccountRequest) (*UnlinkSocialAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnlinkSocialAccount not implemented")
+}
+func (UnimplementedGameServer) ExecuteCommand(context.Context, *ExecuteCommandRequest) (*ExecuteCommandResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ExecuteCommand not implemented")
 }
 func (UnimplementedGameServer) CreateGame(context.Context, *CreateGameCommand) (*GameCreatedEvent, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateGame not implemented")
@@ -469,6 +484,24 @@ func _Game_UnlinkSocialAccount_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Game_ExecuteCommand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExecuteCommandRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GameServer).ExecuteCommand(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Game_ExecuteCommand_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GameServer).ExecuteCommand(ctx, req.(*ExecuteCommandRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Game_CreateGame_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateGameCommand)
 	if err := dec(in); err != nil {
@@ -573,6 +606,10 @@ var Game_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UnlinkSocialAccount",
 			Handler:    _Game_UnlinkSocialAccount_Handler,
+		},
+		{
+			MethodName: "ExecuteCommand",
+			Handler:    _Game_ExecuteCommand_Handler,
 		},
 		{
 			MethodName: "CreateGame",
