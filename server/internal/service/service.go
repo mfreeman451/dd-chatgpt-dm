@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/ThreeDotsLabs/watermill/message"
+	"github.com/google/uuid"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
@@ -74,6 +75,9 @@ func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerReques
 	// set the lastLogin to now
 	req.Player.LastLogin = time.Now().Format(time.RFC3339Nano)
 
+	// create a new ID based on uuidv4
+	req.Player.Id = uuid.New().String()
+
 	// Create the player in the database
 	id, err := s.DB.CreatePlayer(ctx, req)
 	if err != nil {
@@ -83,6 +87,8 @@ func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerReques
 	// Set the ID
 	player := req.Player
 	player.Id = id
+
+	fmt.Println("player id: ", id)
 
 	// Create the response with the player object
 	response := &game.CreatePlayerResponse{

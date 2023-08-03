@@ -113,6 +113,7 @@ func (db *DynamoDB) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequ
 	fmt.Println("Creating player in Dynamo..")
 	player := req.Player
 
+	// TODO: update this, I don't think we should be doing this anymore
 	// Generate ID
 	player.Id = uuid.New().String()
 
