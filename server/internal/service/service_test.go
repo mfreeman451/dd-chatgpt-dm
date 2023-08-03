@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
-	myred "github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
+	myred "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db/cache"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

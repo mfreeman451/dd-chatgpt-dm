@@ -7,6 +7,7 @@ import (
 	grpcPrometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db/cache"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/thejerf/suture/v4"
@@ -19,7 +20,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/janitor"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/logger"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis" // Use the custom redis package
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/server"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/service"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
@@ -54,7 +54,7 @@ func main() {
 	}
 
 	// Create Redis client using the custom package
-	rdb := redis.NewClient(&redis.Options{
+	rdb := cache.NewClient(&cache.Options{
 		Address:  os.Getenv("REDIS_ADDRESS"),
 		Password: os.Getenv("REDIS_PASSWORD"),
 		DB:       0,
@@ -158,7 +158,7 @@ func main() {
 		}
 	}()
 
-	// Start the Janitor Bot
+	// Create the Janitor Bot
 	janitorBot := janitor.NewJanitorBot(subscriber, log)
 
 	// Add the Janitor Bot as a service to the supervisor

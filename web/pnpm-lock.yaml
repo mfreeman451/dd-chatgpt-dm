@@ -2160,7 +2160,7 @@ packages:
       - '@azure/keyvault-secrets'
       - '@azure/storage-blob'
       - '@planetscale/database'
-      - '@upstash/redis'
+      - '@upstash/cache'
       - '@vercel/kv'
       - '@vue/composition-api'
       - debug
@@ -6600,7 +6600,7 @@ packages:
       - '@azure/keyvault-secrets'
       - '@azure/storage-blob'
       - '@planetscale/database'
-      - '@upstash/redis'
+      - '@upstash/cache'
       - '@vercel/kv'
       - debug
       - encoding
@@ -6950,7 +6950,7 @@ packages:
       - '@azure/keyvault-secrets'
       - '@azure/storage-blob'
       - '@planetscale/database'
-      - '@upstash/redis'
+      - '@upstash/cache'
       - '@vercel/kv'
       - debug
       - encoding

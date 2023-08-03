@@ -2,12 +2,11 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/google/uuid"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/redis"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db/cache"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/proto"
@@ -18,24 +17,24 @@ import (
 type Service struct {
 	game.UnimplementedGameServer
 	mydb.DB
-	redis     redis.Client
 	publisher message.Publisher
 }
 
 // NewService creates a new gRPC service
-func NewService(db mydb.DB, redisClient redis.Client, publisher message.Publisher) *Service {
-	return &Service{game.UnimplementedGameServer{}, db, redisClient, publisher}
+func NewService(db mydb.DB, redisClient cache.Client, publisher message.Publisher) *Service {
+	return &Service{game.UnimplementedGameServer{}, db, publisher}
 }
 
 // PublishNewPlayerEvent sends a message to the room channel notifying other players about the new player
-func (s *Service) PublishNewPlayerEvent(ctx context.Context, roomID, newPlayerID string) error {
+func (s *Service) PublishNewPlayerEvent(ctx context.Context, newPlayerID string, roomID game.Coordinates) error {
 	// Create a message indicating that a new player has joined the room
 	myMsg := "Player " + newPlayerID + " has joined the room."
 
-	// Publish the message to the room channel
-	err := s.redis.Publish(ctx, roomID, myMsg)
-	if err != nil {
-		// Handle error
+	// Create a message indicating that a new player has joined the game to the new_user channel
+	msg := message.NewMessage(uuid.New().String(), []byte(myMsg))
+
+	// Publish the message to the new_user channel
+	if err := s.publisher.Publish("user_created", msg); err != nil {
 		return err
 	}
 
@@ -66,9 +65,9 @@ func (s *Service) GetPlayer(ctx context.Context, req *game.GetPlayerRequest) (*g
 func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (*game.CreatePlayerResponse, error) {
 	// Set the default room ID on the player object
 	defaultRoom := &game.Coordinates{
-		X: 0,
-		Y: 0,
-		Z: 0,
+		X: 1,
+		Y: 1,
+		Z: 1,
 	}
 	req.Player.DefaultRoom = defaultRoom
 
@@ -88,17 +87,13 @@ func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerReques
 	player := req.Player
 	player.Id = id
 
-	fmt.Println("player id: ", id)
-
 	// Create the response with the player object
 	response := &game.CreatePlayerResponse{
 		Player: player,
 	}
 
-	fmt.Println("DefaultRoom: ", player.DefaultRoom, "PlayerID: ", player.Id, "Req", req.Player.DefaultRoom)
-
 	// Publish a message to the room channel notifying other players that a new player has joined
-	err = s.PublishNewPlayerEvent(ctx, player.DefaultRoom.String(), player.Id)
+	err = s.PublishNewPlayerEvent(ctx, player.Id, *player.DefaultRoom)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to publish new player event: %v", err)
 	}
