@@ -1,5 +1,5 @@
-// package: 
-// file: watermill.proto
+// package: player.v1
+// file: player/v1/player.proto
 
 /* tslint:disable */
 /* eslint-disable */
@@ -130,10 +130,26 @@ export class Player extends jspb.Message {
     clearLocation(): void;
     getLocation(): Coordinates | undefined;
     setLocation(value?: Coordinates): Player;
-    getLastlogin(): number;
-    setLastlogin(value: number): Player;
-    getLastlogout(): number;
-    setLastlogout(value: number): Player;
+
+    hasDefaultroom(): boolean;
+    clearDefaultroom(): void;
+    getDefaultroom(): Coordinates | undefined;
+    setDefaultroom(value?: Coordinates): Player;
+    getLastlogin(): string;
+    setLastlogin(value: string): Player;
+    getLastlogout(): string;
+    setLastlogout(value: string): Player;
+
+    hasAdmin(): boolean;
+    clearAdmin(): void;
+    getAdmin(): Admin | undefined;
+    setAdmin(value?: Admin): Player;
+    getSocialProvider(): SocialProvider;
+    setSocialProvider(value: SocialProvider): Player;
+    getSocialId(): string;
+    setSocialId(value: string): Player;
+    getSocialToken(): string;
+    setSocialToken(value: string): Player;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): Player.AsObject;
@@ -183,8 +199,33 @@ export namespace Player {
         specialabilitiesList: Array<SpecialAbility.AsObject>,
         racialtraits?: RacialTraits.AsObject,
         location?: Coordinates.AsObject,
-        lastlogin: number,
-        lastlogout: number,
+        defaultroom?: Coordinates.AsObject,
+        lastlogin: string,
+        lastlogout: string,
+        admin?: Admin.AsObject,
+        socialProvider: SocialProvider,
+        socialId: string,
+        socialToken: string,
+    }
+}
+
+export class Admin extends jspb.Message { 
+    getIsadmin(): boolean;
+    setIsadmin(value: boolean): Admin;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): Admin.AsObject;
+    static toObject(includeInstance: boolean, msg: Admin): Admin.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: Admin, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): Admin;
+    static deserializeBinaryFromReader(message: Admin, reader: jspb.BinaryReader): Admin;
+}
+
+export namespace Admin {
+    export type AsObject = {
+        isadmin: boolean,
     }
 }
 
@@ -493,6 +534,8 @@ export namespace NPC {
 }
 
 export class CreatePlayerRequest extends jspb.Message { 
+    getPlayerId(): string;
+    setPlayerId(value: string): CreatePlayerRequest;
 
     hasPlayer(): boolean;
     clearPlayer(): void;
@@ -511,6 +554,7 @@ export class CreatePlayerRequest extends jspb.Message {
 
 export namespace CreatePlayerRequest {
     export type AsObject = {
+        playerId: string,
         player?: Player.AsObject,
     }
 }
@@ -584,52 +628,6 @@ export class MovePlayerResponse extends jspb.Message {
 export namespace MovePlayerResponse {
     export type AsObject = {
         player?: Player.AsObject,
-    }
-}
-
-export class GetLocationRequest extends jspb.Message { 
-
-    hasCoordinates(): boolean;
-    clearCoordinates(): void;
-    getCoordinates(): Coordinates | undefined;
-    setCoordinates(value?: Coordinates): GetLocationRequest;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): GetLocationRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: GetLocationRequest): GetLocationRequest.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: GetLocationRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): GetLocationRequest;
-    static deserializeBinaryFromReader(message: GetLocationRequest, reader: jspb.BinaryReader): GetLocationRequest;
-}
-
-export namespace GetLocationRequest {
-    export type AsObject = {
-        coordinates?: Coordinates.AsObject,
-    }
-}
-
-export class GetLocationResponse extends jspb.Message { 
-
-    hasLocation(): boolean;
-    clearLocation(): void;
-    getLocation(): Location | undefined;
-    setLocation(value?: Location): GetLocationResponse;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): GetLocationResponse.AsObject;
-    static toObject(includeInstance: boolean, msg: GetLocationResponse): GetLocationResponse.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: GetLocationResponse, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): GetLocationResponse;
-    static deserializeBinaryFromReader(message: GetLocationResponse, reader: jspb.BinaryReader): GetLocationResponse;
-}
-
-export namespace GetLocationResponse {
-    export type AsObject = {
-        location?: Location.AsObject,
     }
 }
 
@@ -808,4 +806,151 @@ export namespace UpdatePlayerResponse {
     export type AsObject = {
         player?: Player.AsObject,
     }
+}
+
+export class SocialLoginResponse extends jspb.Message { 
+    getPlayerId(): string;
+    setPlayerId(value: string): SocialLoginResponse;
+    getToken(): string;
+    setToken(value: string): SocialLoginResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): SocialLoginResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: SocialLoginResponse): SocialLoginResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: SocialLoginResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): SocialLoginResponse;
+    static deserializeBinaryFromReader(message: SocialLoginResponse, reader: jspb.BinaryReader): SocialLoginResponse;
+}
+
+export namespace SocialLoginResponse {
+    export type AsObject = {
+        playerId: string,
+        token: string,
+    }
+}
+
+export class SocialLoginRequest extends jspb.Message { 
+    getProvider(): SocialProvider;
+    setProvider(value: SocialProvider): SocialLoginRequest;
+    getSocialId(): string;
+    setSocialId(value: string): SocialLoginRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): SocialLoginRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: SocialLoginRequest): SocialLoginRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: SocialLoginRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): SocialLoginRequest;
+    static deserializeBinaryFromReader(message: SocialLoginRequest, reader: jspb.BinaryReader): SocialLoginRequest;
+}
+
+export namespace SocialLoginRequest {
+    export type AsObject = {
+        provider: SocialProvider,
+        socialId: string,
+    }
+}
+
+export class UnlinkSocialAccountRequest extends jspb.Message { 
+    getPlayerId(): string;
+    setPlayerId(value: string): UnlinkSocialAccountRequest;
+    getProvider(): SocialProvider;
+    setProvider(value: SocialProvider): UnlinkSocialAccountRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UnlinkSocialAccountRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: UnlinkSocialAccountRequest): UnlinkSocialAccountRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UnlinkSocialAccountRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UnlinkSocialAccountRequest;
+    static deserializeBinaryFromReader(message: UnlinkSocialAccountRequest, reader: jspb.BinaryReader): UnlinkSocialAccountRequest;
+}
+
+export namespace UnlinkSocialAccountRequest {
+    export type AsObject = {
+        playerId: string,
+        provider: SocialProvider,
+    }
+}
+
+export class UnlinkSocialAccountResponse extends jspb.Message { 
+    getPlayerId(): string;
+    setPlayerId(value: string): UnlinkSocialAccountResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UnlinkSocialAccountResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: UnlinkSocialAccountResponse): UnlinkSocialAccountResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: UnlinkSocialAccountResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UnlinkSocialAccountResponse;
+    static deserializeBinaryFromReader(message: UnlinkSocialAccountResponse, reader: jspb.BinaryReader): UnlinkSocialAccountResponse;
+}
+
+export namespace UnlinkSocialAccountResponse {
+    export type AsObject = {
+        playerId: string,
+    }
+}
+
+export class LinkSocialAccountRequest extends jspb.Message { 
+    getPlayerId(): string;
+    setPlayerId(value: string): LinkSocialAccountRequest;
+    getProvider(): SocialProvider;
+    setProvider(value: SocialProvider): LinkSocialAccountRequest;
+    getSocialId(): string;
+    setSocialId(value: string): LinkSocialAccountRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): LinkSocialAccountRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: LinkSocialAccountRequest): LinkSocialAccountRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: LinkSocialAccountRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): LinkSocialAccountRequest;
+    static deserializeBinaryFromReader(message: LinkSocialAccountRequest, reader: jspb.BinaryReader): LinkSocialAccountRequest;
+}
+
+export namespace LinkSocialAccountRequest {
+    export type AsObject = {
+        playerId: string,
+        provider: SocialProvider,
+        socialId: string,
+    }
+}
+
+export class LinkSocialAccountResponse extends jspb.Message { 
+    getPlayerId(): string;
+    setPlayerId(value: string): LinkSocialAccountResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): LinkSocialAccountResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: LinkSocialAccountResponse): LinkSocialAccountResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: LinkSocialAccountResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): LinkSocialAccountResponse;
+    static deserializeBinaryFromReader(message: LinkSocialAccountResponse, reader: jspb.BinaryReader): LinkSocialAccountResponse;
+}
+
+export namespace LinkSocialAccountResponse {
+    export type AsObject = {
+        playerId: string,
+    }
+}
+
+export enum InterpType {
+    INTERP_TYPE_UNSPECIFIED = 0,
+    INTERP_TYPE_LOGIN = 1,
+    INTERP_TYPE_PLAYING = 2,
+    INTERP_TYPE_BUILDING = 3,
+}
+
+export enum SocialProvider {
+    GOOGLE = 0,
+    GITHUB = 1,
 }

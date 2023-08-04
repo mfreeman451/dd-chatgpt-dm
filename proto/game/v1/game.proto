@@ -1,6 +1,7 @@
 syntax = "proto3";
+package game.v1;
 
-option go_package = "pb/game";
+// option go_package = "pb/game";
 
 service Game {
   rpc CreatePlayer(CreatePlayerRequest) returns (CreatePlayerResponse) {}
@@ -20,6 +21,13 @@ service Game {
   rpc CreateGame(CreateGameCommand) returns (GameCreatedEvent);
   rpc StartGame(StartGameCommand) returns (GameStartedEvent);
   rpc EndGame(EndGameCommand) returns (GameEndedEvent);
+}
+
+enum InterpType {
+  INTERP_TYPE_UNSPECIFIED = 0;
+  INTERP_TYPE_LOGIN = 1;
+  INTERP_TYPE_PLAYING = 2;
+  INTERP_TYPE_BUILDING = 3;
 }
 
 message ExecuteCommandRequest {
