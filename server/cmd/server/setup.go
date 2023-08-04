@@ -20,7 +20,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-func SetupServer(log logger.Logger) (*server.GRPCServer, *server.GRPCWebService, message.Subscriber, *metrics.MetricsService, error) {
+func SetupServer(log logger.Logger) (*server.GRPCServer, *server.GRPCWebService, message.Subscriber, *metrics.Service, error) {
 	// Create DB instance, pass in .env variables
 	dbConnStr := os.Getenv("DB_CONN_STR")
 	dbType := os.Getenv("DB_TYPE")

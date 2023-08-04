@@ -1,0 +1,87 @@
+syntax = "proto3";
+package room.v1;
+
+// option go_package = "pb/game";
+
+service RoomSvc {
+  rpc GetRoomState(GetRoomStateRequest) returns (GetRoomStateResponse) {} // Added GetRoomState method
+}
+
+enum InterpType {
+  INTERP_TYPE_UNSPECIFIED = 0;
+  INTERP_TYPE_LOGIN = 1;
+  INTERP_TYPE_PLAYING = 2;
+  INTERP_TYPE_BUILDING = 3;
+}
+
+message Room {
+  string id = 1;
+  string description = 2;
+  repeated Item items = 3;
+  repeated NPC npcs = 4;
+  repeated string players = 5;
+  Coordinates coordinates = 6;
+  message Exit {
+    string name = 1;
+    bool open = 2;
+    bool locked = 3;
+    bool always_open = 4;
+    optional string target_room = 5;
+  }
+
+  Exit north_exit = 7;
+  Exit east_exit = 8;
+  Exit south_exit = 9;
+  Exit west_exit = 10;
+  Exit up_exit = 11;
+  Exit down_exit = 12;
+}
+
+message Coordinates {
+  int32 x = 1;
+  int32 y = 2;
+  int32 z = 3;
+}
+
+// lets store user credentials in a different object
+message UserCredentials {
+  string player_id = 1;
+  string password = 2;
+}
+
+message Location {
+  string id = 1;
+  string description = 2;
+  repeated Item items = 3;
+  repeated NPC npcs = 4;
+}
+
+message GetRoomStateRequest { // Added message
+  string room_id = 1;
+}
+
+message GetRoomStateResponse { // Added message
+  RoomState room_state = 1;
+}
+
+message GetLocationRequest {
+  Coordinates coordinates = 1;
+}
+
+message GetLocationResponse {
+  Location location = 1;
+}
+
+message RoomState {
+  string id = 1;
+  repeated string players = 2;
+  // Other fields...
+}
+
+message Item {
+  string name = 1;
+}
+
+message NPC {
+  string name = 1;
+}

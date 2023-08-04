@@ -13,17 +13,17 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-type MetricsService struct {
+type Service struct {
 	suture.Service
 	server *http.Server
 	log    logger.Logger
 }
 
-func NewMetricsService(log logger.Logger) *MetricsService {
-	return &MetricsService{log: log}
+func NewMetricsService(log logger.Logger) *Service {
+	return &Service{log: log}
 }
 
-func (m *MetricsService) Serve(ctx context.Context) error {
+func (m *Service) Serve(ctx context.Context) error {
 	// Register a counter metric to track incoming requests.
 	requestsCounter := prometheus.NewCounter(prometheus.CounterOpts{
 		Name: "dnd_requests_total",
@@ -44,7 +44,7 @@ func (m *MetricsService) Serve(ctx context.Context) error {
 	return m.server.ListenAndServe()
 }
 
-func (m *MetricsService) Stop() {
+func (m *Service) Stop() {
 	if m.server != nil {
 		_ = m.server.Close()
 	}

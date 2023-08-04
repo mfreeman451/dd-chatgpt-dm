@@ -1,54 +1,29 @@
 syntax = "proto3";
+package player.v1;
 
-option go_package = "pb/game";
+// option go_package = "pb/game";
 
-service Game {
+service PlayerSvc {
   rpc CreatePlayer(CreatePlayerRequest) returns (CreatePlayerResponse) {}
   rpc MovePlayer(MovePlayerRequest) returns (MovePlayerResponse) {}
-  rpc GetLocation(GetLocationRequest) returns (GetLocationResponse) {}
   rpc ListPlayers(ListPlayersRequest) returns (ListPlayersResponse) {}
   rpc GetPlayer(GetPlayerRequest) returns (GetPlayerResponse) {} // Added GetPlayer method
   rpc SetPlayer(SetPlayerRequest) returns (SetPlayerResponse); // Added SetPlayer method
   rpc UpdatePlayer(UpdatePlayerRequest) returns (UpdatePlayerResponse) {} // Added UpdatePlayer method
-  rpc GetRoomState(GetRoomStateRequest) returns (GetRoomStateResponse) {} // Added GetRoomState method
-  rpc SocialLogin(SocialLoginRequest) returns (SocialLoginResponse) {}
-  rpc Login(LoginRequest) returns (LoginResponse) {}
-  rpc LinkSocialAccount(LinkSocialAccountRequest) returns (LinkSocialAccountResponse) {}
-  rpc UnlinkSocialAccount(UnlinkSocialAccountRequest) returns (UnlinkSocialAccountResponse) {}
-  // New methods for handling commands and events
-  rpc CreateGame(CreateGameCommand) returns (GameCreatedEvent);
-  rpc StartGame(StartGameCommand) returns (GameStartedEvent);
-  rpc EndGame(EndGameCommand) returns (GameEndedEvent);
 }
 
-message LoginRequest {
-  string player_id = 1;
-  string password = 2;
+enum InterpType {
+  INTERP_TYPE_UNSPECIFIED = 0;
+  INTERP_TYPE_LOGIN = 1;
+  INTERP_TYPE_PLAYING = 2;
+  INTERP_TYPE_BUILDING = 3;
 }
 
-message LoginResponse {
-  string token = 1;
-}
-
-message Room {
-  string id = 1;
-  string description = 2;
-  repeated Item items = 3;
-  repeated NPC npcs = 4;
-  repeated Player players = 5;
-  Coordinates coordinates = 6;
-}
 
 message Coordinates {
   int32 x = 1;
   int32 y = 2;
   int32 z = 3;
-}
-
-// lets store user credentials in a different object
-message UserCredentials {
-  string player_id = 1;
-  string password = 2;
 }
 
 message Player {
@@ -96,7 +71,6 @@ message Player {
   string social_id = 42;
   string social_token = 43;
 }
-
 
 enum SocialProvider {
   GOOGLE = 0;
@@ -171,14 +145,6 @@ message NPC {
   string name = 1;
 }
 
-message GetRoomStateRequest { // Added message
-  string room_id = 1;
-}
-
-message GetRoomStateResponse { // Added message
-  RoomState room_state = 1;
-}
-
 message CreatePlayerRequest {
   string player_id = 1;
   Player player = 2;
@@ -195,14 +161,6 @@ message MovePlayerRequest {
 
 message MovePlayerResponse {
   Player player = 1;
-}
-
-message GetLocationRequest {
-  Coordinates coordinates = 1;
-}
-
-message GetLocationResponse {
-  Location location = 1;
 }
 
 message ListPlayersRequest {}
@@ -236,12 +194,6 @@ message UpdatePlayerResponse { // Added message
   Player player = 1;
 }
 
-message RoomState {
-  string id = 1;
-  repeated Player players = 2;
-  // Other fields...
-}
-
 message SocialLoginResponse {
   string player_id = 1;
   string token = 2;
@@ -272,50 +224,3 @@ message LinkSocialAccountRequest {
 message LinkSocialAccountResponse {
   string player_id = 1;
 }
-
-// Command to create a new game
-message CreateGameCommand {
-  string game_id = 1;
-  string player_id = 2;
-}
-
-// Event that a game was created
-message GameCreatedEvent {
-  string game_id = 1;
-  string player_id = 2;
-}
-
-// Command to start a game
-message StartGameCommand {
-  string game_id = 1;
-}
-
-// Event that a game was started
-message GameStartedEvent {
-  string game_id = 1;
-}
-
-// Command to end a game
-message EndGameCommand {
-  string game_id = 1;
-}
-
-// Event that a game was ended
-message GameEndedEvent {
-  string game_id = 1;
-}
-
-// Command to move a player
-message MovePlayerCommand {
-  string game_id = 1;
-  string player_id = 2;
-  string direction = 3; // could be an enum depending on your game's rules
-}
-
-// Event that a player moved
-message PlayerMovedEvent {
-  string game_id = 1;
-  string player_id = 2;
-  string direction = 3; // could be an enum depending on your game's rules
-}
-

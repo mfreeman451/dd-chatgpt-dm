@@ -1,15 +1,30 @@
 package interp
 
 import (
+	"errors"
 	"fmt"
 	"github.com/ThreeDotsLabs/watermill/message"
+	playerv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/proto/go/player/v1"
 	"strings"
+	"sync"
 )
 
 type Command struct {
 	Action string
 	Args   []string
 }
+
+type Handler struct {
+	// interp state goes here
+	interps map[playerv1.Player_InterpType]Interp
+}
+
+var (
+	once         sync.Once
+	interp       *Handler
+	ErrNoInterp  = errors.New("interp not set for this interp type")
+	ErrNoCommand = errors.New("no such command")
+)
 
 func NewCommand(msg *message.Message) *Command {
 	input := string(msg.Payload)
