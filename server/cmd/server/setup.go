@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/ThreeDotsLabs/watermill/message"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/watermill"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
@@ -16,10 +18,8 @@ import (
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/logger"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/server"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/service"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db/cache"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/watermill"
 	"google.golang.org/grpc"
 )
 

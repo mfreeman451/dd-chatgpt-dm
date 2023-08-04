@@ -16,10 +16,29 @@ service Game {
   rpc LinkSocialAccount(LinkSocialAccountRequest) returns (LinkSocialAccountResponse) {}
   rpc UnlinkSocialAccount(UnlinkSocialAccountRequest) returns (UnlinkSocialAccountResponse) {}
   // New methods for handling commands and events
+  rpc ExecuteCommand(ExecuteCommandRequest) returns (ExecuteCommandResponse) {}
   rpc CreateGame(CreateGameCommand) returns (GameCreatedEvent);
   rpc StartGame(StartGameCommand) returns (GameStartedEvent);
   rpc EndGame(EndGameCommand) returns (GameEndedEvent);
 }
+
+message ExecuteCommandRequest {
+  string command = 1;
+  string game_id = 2;
+  string player_id = 3;
+}
+
+message ExecuteCommandResponse {
+  string result = 1;
+  string game_id = 2;
+  string command = 3;
+}
+
+message CommandExecutedEvent {
+  string game_id = 1;
+  string player_id = 2;
+  string command = 3;
+ }
 
 message LoginRequest {
   string player_id = 1;

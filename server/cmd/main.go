@@ -40,7 +40,7 @@ func main() {
 		supervisor.Add(grpcServer)
 		supervisor.Add(grpcWebService)
 
-		// Setup the Janitor Bot
+		// Set up the Janitor Bot
 		janitorBot := janitor.SetupJanitorBot(subscriber, log)
 
 		// Add the Janitor Bot as a service to the supervisor

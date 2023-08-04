@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/ThreeDotsLabs/watermill/message"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/interp"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/logger"
 )
 
@@ -11,6 +12,7 @@ type Bot struct {
 	subscriber message.Subscriber
 	logger     logger.Logger
 	cancel     context.CancelFunc
+	command    *interp.Command
 }
 
 // create a slice of topics for the bot to subscribe to
@@ -19,6 +21,7 @@ var topics = []string{
 	"game_created",
 	"user_created",
 	"user_joined",
+	"command_executed",
 }
 
 func (j *Bot) Serve(ctx context.Context) error {
@@ -65,7 +68,8 @@ func (j *Bot) processMessages(ctx context.Context, msgs <-chan *message.Message)
 		case msg := <-msgs:
 			j.logger.Info().Msgf("Received message: %s, Content: %s", msg.UUID, string(msg.Payload))
 
-			// TODO: Add logic for processing the message here
+			// Parse the message payload into a command
+			j.command = interp.NewCommand(msg)
 
 			msg.Ack()
 		case <-ctx.Done():

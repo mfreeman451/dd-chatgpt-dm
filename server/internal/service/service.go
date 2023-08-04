@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/google/uuid"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
@@ -47,7 +48,7 @@ func (s *Service) Login(ctx context.Context, req *game.LoginRequest) (*game.Logi
 }
 
 // PublishNewPlayerEvent sends a message to the room channel notifying other players about the new player
-func (s *Service) PublishNewPlayerEvent(ctx context.Context, newPlayerID string, roomID game.Coordinates) error {
+func (s *Service) PublishNewPlayerEvent(ctx context.Context, newPlayerID string, roomID *game.Coordinates) error {
 	// Create a message indicating that a new player has joined the room
 	myMsg := "Player " + newPlayerID + " has joined the room."
 
@@ -114,7 +115,7 @@ func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerReques
 	}
 
 	// Publish a message to the room channel notifying other players that a new player has joined
-	err = s.PublishNewPlayerEvent(ctx, player.Id, *player.DefaultRoom)
+	err = s.PublishNewPlayerEvent(ctx, player.Id, player.DefaultRoom)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to publish new player event: %v", err)
 	}
@@ -216,6 +217,38 @@ func (s *Service) CreateGame(ctx context.Context, req *game.CreateGameCommand) (
 	// Publish the message to the "game_created" topic
 	if err := s.publisher.Publish("game_created", msg); err != nil {
 		return nil, err
+	}
+
+	return response, nil
+}
+
+// ExecuteCommand executes a command in the game
+func (s *Service) ExecuteCommand(ctx context.Context, req *game.ExecuteCommandRequest) (*game.ExecuteCommandResponse, error) {
+	// Create a new CommandExecuted event
+	event := &game.CommandExecutedEvent{
+		GameId:   req.GameId,
+		PlayerId: req.PlayerId,
+		Command:  req.Command,
+	}
+
+	// Marshal the event into a protobuf message
+	data, err := proto.Marshal(event)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create a new Watermill message with the protobuf data
+	msg := message.NewMessage(watermill.NewUUID(), data)
+
+	// Publish the message to the "command_executed" topic
+	if err := s.publisher.Publish("command_executed", msg); err != nil {
+		return nil, err
+	}
+
+	// Create and return the response
+	response := &game.ExecuteCommandResponse{
+		GameId:  req.GameId,
+		Command: req.Command,
 	}
 
 	return response, nil
