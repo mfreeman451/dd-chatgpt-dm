@@ -71,9 +71,8 @@
   </div>
 </template>
 
-
 <script lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
 import { Character } from "~/types/character";
 
 export default {
@@ -98,7 +97,7 @@ export default {
           console.error("parsedData.error: ", parsedData.error)
           return
         }
-        character.value = parsedData as Character;
+        character.value = parsedData
       }
     })
 

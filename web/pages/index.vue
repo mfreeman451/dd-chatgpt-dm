@@ -165,7 +165,7 @@ const generate = () => {
 }
 
 const createEmptyCharacter = (): Character => {
-  return new Character('', '', '', '', '', '')
+  return new Character('', '', '', '', '')
 }
 
 const character = ref<Character>(createEmptyCharacter())
