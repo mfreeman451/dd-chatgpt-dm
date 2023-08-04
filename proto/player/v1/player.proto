@@ -1,5 +1,6 @@
 syntax = "proto3";
 package player.v1;
+option go_package = "player/v1/player";
 
 // option go_package = "pb/game";
 
