@@ -16,11 +16,11 @@
         <div class="rounded-md shadow-sm -space-y-px">
           <div>
             <label for="email-address" class="sr-only">Email address</label>
-            <input id="email-address" v-model="auth.email" name="email" type="email" autocomplete="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address">
+            <input id="email-address" v-model="email" name="email" type="email" autocomplete="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address">
           </div>
           <div>
             <label for="password" class="sr-only">Password</label>
-            <input id="password" name="password" v-model="auth.password" type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
+            <input id="password" name="password" v-model="password" type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
           </div>
         </div>
 
@@ -36,16 +36,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import {Auth} from "~/types/auth";
 const email = ref('')
 const password = ref('')
 const loginId = ref('')
 
-const createEmptyAuth = (): Auth => {
-  return new Auth()
-}
-
-const auth = ref<Auth>(createEmptyAuth())
 
 async function onSubmit() {
   // const email = ref('')
@@ -53,12 +47,14 @@ async function onSubmit() {
   const route = useRoute()
   const id = route.params.id
 
+  console.log("Email: ", email)
+
   const { data: loginId } = await useFetch(`/api/auth/login/${id}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body:  { email: email.value, password: password.value }
+    body:  { email: email, password: password }
   })
   console.log("Login ID: ", loginId.value.body)
 }
