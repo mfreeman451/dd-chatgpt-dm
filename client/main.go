@@ -6,7 +6,8 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/mfreeman451/dd-chatgpt-dm/client/pkg/client"
-	"github.com/mfreeman451/dd-chatgpt-dm/gen/game"
+	gamev1 "github.com/mfreeman451/dd-chatgpt-dm/gen/game/go/game/v1"
+	playerv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/game/go/player/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
@@ -51,7 +52,7 @@ func main() {
 		}
 		playerID, password := parts[0], parts[1]
 
-		req := &game.LoginRequest{
+		req := &gamev1.LoginRequest{
 			PlayerId: playerID,
 			Password: password,
 		}
@@ -81,16 +82,17 @@ func main() {
 		}
 	}(conn)
 
-	gameClient := game.NewGameClient(conn)
+	gameClient := gamev1.NewGameClient(conn)
+	playerClient := playerv1.NewPlayerClient(conn)
 
 	if *createUserFlag {
 		// Create player
-		req := &game.CreatePlayerRequest{
-			Player: &game.Player{
+		req := &playerv1.CreatePlayerRequest{
+			Player: &playerv1.Player{
 				Name: "Test Player",
 			},
 		}
-		resp, err := gameClient.CreatePlayer(context.Background(), req)
+		resp, err := playerClient.CreatePlayer(context.Background(), req)
 
 		if err != nil {
 			log.Fatalf("failed to create player: %v", err)
@@ -101,8 +103,8 @@ func main() {
 
 	if *listUsersFlag {
 		// List Players
-		req2 := &game.ListPlayersRequest{}
-		resp2, err := gameClient.ListPlayers(context.Background(), req2)
+		req2 := &playerv1.ListPlayersRequest{}
+		resp2, err := playerClient.ListPlayers(context.Background(), req2)
 		if err != nil {
 			log.Fatalf("failed to list players: %v", err)
 		}
@@ -113,7 +115,7 @@ func main() {
 	}
 
 	if *createGameFlag {
-		createGame, err := gameClient.CreateGame(context.Background(), &game.CreateGameCommand{
+		createGame, err := gameClient.CreateGame(context.Background(), &gamev1.CreateGameCommand{
 			GameId:   "dnd",
 			PlayerId: "test-player",
 		})
@@ -126,7 +128,7 @@ func main() {
 
 	if *executeCommandFlag != "" {
 		// Execute command
-		req := &game.ExecuteCommandRequest{
+		req := &gamev1.ExecuteCommandRequest{
 			Command: *executeCommandFlag,
 		}
 		resp, err := gameClient.ExecuteCommand(context.Background(), req)
