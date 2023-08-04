@@ -18,7 +18,6 @@
 <script setup>
 const menu = ref([
   { name: "Register", link: "/" },
-  { name: "Login", link: "/login" },
   { name: "Existing Characters", link: "/characters" },
 ]);
 </script>

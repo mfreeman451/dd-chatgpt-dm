@@ -20,6 +20,7 @@ func main() {
 	listUsersFlag := flag.Bool("list-users", false, "List all users")
 	createGameFlag := flag.Bool("create-game", false, "Create a new game")
 	executeCommandFlag := flag.String("execute-command", "", "Execute a command")
+	loginFlag := flag.String("login", "", "Login to the game")
 	helpFlag := flag.Bool("help", false, "Display help message")
 
 	flag.Parse()
@@ -37,7 +38,7 @@ func main() {
 	}
 
 	// Check if any flags were provided
-	if !*createUserFlag && !*createGameFlag && *executeCommandFlag == "" {
+	if !*createUserFlag && !*createGameFlag && *executeCommandFlag == "" && *loginFlag == "" {
 		fmt.Println("Usage: main [-create-user] [-create-game] [-execute-command command] [-help]")
 		fmt.Println("  -login: Login to the game")
 		os.Exit(0)
@@ -80,16 +81,16 @@ func main() {
 		}
 	}(conn)
 
-	client := watermill.NewGameClient(conn)
+	gameClient := game.NewGameClient(conn)
 
 	if *createUserFlag {
 		// Create player
-		req := &watermill.CreatePlayerRequest{
-			Player: &watermill.Player{
+		req := &game.CreatePlayerRequest{
+			Player: &game.Player{
 				Name: "Test Player",
 			},
 		}
-		resp, err := client.CreatePlayer(context.Background(), req)
+		resp, err := gameClient.CreatePlayer(context.Background(), req)
 
 		if err != nil {
 			log.Fatalf("failed to create player: %v", err)
@@ -100,8 +101,8 @@ func main() {
 
 	if *listUsersFlag {
 		// List Players
-		req2 := &watermill.ListPlayersRequest{}
-		resp2, err := client.ListPlayers(context.Background(), req2)
+		req2 := &game.ListPlayersRequest{}
+		resp2, err := gameClient.ListPlayers(context.Background(), req2)
 		if err != nil {
 			log.Fatalf("failed to list players: %v", err)
 		}
@@ -112,7 +113,7 @@ func main() {
 	}
 
 	if *createGameFlag {
-		createGame, err := client.CreateGame(context.Background(), &watermill.CreateGameCommand{
+		createGame, err := gameClient.CreateGame(context.Background(), &game.CreateGameCommand{
 			GameId:   "dnd",
 			PlayerId: "test-player",
 		})
@@ -125,10 +126,10 @@ func main() {
 
 	if *executeCommandFlag != "" {
 		// Execute command
-		req := &watermill.ExecuteCommandRequest{
+		req := &game.ExecuteCommandRequest{
 			Command: *executeCommandFlag,
 		}
-		resp, err := client.ExecuteCommand(context.Background(), req)
+		resp, err := gameClient.ExecuteCommand(context.Background(), req)
 
 		if err != nil {
 			log.Fatalf("failed to execute command: %v", err)
