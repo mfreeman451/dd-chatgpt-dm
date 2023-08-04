@@ -2,13 +2,10 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"github.com/ThreeDotsLabs/watermill/message"
+	"github.com/mfreeman451/dd-chatgpt-dm/server/cmd/metrics"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/watermill"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"net/http"
 	"os"
 	"strconv"
 
@@ -23,7 +20,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-func SetupServer(log logger.Logger) (*server.GRPCServer, *server.GRPCWebService, message.Subscriber, error) {
+func SetupServer(log logger.Logger) (*server.GRPCServer, *server.GRPCWebService, message.Subscriber, *metrics.MetricsService, error) {
 	// Create DB instance, pass in .env variables
 	dbConnStr := os.Getenv("DB_CONN_STR")
 	dbType := os.Getenv("DB_TYPE")
@@ -31,7 +28,7 @@ func SetupServer(log logger.Logger) (*server.GRPCServer, *server.GRPCWebService,
 	dbInstance, err := db.NewDB(dbConnStr, dbType)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to create DB instance")
-		return nil, nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 
 	// Create Redis client using the custom package
@@ -45,7 +42,7 @@ func SetupServer(log logger.Logger) (*server.GRPCServer, *server.GRPCWebService,
 	redRes, err := rdb.Ping(context.Background())
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to connect to Redis")
-		return nil, nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 	log.Info().Msgf("Redis ping result: %s", redRes)
 
@@ -53,7 +50,7 @@ func SetupServer(log logger.Logger) (*server.GRPCServer, *server.GRPCWebService,
 	commandProcessor, eventProcessor, publisher, subscriber, err := watermill.NewCQRS(log)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to create CQRS components")
-		return nil, nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 
 	// Create the command handler
@@ -81,7 +78,7 @@ func SetupServer(log logger.Logger) (*server.GRPCServer, *server.GRPCWebService,
 	grpcPort, err := strconv.Atoi(os.Getenv("GRPC_PORT"))
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to convert GRPC_PORT to int")
-		return nil, nil, nil, err
+		return nil, nil, nil, nil, err
 	}
 	grpcServer := server.NewGRPCServer(srv, grpcPort, log)
 
@@ -106,29 +103,7 @@ func SetupServer(log logger.Logger) (*server.GRPCServer, *server.GRPCWebService,
 	// Register service implementation
 	game.RegisterGameServer(grpcServer.GetGRPCServer(), srv)
 
-	// Register a counter metric to track incoming requests.
-	requestsCounter := prometheus.NewCounter(prometheus.CounterOpts{
-		Name: "dnd_requests_total",
-		Help: "Total number of incoming requests",
-	})
-	prometheus.MustRegister(requestsCounter)
+	metricsService := metrics.NewMetricsService(log)
 
-	// Expose Prometheus metrics via HTTP endpoint
-	http.Handle("/metrics", promhttp.Handler())
-
-	// Start HTTP server for Prometheus metrics
-	go func() {
-		log.Info().Msg("Starting Prometheus Metrics server")
-		httpPort, err := strconv.Atoi(os.Getenv("PROMETHEUS_PORT"))
-		if err != nil {
-			log.Fatal().Err(err).Msg("failed to convert PROMETHEUS_PORT to int")
-		}
-		httpAddr := fmt.Sprintf(":%d", httpPort)
-		log.Info().Msgf("Prometheus metrics server listening on %s", httpAddr)
-		if err := http.ListenAndServe(httpAddr, nil); err != nil {
-			log.Fatal().Err(err).Msg("failed to start Prometheus metrics server")
-		}
-	}()
-
-	return grpcServer, grpcWebService, subscriber, nil
+	return grpcServer, grpcWebService, subscriber, metricsService, nil
 }

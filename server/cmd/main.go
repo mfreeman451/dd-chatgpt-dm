@@ -30,7 +30,7 @@ func main() {
 
 	// Start the supervisor in a separate goroutine
 	go func() {
-		grpcServer, grpcWebService, subscriber, err := server.SetupServer(log)
+		grpcServer, grpcWebService, subscriber, metricsService, err := server.SetupServer(log)
 		if err != nil {
 			log.Fatal().Err(err).Msg("failed to set up server")
 			return
@@ -39,6 +39,9 @@ func main() {
 		// Add the GRPC server and GRPC web service to the supervisor
 		supervisor.Add(grpcServer)
 		supervisor.Add(grpcWebService)
+
+		// Add the Prometheus metrics service to the supervisor
+		supervisor.Add(metricsService)
 
 		// Set up the Janitor Bot
 		janitorBot := janitor.SetupJanitorBot(subscriber, log)
