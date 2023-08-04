@@ -5,11 +5,13 @@ import (
 	"flag"
 	"fmt"
 	"github.com/joho/godotenv"
-	"github.com/mfreeman451/dd-chatgpt-dm/client/pb/watermill"
+	"github.com/mfreeman451/dd-chatgpt-dm/client/pb/game"
+	"github.com/mfreeman451/dd-chatgpt-dm/client/pkg/client"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -37,7 +39,28 @@ func main() {
 	// Check if any flags were provided
 	if !*createUserFlag && !*createGameFlag && *executeCommandFlag == "" {
 		fmt.Println("Usage: main [-create-user] [-create-game] [-execute-command command] [-help]")
+		fmt.Println("  -login: Login to the game")
 		os.Exit(0)
+	}
+
+	if *loginFlag != "" {
+		parts := strings.SplitN(*loginFlag, ":", 2)
+		if len(parts) != 2 {
+			log.Fatalf("invalid login format, expected player_id:password")
+		}
+		playerID, password := parts[0], parts[1]
+
+		req := &game.LoginRequest{
+			PlayerId: playerID,
+			Password: password,
+		}
+
+		resp, err := client.Login(context.Background(), req)
+		if err != nil {
+			log.Fatalf("failed to login: %v", err)
+		}
+
+		log.Printf("Logged in with token: %v", resp.Token)
 	}
 
 	// load .env
