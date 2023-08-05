@@ -1,8 +1,6 @@
 syntax = "proto3";
 package game.v1;
 
-option go_package = "pb/game";
-
 service Game {
   rpc CreatePlayer(CreatePlayerRequest) returns (CreatePlayerResponse) {}
   rpc MovePlayer(MovePlayerRequest) returns (MovePlayerResponse) {}

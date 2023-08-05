@@ -1,6 +1,7 @@
 package game
 
 import (
+	playerv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/player/v1"
 	roomv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/room/v1"
 )
 
@@ -28,7 +29,7 @@ func (s *RoomService) DeleteRoom(roomID string) error {
 }
 
 // AddPlayer adds a player to a room.
-func (s *RoomService) AddPlayer(roomID string, player *roomv1.Player) error {
+func (s *RoomService) AddPlayer(roomID string, player *playerv1.Player) error {
 	// implementation goes here
 	return nil
 }

@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
+	"github.com/mfreeman451/dd-chatgpt-dm/gen/game/v1/gamev1connect"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/internal/logger"
-	pb "github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
-	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc"
 	"net"
 	"net/http"
@@ -64,12 +63,9 @@ func (s *GRPCServer) Serve(ctx context.Context) error {
 }
 
 // NewGRPCServer creates a new gRPC server
-func NewGRPCServer(service pb.GameServer, port int, log logger.Logger) *GRPCServer {
+func NewGRPCServer(service gamev1connect.GameClient, port int, log logger.Logger) *GRPCServer {
 	// Initialize gRPC server
 	grpcServer := grpc.NewServer()
-
-	// Register service implementation
-	pb.RegisterGameServer(grpcServer, service)
 
 	// Return the gRPC server
 	return &GRPCServer{
