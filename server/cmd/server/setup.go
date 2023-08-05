@@ -3,8 +3,8 @@ package server
 import (
 	"context"
 	"github.com/ThreeDotsLabs/watermill/message"
+	game "github.com/mfreeman451/dd-chatgpt-dm/proto/server"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/cmd/metrics"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/watermill"
 	"os"
 	"strconv"

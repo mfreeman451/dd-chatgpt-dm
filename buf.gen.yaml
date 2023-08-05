@@ -2,28 +2,12 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/mfreeman451/dd-chatgpt-dm/gen/proto/go
+    default: github.com/mfreeman451/dd-chatgpt-dm/gen
 
 plugins:
-  - name: go
-    out: gen/proto/go
-    opt:
-      - paths=source_relative
-
-  - name: go-grpc
-    out: gen/proto/go
+  - plugin: buf.build/protocolbuffers/go
+    out: gen
     opt: paths=source_relative
-    strategy: all
-
-  - name: js
-    out: web/proto
-    opt: import_style=commonjs,binary
-
-  - name: grpc-js
-    out: web/proto
-    opt: grpc_js
-    path: grpc_tools_node_protoc_plugin
-
-  - name: ts
-    out: web/proto
-    opt: grpc_js
+  - plugin: buf.build/bufbuild/connect-go
+    out: gen
+    opt: paths=source_relative

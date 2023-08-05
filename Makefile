@@ -17,6 +17,7 @@ install:
 	brew install protobuf
 	brew install clang-format
 	brew install grpcurl
+	brew install bufbuild/buf/buf
 	export PATH=$PATH:$(go env GOPATH)/bin
 
 test:

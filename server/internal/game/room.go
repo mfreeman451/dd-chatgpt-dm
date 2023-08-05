@@ -1,6 +1,8 @@
 package game
 
-import roomv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/proto/go/room/v1"
+import (
+	roomv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/room/v1"
+)
 
 // RoomService manages rooms in the game.
 type RoomService struct {
