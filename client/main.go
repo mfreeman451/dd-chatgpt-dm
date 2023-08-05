@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/mfreeman451/dd-chatgpt-dm/client/pkg/client"
-	gamev1 "github.com/mfreeman451/dd-chatgpt-dm/gen/game/go/game/v1"
-	playerv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/game/go/player/v1"
+	gamev1 "github.com/mfreeman451/dd-chatgpt-dm/gen/proto/go/game/v1"
+	playerv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/proto/go/player/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
@@ -83,7 +83,6 @@ func main() {
 	}(conn)
 
 	gameClient := gamev1.NewGameClient(conn)
-	playerClient := playerv1.NewPlayerClient(conn)
 
 	if *createUserFlag {
 		// Create player
@@ -92,7 +91,7 @@ func main() {
 				Name: "Test Player",
 			},
 		}
-		resp, err := playerClient.CreatePlayer(context.Background(), req)
+		resp, err := gameClient.CreatePlayer(context.Background(), req)
 
 		if err != nil {
 			log.Fatalf("failed to create player: %v", err)
@@ -104,7 +103,7 @@ func main() {
 	if *listUsersFlag {
 		// List Players
 		req2 := &playerv1.ListPlayersRequest{}
-		resp2, err := playerClient.ListPlayers(context.Background(), req2)
+		resp2, err := gameClient.ListPlayers(context.Background(), req2)
 		if err != nil {
 			log.Fatalf("failed to list players: %v", err)
 		}
