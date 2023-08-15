@@ -9,7 +9,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/google/uuid"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	playerv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/player/v1"
+	roomv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/room/v1"
 )
 
 // DynamoDB is a DynamoDB database
@@ -30,7 +31,7 @@ func NewDynamoDB(region string) (DB, error) {
 }
 
 // GetLocationByCoordinates retrieves a location from the database based on the provided coordinates.
-func (db *DynamoDB) GetLocationByCoordinates(ctx context.Context, coordinates *game.Coordinates) (*game.Location, error) {
+func (db *DynamoDB) GetLocationByCoordinates(ctx context.Context, coordinates *roomv1.Coordinates) (*roomv1.Location, error) {
 	// Fetch location from the database based on the given coordinates
 	// Note: Implement the logic to fetch the location using the provided coordinates.
 	// For example, you can use the Scan method or GetItem method with a proper filter condition.
@@ -70,7 +71,7 @@ func (db *DynamoDB) GetLocationByCoordinates(ctx context.Context, coordinates *g
 	}
 
 	// Unmarshal the first item into a Location object
-	location := &game.Location{}
+	location := &roomv1.Location{}
 	err = dynamodbattribute.UnmarshalMap(result.Items[0], location)
 	if err != nil {
 		fmt.Println("Error unmarshalling location:", err)
@@ -81,7 +82,7 @@ func (db *DynamoDB) GetLocationByCoordinates(ctx context.Context, coordinates *g
 }
 
 // UpdatePlayer updates an existing player in the database based on the provided player object.
-func (db *DynamoDB) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerRequest) error {
+func (db *DynamoDB) UpdatePlayer(ctx context.Context, req *playerv1.UpdatePlayerRequest) error {
 	player := req.Player
 	// Check if the player ID is empty
 	if player.Id == "" {
@@ -109,7 +110,7 @@ func (db *DynamoDB) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerRequ
 }
 
 // CreatePlayer creates a new player
-func (db *DynamoDB) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (string, error) {
+func (db *DynamoDB) CreatePlayer(ctx context.Context, req *playerv1.CreatePlayerRequest) (string, error) {
 	fmt.Println("Creating player in Dynamo..")
 	player := req.Player
 
@@ -138,7 +139,7 @@ func (db *DynamoDB) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequ
 }
 
 // GetPlayer retrieves a player by ID
-func (db *DynamoDB) GetPlayer(ctx context.Context, id string) (*game.Player, error) {
+func (db *DynamoDB) GetPlayer(ctx context.Context, id string) (*playerv1.Player, error) {
 	// Fetch player from the database based on the given ID
 	result, err := db.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String("Players"),
@@ -157,7 +158,7 @@ func (db *DynamoDB) GetPlayer(ctx context.Context, id string) (*game.Player, err
 		return nil, nil // Return nil if player not found
 	}
 
-	player := &game.Player{}
+	player := &playerv1.Player{}
 	err = dynamodbattribute.UnmarshalMap(result.Item, player)
 	if err != nil {
 		fmt.Println("Error unmarshalling player:", err)
@@ -168,9 +169,9 @@ func (db *DynamoDB) GetPlayer(ctx context.Context, id string) (*game.Player, err
 }
 
 // ListPlayers retrieves all players
-func (db *DynamoDB) ListPlayers(ctx context.Context) ([]*game.Player, error) {
+func (db *DynamoDB) ListPlayers(ctx context.Context) ([]*playerv1.Player, error) {
 	// Define an empty slice to store the players
-	var players []*game.Player
+	var players []*playerv1.Player
 
 	// Scan the "Players" table to retrieve all players
 	input := &dynamodb.ScanInput{
@@ -184,7 +185,7 @@ func (db *DynamoDB) ListPlayers(ctx context.Context) ([]*game.Player, error) {
 
 	// Unmarshal each item into a Player object and add it to the slice
 	for _, item := range result.Items {
-		player := &game.Player{}
+		player := &playerv1.Player{}
 		err = dynamodbattribute.UnmarshalMap(item, player)
 		if err != nil {
 			fmt.Println("Error unmarshalling player:", err)
@@ -197,6 +198,6 @@ func (db *DynamoDB) ListPlayers(ctx context.Context) ([]*game.Player, error) {
 }
 
 // GetRoomState retrieves the state of a room by ID
-func (db *DynamoDB) GetRoomState(ctx context.Context, roomID string) (*game.RoomState, error) {
+func (db *DynamoDB) GetRoomState(ctx context.Context, roomID string) (*roomv1.RoomState, error) {
 	return nil, errors.New("not implemented")
 }

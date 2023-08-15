@@ -5,7 +5,10 @@ import (
 	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/google/uuid"
-	"github.com/mfreeman451/dd-chatgpt-dm/server/pb/game"
+	gamev1 "github.com/mfreeman451/dd-chatgpt-dm/gen/game/v1"
+	"github.com/mfreeman451/dd-chatgpt-dm/gen/game/v1/gamev1connect"
+	playerv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/player/v1"
+	roomv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/room/v1"
 	mydb "github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db"
 	"github.com/mfreeman451/dd-chatgpt-dm/server/pkg/db/cache"
 	"google.golang.org/grpc/codes"
@@ -16,17 +19,17 @@ import (
 
 // Service is a gRPC service
 type Service struct {
-	game.UnimplementedGameServer
+	gamev1connect.UnimplementedGameHandler
 	mydb.DB
 	publisher message.Publisher
 }
 
 // NewService creates a new gRPC service
 func NewService(db mydb.DB, redisClient cache.Client, publisher message.Publisher) *Service {
-	return &Service{game.UnimplementedGameServer{}, db, publisher}
+	return &Service{gamev1connect.UnimplementedGameHandler{}, db, publisher}
 }
 
-func (s *Service) Login(ctx context.Context, req *game.LoginRequest) (*game.LoginResponse, error) {
+func (s *Service) Login(ctx context.Context, req *gamev1.LoginRequest) (*gamev1.LoginResponse, error) {
 	player, err := s.DB.GetPlayer(ctx, req.PlayerId)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to retrieve player: %v", err)
@@ -44,11 +47,11 @@ func (s *Service) Login(ctx context.Context, req *game.LoginRequest) (*game.Logi
 	// TODO: Generate a token. This is just a placeholder.
 	token := "token"
 
-	return &game.LoginResponse{Token: token}, nil
+	return &gamev1.LoginResponse{Token: token}, nil
 }
 
 // PublishNewPlayerEvent sends a message to the room channel notifying other players about the new player
-func (s *Service) PublishNewPlayerEvent(ctx context.Context, newPlayerID string, roomID *game.Coordinates) error {
+func (s *Service) PublishNewPlayerEvent(ctx context.Context, newPlayerID string, roomID *playerv1.Coordinates) error {
 	// Create a message indicating that a new player has joined the room
 	myMsg := "Player " + newPlayerID + " has joined the room."
 
@@ -64,7 +67,7 @@ func (s *Service) PublishNewPlayerEvent(ctx context.Context, newPlayerID string,
 }
 
 // GetPlayer retrieves a player by ID
-func (s *Service) GetPlayer(ctx context.Context, req *game.GetPlayerRequest) (*game.GetPlayerResponse, error) {
+func (s *Service) GetPlayer(ctx context.Context, req *playerv1.GetPlayerRequest) (*playerv1.GetPlayerResponse, error) {
 	// Fetch player from the database based on the given ID
 	player, err := s.DB.GetPlayer(ctx, req.PlayerId)
 	if err != nil {
@@ -77,16 +80,16 @@ func (s *Service) GetPlayer(ctx context.Context, req *game.GetPlayerRequest) (*g
 	}
 
 	// Create the response with the player
-	response := &game.GetPlayerResponse{
+	response := &playerv1.GetPlayerResponse{
 		Player: player,
 	}
 
 	return response, nil
 }
 
-func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerRequest) (*game.CreatePlayerResponse, error) {
+func (s *Service) CreatePlayer(ctx context.Context, req *playerv1.CreatePlayerRequest) (*playerv1.CreatePlayerResponse, error) {
 	// Set the default room ID on the player object
-	defaultRoom := &game.Coordinates{
+	defaultRoom := &playerv1.Coordinates{
 		X: 1,
 		Y: 1,
 		Z: 1,
@@ -110,7 +113,7 @@ func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerReques
 	player.Id = id
 
 	// Create the response with the player object
-	response := &game.CreatePlayerResponse{
+	response := &playerv1.CreatePlayerResponse{
 		Player: player,
 	}
 
@@ -124,7 +127,7 @@ func (s *Service) CreatePlayer(ctx context.Context, req *game.CreatePlayerReques
 }
 
 // ListPlayers lists all players
-func (s *Service) ListPlayers(ctx context.Context, _ *game.ListPlayersRequest) (*game.ListPlayersResponse, error) {
+func (s *Service) ListPlayers(ctx context.Context, _ *playerv1.ListPlayersRequest) (*playerv1.ListPlayersResponse, error) {
 	// Get all players from the database
 	players, err := s.DB.ListPlayers(ctx)
 	if err != nil {
@@ -132,7 +135,7 @@ func (s *Service) ListPlayers(ctx context.Context, _ *game.ListPlayersRequest) (
 	}
 
 	// Create the response with the list of players
-	response := &game.ListPlayersResponse{
+	response := &playerv1.ListPlayersResponse{
 		Players: players,
 	}
 
@@ -140,7 +143,7 @@ func (s *Service) ListPlayers(ctx context.Context, _ *game.ListPlayersRequest) (
 }
 
 // UpdatePlayer updates an existing player in the database based on the provided player object.
-func (s *Service) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerRequest) (*game.UpdatePlayerResponse, error) {
+func (s *Service) UpdatePlayer(ctx context.Context, req *playerv1.UpdatePlayerRequest) (*playerv1.UpdatePlayerResponse, error) {
 	// Get the player from the database based on the provided player ID
 	playerID := req.PlayerId
 	existingPlayer, err := s.DB.GetPlayer(ctx, playerID)
@@ -166,7 +169,7 @@ func (s *Service) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerReques
 	}
 
 	// Create the response with the updated player object
-	response := &game.UpdatePlayerResponse{
+	response := &playerv1.UpdatePlayerResponse{
 		Player: existingPlayer,
 	}
 
@@ -174,7 +177,7 @@ func (s *Service) UpdatePlayer(ctx context.Context, req *game.UpdatePlayerReques
 }
 
 // GetRoomState retrieves the state of a room
-func (s *Service) GetRoomState(ctx context.Context, req *game.GetRoomStateRequest) (*game.GetRoomStateResponse, error) {
+func (s *Service) GetRoomState(ctx context.Context, req *roomv1.GetRoomStateRequest) (*roomv1.GetRoomStateResponse, error) {
 	// Fetch room from the database based on the given ID
 	room, err := s.DB.GetRoomState(ctx, req.RoomId)
 	if err != nil {
@@ -187,21 +190,21 @@ func (s *Service) GetRoomState(ctx context.Context, req *game.GetRoomStateReques
 	}
 
 	// Create the response with the room
-	response := &game.GetRoomStateResponse{
+	response := &roomv1.GetRoomStateResponse{
 		RoomState: room,
 	}
 
 	return response, nil
 }
 
-func (s *Service) CreateGame(ctx context.Context, req *game.CreateGameCommand) (*game.GameCreatedEvent, error) {
+func (s *Service) CreateGame(ctx context.Context, req *gamev1.CreateGameCommand) (*gamev1.GameCreatedEvent, error) {
 	// Implement your game creation logic here.
 	// For example, you might create a new game in your database and return its ID.
 
 	// ... game creation logic ...
 
 	// Create the response with the game ID
-	response := &game.GameCreatedEvent{
+	response := &gamev1.GameCreatedEvent{
 		GameId: "123",
 	}
 
@@ -223,9 +226,9 @@ func (s *Service) CreateGame(ctx context.Context, req *game.CreateGameCommand) (
 }
 
 // ExecuteCommand executes a command in the game
-func (s *Service) ExecuteCommand(ctx context.Context, req *game.ExecuteCommandRequest) (*game.ExecuteCommandResponse, error) {
+func (s *Service) ExecuteCommand(ctx context.Context, req *gamev1.ExecuteCommandRequest) (*gamev1.ExecuteCommandResponse, error) {
 	// Create a new CommandExecuted event
-	event := &game.CommandExecutedEvent{
+	event := &gamev1.CommandExecutedEvent{
 		GameId:   req.GameId,
 		PlayerId: req.PlayerId,
 		Command:  req.Command,
@@ -246,7 +249,7 @@ func (s *Service) ExecuteCommand(ctx context.Context, req *game.ExecuteCommandRe
 	}
 
 	// Create and return the response
-	response := &game.ExecuteCommandResponse{
+	response := &gamev1.ExecuteCommandResponse{
 		GameId:  req.GameId,
 		Command: req.Command,
 	}

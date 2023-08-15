@@ -2,13 +2,13 @@ package client
 
 import (
 	"context"
-	"github.com/mfreeman451/dd-chatgpt-dm/client/pb/game"
+	gamev1 "github.com/mfreeman451/dd-chatgpt-dm/gen/game/v1"
 )
 
 type response struct {
 	Token string
 }
 
-func Login(ctx context.Context, req *game.LoginRequest) (response, error) {
+func Login(ctx context.Context, req gamev1.LoginRequest) (response, error) {
 	return response{"foobar"}, nil
 }

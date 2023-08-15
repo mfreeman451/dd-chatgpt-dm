@@ -4,10 +4,12 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	connect_go "github.com/bufbuild/connect-go"
 	"github.com/joho/godotenv"
 	"github.com/mfreeman451/dd-chatgpt-dm/client/pkg/client"
-	gamev1 "github.com/mfreeman451/dd-chatgpt-dm/gen/proto/go/game/v1"
-	playerv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/proto/go/player/v1"
+	gamev1 "github.com/mfreeman451/dd-chatgpt-dm/gen/game/v1"
+	"github.com/mfreeman451/dd-chatgpt-dm/gen/game/v1/gamev1connect"
+	playerv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/player/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
@@ -82,9 +84,15 @@ func main() {
 		}
 	}(conn)
 
-	gameClient := gamev1.NewGameClient(conn)
+	// gameClient := gamev1.NewGameClient(conn)
+	gameClient := gamev1connect.NewGameClient(conn)
 
 	if *createUserFlag {
+		// *connect_go.Request[v1.CreatePlayerRequest]
+		r := &connect_go.Request[playerv1.CreatePlayerRequest]{
+			PlayerId: "test",
+		}
+
 		// Create player
 		req := &playerv1.CreatePlayerRequest{
 			Player: &playerv1.Player{

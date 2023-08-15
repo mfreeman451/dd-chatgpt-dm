@@ -71,6 +71,7 @@ message Player {
   SocialProvider social_provider = 41;
   string social_id = 42;
   string social_token = 43;
+  InterpType interp_type = 44;
 }
 
 enum SocialProvider {

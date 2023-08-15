@@ -7,7 +7,9 @@ managed:
 plugins:
   - plugin: buf.build/protocolbuffers/go
     out: gen
-    opt: paths=source_relative
+    opt:
+      - paths=source_relative
   - plugin: buf.build/bufbuild/connect-go
     out: gen
-    opt: paths=source_relative
+    opt:
+      - paths=source_relative

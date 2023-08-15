@@ -4,19 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ThreeDotsLabs/watermill/message"
-	playerv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/proto/go/player/v1"
+	playerv1 "github.com/mfreeman451/dd-chatgpt-dm/gen/player/v1"
 	"strings"
 	"sync"
 )
 
-type Command struct {
-	Action string
-	Args   []string
-}
-
 type Handler struct {
-	// interp state goes here
-	interps map[playerv1.Player_InterpType]Interp
+	interps map[playerv1.InterpType]Interp
 }
 
 var (
